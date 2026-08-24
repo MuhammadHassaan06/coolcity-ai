@@ -1,354 +1,816 @@
-# Temperature API Quickstart
+# CoolCity AI
 
-A Python + Jupyter sandbox for the [FortyGuard tOS Enterprise API](https://api.fortyguard.com). Drop in your API key and run a notebook — you'll get a heatmap, a heat-intelligence PDF, or an environmental-parameter time series in minutes.
+**Autonomous Heat-Relief Resource Planner for Phoenix, Arizona**
 
-> **Starting a hackathon project?** Click **Use this template → Create a new repository** (green button, top of this page) to spin up your own copy to work in, then follow [Getting started](#getting-started) below.
+CoolCity AI is a hackathon project that combines **FortyGuard's hyperlocal temperature intelligence**, **public demographic/socioeconomic data**, **data analysis and correlation**, and an **AI agent** to help city heat-response teams decide where limited cooling resources should be deployed first.
 
-The `fortyguard/` package wraps every endpoint the API exposes and handles the submit-then-poll pattern for you. The `notebooks/` folder walks you through each endpoint with runnable examples, and `notebooks/use_cases/` shows full narrative workflows that combine your own data with FortyGuard layers to produce a defensible action list.
+The project is designed for the FortyGuard challenge and combines:
 
-![San Jose AOI heatmap — daily mean vs. daily peak](docs/images/heatmap_visualized.png)
+- **Track 6 — Agentic Track (API + Agentic)**
+- **Track 7 — Data Analysis & Correlation**
 
-*Above: the bundled 24-hour heatmap rendered tile-by-tile — daily mean (left) and daily peak (right) across ~16,500 tiles. The southeast urban heat island is exactly the kind of pattern the use-case notebooks pick up when they join your point list against this layer.*
-
-![AOI temperature distribution — heatmap summary](docs/images/heatmap_summary.png)
-
-*And the one-line summary card every use-case notebook prints right after loading the heatmap — min / mean / max swatches, a colored histogram of every tile's peak, and a continuous colorbar.*
+> Core idea: **Track 7 understands and quantifies the heat problem; Track 6 turns that evidence into an explainable resource-allocation decision.**
 
 ---
 
-## What you can do here
+## 1. Project Status
 
-### Endpoint walkthroughs
+This repository is the shared source of truth for a **3-member team**.
 
-| # | Notebook | Endpoint | Plan |
-|---|----------|----------|------|
-| 00 | [Setup & authentication](notebooks/00_setup.ipynb) | `POST /v1/system/fetch-api-key-custom-usage` | Both |
-| 01 | [Create heatmap](notebooks/01_create_heatmap.ipynb) | `POST /v1/heatmap` | Both |
-| 02 | [Environmental parameters](notebooks/02_environmental_parameters.ipynb) | `POST /v1/env_params` | Both |
-| 03 | [Satellite segmentation](notebooks/03_satellite_segmentation.ipynb) | `POST /v1/satellite` | Premium |
-| 04 | [Street view segmentation](notebooks/04_street_view_segmentation.ipynb) | `POST /v1/streetview` | Premium |
-| 05 | [Heat intelligence report](notebooks/05_heat_intelligence_report.ipynb) | `POST /v1/heat_intelligence` | Premium |
+### Current frozen decisions
 
-All analysis endpoints are asynchronous: you submit a request, get an `activity_id`, and poll `GET /v1/status/{activity_id}` until the task finishes. The client does the polling for you — you just call `client.create_heatmap(...)` and get the result back.
+- **Project name:** CoolCity AI
+- **Primary city:** Phoenix, Arizona, USA
+- **Primary customer:** Municipal heat-response / emergency-management teams
+- **Selected tracks:** Track 6 + Track 7
+- **Core product:** Hyperlocal heat-risk analysis + autonomous cooling-resource allocation
+- **Temperature source:** Official FortyGuard Temperature API provided by the hackathon organizers
+- **Starter repository:** Official FortyGuard Temperature API Quickstart repository provided by the hackathon organizers
+- **Demographic source:** U.S. Census / ACS or another suitable U.S. public demographic dataset
+- **Frontend/backend:** Next.js + TypeScript
+- **Data analysis:** Python + Pandas; SciPy/GeoPandas only where useful
+- **Map:** Leaflet / React Leaflet
+- **Charts:** Recharts
+- **AI layer:** Tool-using LLM agent (Gemini is the initial preferred option)
+- **Deployment:** Vercel
+- **Version control:** GitHub with feature branches and pull requests
 
-#### How a request actually flows
+### Decisions that must be validated before final implementation
 
-```
-       you / notebook              FortyGuard API
-            │                            │
-            │  POST /v1/<endpoint>       │   (payload: AOI / point + date_time + ...)
-            │ ─────────────────────────► │
-            │                            │
-            │  { activity_id: "..." }    │   202-style accept — task queued
-            │ ◄───────────────────────── │
-            │                            │
-            │  GET /v1/status/{id}       │
-            │ ─────────────────────────► │   ┐
-            │  { status: "Processing" }  │   │  client polls every
-            │ ◄───────────────────────── │   │  poll_interval seconds
-            │  GET /v1/status/{id}       │   │  (default: 3s) until
-            │ ─────────────────────────► │   │  status terminates
-            │  { status: "Completed",    │   │
-            │    result: {...} }         │   ┘
-            │ ◄───────────────────────── │
-```
+- Exact Phoenix area-of-interest polygon
+- Exact number and boundaries of analysis zones
+- The team's actual FortyGuard API plan and available endpoint limits
+- Exact formula/weights for the CoolCity Risk Score
+- Exact public dataset used for cooling/heat-relief locations
+- Exact demographic variables retained after data-quality checks
+- Whether 12-hour forecast data is included in the final MVP or treated as a stretch feature
 
-*(Status strings are matched case-insensitively, so the client handles
-`Completed`/`completed`/`succeeded` alike.)*
-
-`client.<endpoint>(...)` does all of that in one call and returns `{"activity_id": ..., "result": ...}`. If you'd rather drive the polling yourself, pass `wait=False` to get the `activity_id` immediately, then call `client.get_status(activity_id)` or `client.wait_for(activity_id)` on your own schedule.
-
-> **Why async?** Heatmaps, segmentation, and PDF reports take seconds-to-minutes — the API queues them so a slow result never blocks your HTTP connection. Failed tasks are free; credits are deducted only once a task reaches `Completed`.
-
-### Use-case notebooks
-
-Once you've completed `00_setup.ipynb`, jump into a narrative workflow that combines **your own data** with FortyGuard layers to produce a ranked, defensible action list. See [`notebooks/use_cases/`](notebooks/use_cases/README.md) for the full index. The five available today:
-
-| Persona / industry | Your data | Output |
-|-------------------|-----------|--------|
-| [Real-estate portfolio heat risk](notebooks/use_cases/real_estate_portfolio_heat_risk.ipynb) | Property portfolio | Client-deck slide pack (M1/M2/M3 maps) + per-property action brief citing public programs (EPA, USDA, ASHRAE, OSHA) |
-| [Urban planner — bus-stop cooling](notebooks/use_cases/urban_planner_bus_stop_prioritization.ipynb) | Bus-stop points | Ranked intervention list |
-| [Public-parks heat-resilience audit](notebooks/use_cases/public_parks_heat_resilience_audit.ipynb) | Park points (id + type + acres + lat/lon) | Per-park audit with declarative, threshold-triggered recommendations citing federal programs |
-| [Single-parcel heat due diligence](notebooks/use_cases/parcel_site_due_diligence.ipynb) | **One parcel boundary** (polygon GeoJSON) | `reportAll` bundle — branded PDF + evaluation CSV + findings CSV + maps, from **all five endpoints** on one site |
-| [Multi-parcel heat screening](notebooks/use_cases/parcel_portfolio_heat_screening.ipynb) | **Several parcel boundaries** (multi-feature polygon GeoJSON) | Ranked shortlist — one 14 km² AOI across the whole portfolio, area-weighted per parcel, expensive endpoints spent only on the top few. **Temperatures in °F with °C in brackets** |
-
-> **The two parcel notebooks are the ones to demo to a client on their own sites.** They take boundaries rather than point lists and run building-scale AOIs instead of citywide ones. Use the **single-parcel** one for "should I buy this site" and the **multi-parcel** one for "which of these sites should I pursue". See [Parcel scale vs. city scale](#parcel-scale-vs-city-scale) below for why both lead with exposure *duration* rather than peak temperature.
-
-> **These two run with no API key.** Unlike the rest of the repo, the parcel notebooks ship both their input boundaries and their cached API responses. Clone, `pip install -r requirements.txt`, open either notebook, and Run All — you get the full report bundle offline, with zero credits spent. Everything else in `data/` is git-ignored; set `REFRESH = True` in a parcel notebook's Setup cell when you do want live calls.
-
-Bring your own inputs: create a `data/` directory (it's git-ignored, not shipped) and drop in a CSV with the columns each notebook documents — everything downstream works. See each use-case notebook's intro for the expected schema.
-
-![Surface composition stacked bar — top-N parks](docs/images/surface_composition.png)
-
-*Example output from the public-parks audit: a satellite-segmentation stacked bar tells the parks director why each top park is hot — the building, road, and tree shares feed straight into threshold-triggered recommendations like "USDA Forest Service i-Tree planting plan" or "EPA Heat Island Reduction cool-pavement retrofit".*
+Do not silently convert any of these open decisions into permanent implementation assumptions. Validate them first and update `PROJECT_PLAN.md`.
 
 ---
 
-## Prerequisites
+## 2. The Problem
 
-- Python 3.10 or newer
-- A FortyGuard API key (Basic or Premium tier)
-- About 5 minutes
+Cities face extreme-heat conditions across neighborhoods that can differ significantly even over short distances. At the same time, a heat-response team may have limited resources such as:
+
+- mobile cooling units,
+- temporary hydration/water stations,
+- outreach teams,
+- transportation/support teams,
+- temporary cooling capacity,
+- or other deployable heat-relief resources.
+
+Those resources cannot be sent everywhere at the same time.
+
+A city therefore needs a defensible answer to:
+
+> **Which locations should receive limited heat-relief resources first, and why?**
+
+CoolCity AI converts temperature and vulnerability evidence into a ranked, auditable deployment plan.
 
 ---
 
-## Getting started
+## 3. Why Phoenix?
 
-### 1. Clone and create a virtual environment
+Phoenix is the initial city because extreme heat is already a major operational and public-health issue there. The City of Phoenix maintains a formal Heat Response Plan that includes publicly accessible cool space and drinking water, heat-safe mobility, worker heat-safety measures, outreach, and other heat-response strategies.
 
-```bash
-git clone <this-repo> temperature-api-quickstart
-cd temperature-api-quickstart
+CoolCity AI is **not an official City of Phoenix system** and must never be presented as one. Phoenix is the hackathon study geography and the city heat-response team is the proposed client persona.
 
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# macOS / Linux
-source venv/bin/activate
+---
+
+## 4. What FortyGuard Gives Us
+
+FortyGuard does **not** directly decide where city resources should go. It supplies high-resolution temperature intelligence that our product uses as evidence.
+
+The current API documentation describes heatmap generation using:
+
+- a GeoJSON polygon area of interest,
+- date/time inputs,
+- supported heatmap granularity,
+- API-key authentication,
+- asynchronous processing,
+- GeoJSON heatmap output,
+- and temperature statistics.
+
+### Basic heatmap workflow
+
+```text
+CoolCity backend
+      |
+      v
+POST /v1/heatmap
+      |
+      v
+FortyGuard returns activity_id
+      |
+      v
+GET /v1/status/{activity_id}
+      |
+      +---- Processing -> poll again with a safe bound
+      |
+      +---- Completed -> read result
+      |
+      +---- Failed -> stop and record error
+                    |
+                    v
+             map_data + stats_data
 ```
 
-### 2. Install dependencies
+The heatmap can provide the spatial temperature layer that powers our map and risk analysis.
 
-```bash
-pip install -r requirements.txt
+FortyGuard should be called **server-side only** so the API key is never exposed to browser code.
+
+---
+
+## 4A. What the Hackathon Provides vs What We Build
+
+### Provided by the FortyGuard hackathon team
+
+The organizers provide the core temperature-intelligence infrastructure:
+
+- Official FortyGuard Temperature API
+- Hackathon participant API key/access
+- Official Temperature API documentation
+- Official `temperature-api-quickstart` GitHub repository
+- Sample code/notebooks for learning how to call the API
+
+### Built by the CoolCity AI team
+
+Our project value comes from what we build **on top of** those official resources:
+
+- Phoenix study-area design
+- Zone aggregation and data preparation
+- Historical heat analytics
+- Demographic/socioeconomic data integration
+- Track 7 correlation analysis
+- CoolCity Risk Score
+- Priority-zone ranking
+- Deterministic resource-allocation logic
+- Track 6 tool-using AI agent
+- Explainable recommendations and evidence
+- Dashboard, map, charts, and resource-planning UI
+- Testing, deployment, and final commercialization story
+
+This distinction must remain clear in the final submission and presentation.
+
+---
+
+## 5. Product Concept
+
+CoolCity AI follows this end-to-end workflow:
+
+```text
+FortyGuard temperature data
+          +
+Historical heat metrics
+          +
+Demographic vulnerability data
+          +
+Existing heat-relief / cooling coverage
+          |
+          v
+Data cleaning and spatial alignment
+          |
+          v
+Track 7 analysis and correlations
+          |
+          v
+Normalized zone-level metrics
+          |
+          v
+CoolCity Risk Score
+          |
+          v
+Ranked high-risk zones
+          |
+          v
+Track 6 AI agent
+          |
+          +--> reads resource inventory
+          +--> calls approved tools
+          +--> retrieves real zone evidence
+          +--> creates allocation plan
+          |
+          v
+Explainable deployment recommendation
 ```
 
-### 3. Add your API key
+---
 
-```bash
-cp .env.example .env
+## 6. Example User Scenario
+
+A Phoenix heat-response operator opens CoolCity AI.
+
+The dashboard shows:
+
+- a Phoenix study-area heatmap,
+- current/selected-time temperatures,
+- historical heat metrics,
+- zone risk scores,
+- demographic vulnerability indicators,
+- existing heat-relief coverage,
+- and ranked priority zones.
+
+The operator enters:
+
+```text
+Available resources:
+- 2 mobile cooling units
+- 3 water stations
+- 1 outreach team
 ```
 
-Open `.env` and paste your key:
+The agent may return:
+
+```text
+Priority 1: Zone B
+Recommended action: Deploy 1 mobile cooling unit + outreach team
+
+Priority 2: Zone C
+Recommended action: Deploy 1 mobile cooling unit
+
+Water stations:
+Allocate to the highest uncovered high-risk zones.
+```
+
+Every recommendation must be supported by actual tool/data output. The LLM must not invent temperatures, risk scores, demographic values, or resource locations.
+
+---
+
+## 7. Track 7 — Data Analysis & Correlation
+
+Track 7 is responsible for **measuring and explaining** the heat problem.
+
+Possible zone-level variables include:
+
+### Heat variables
+
+- selected-hour temperature,
+- mean temperature,
+- peak/max temperature,
+- heat persistence,
+- threshold exceedance,
+- historical average,
+- historical percentile/rank,
+- deviation from historical baseline,
+- number/density of hot tiles.
+
+### Non-weather variables
+
+Candidate U.S. Census / ACS indicators:
+
+- total population,
+- poverty rate,
+- age 65+ share,
+- selected household vulnerability indicators,
+- no-vehicle household share where available and appropriate.
+
+### Cooling-access variables
+
+Where reliable public data is available:
+
+- distance to nearest cooling/heat-relief site,
+- number of relief sites in/near a zone,
+- whether a high-risk zone has nearby cooling access,
+- resource/service coverage gap.
+
+### Analysis outputs
+
+- cleaned zone-level dataset,
+- descriptive statistics,
+- visual distributions,
+- correlation matrix,
+- Pearson or Spearman correlations as appropriate,
+- interpretation that clearly states **correlation does not prove causation**,
+- normalized input features for risk scoring.
+
+---
+
+## 8. Track 6 — Agentic AI
+
+Track 6 turns the analytical evidence into an operational plan.
+
+The agent should use explicit tools rather than making unsupported guesses.
+
+Candidate tools:
+
+```text
+getZoneHeatData()
+getHistoricalHeatMetrics()
+getZoneVulnerability()
+getCoolingCoverage()
+getZoneRiskScores()
+getResourceInventory()
+rankPriorityZones()
+allocateResources()
+```
+
+Expected agent loop:
+
+```text
+Observe
+   |
+   v
+Determine what evidence is required
+   |
+   v
+Call approved tools
+   |
+   v
+Receive structured data
+   |
+   v
+Rank / allocate using deterministic constraints
+   |
+   v
+Explain the decision
+```
+
+The strongest implementation keeps **scientific calculations and hard constraints deterministic** while using the LLM for planning, tool selection, synthesis, and explanation.
+
+---
+
+## 9. CoolCity Risk Score
+
+The risk score is a project-defined decision-support score, **not an official FortyGuard, City of Phoenix, medical, or emergency-management score**.
+
+Initial candidate model:
+
+```text
+Risk =
+  Heat Exposure
++ Heat Persistence
++ Demographic Vulnerability
++ Cooling Access Gap
+```
+
+An early prototype may test weights such as:
+
+```text
+40% heat exposure
+25% persistence
+25% demographic vulnerability
+10% cooling access gap
+```
+
+These are **initial product-design weights only**. They must be validated, sensitivity-tested, documented, and changed if the data suggests a better approach.
+
+Example presentation:
+
+```text
+0-39   Low
+40-59  Moderate
+60-79  High
+80-100 Critical
+```
+
+The UI must show the underlying factors so a user can see why a zone received its score.
+
+---
+
+## 10. MVP Features
+
+The hackathon MVP is intentionally focused.
+
+### Required MVP
+
+1. **Phoenix study-area heatmap**
+2. **FortyGuard API integration**
+3. **Historical/current heat analytics**
+4. **Demographic vulnerability layer**
+5. **Track 7 correlation analysis**
+6. **Zone-level CoolCity Risk Score**
+7. **Ranked priority-zone table**
+8. **Resource inventory input**
+9. **Tool-using AI resource-allocation agent**
+10. **Explainable recommendation/evidence panel**
+11. **Error/loading/empty states**
+12. **Source attribution**
+13. **Deployed public demo**
+14. **Clear README and project documentation**
+
+### Stretch features
+
+- up to 12-hour proactive heat planning if supported by the team's FortyGuard access and time,
+- scenario comparison,
+- exportable decision memo,
+- richer cooling-access analysis,
+- sensitivity controls for risk-score weights,
+- more than one Phoenix study area.
+
+---
+
+## 11. Out of Scope
+
+For the MVP, do **not** attempt:
+
+- all U.S. cities,
+- the entire Phoenix metro at maximum resolution,
+- real emergency dispatch,
+- automatic contact with first responders,
+- medical diagnosis or personal-health advice,
+- physical simulation of how a cooling intervention will lower real temperature,
+- production-grade municipal procurement workflows,
+- a mobile native application,
+- a large custom machine-learning model if simple statistical analysis is sufficient,
+- unsupported claims that the system will prevent deaths or guarantee safety.
+
+CoolCity AI is a **decision-support prototype**.
+
+---
+
+## 12. High-Level Architecture
+
+```text
+                         USER
+                          |
+                          v
+                 Next.js Web Dashboard
+                          |
+          +---------------+----------------+
+          |               |                |
+          v               v                v
+     Heatmap API      Analytics API      Agent API
+          |               |                |
+          v               v                v
+      FortyGuard     Prepared datasets   Tool layer
+                          |                |
+                          v                v
+                    Risk calculations  Allocation logic
+                          \                /
+                           \              /
+                            v            v
+                         Structured result
+                              |
+                              v
+                   Map + Charts + Evidence
+```
+
+### Recommended principle
+
+- **Frontend:** visualization and interaction
+- **Backend:** secure API calls and orchestration
+- **Python analysis:** data cleaning, statistical analysis, reproducible preprocessing
+- **Deterministic code:** risk calculations and allocation constraints
+- **LLM agent:** tool planning, orchestration, synthesis, and human-readable explanation
+
+---
+
+## 13. Repository Structure
+
+Target structure:
+
+```text
+coolcity-ai/
+|
+|-- README.md
+|-- PROJECT_PLAN.md
+|-- .env.example
+|-- .gitignore
+|-- package.json
+|
+|-- src/
+|   |-- app/
+|   |   |-- api/
+|   |   |   |-- heatmap/
+|   |   |   |-- analytics/
+|   |   |   `-- agent/
+|   |   `-- page.tsx
+|   |
+|   |-- components/
+|   |   |-- map/
+|   |   |-- dashboard/
+|   |   |-- analytics/
+|   |   |-- resources/
+|   |   `-- agent/
+|   |
+|   |-- lib/
+|   |   |-- fortyguard/
+|   |   |-- analytics/
+|   |   |-- agent/
+|   |   `-- data/
+|   |
+|   `-- types/
+|
+|-- analysis/
+|   |-- notebooks/
+|   |-- scripts/
+|   `-- data/
+|
+|-- docs/
+`-- public/
+```
+
+Create directories only when they are needed. Avoid empty architecture for architecture's sake.
+
+---
+
+## 14. Environment Variables
+
+`.env.local`:
 
 ```env
-FORTYGUARD_API_KEY=fg_live_xxxxxxxxxxxxxxxx
-FORTYGUARD_BASE_URL=https://api.fortyguard.com
+FORTYGUARD_API_KEY=your_real_key
+GEMINI_API_KEY=your_real_key_if_used
 ```
 
-> The `.env` file is git-ignored — your key will not be committed.
+`.env.example`:
 
-### 4. Launch Jupyter
-
-```bash
-jupyter lab
+```env
+FORTYGUARD_API_KEY=
+GEMINI_API_KEY=
 ```
 
-Open `notebooks/00_setup.ipynb` and run every cell top-to-bottom. If the last cell prints your plan and remaining credits, you're wired up. Continue through the remaining notebooks in order, then pick a use-case workflow.
+Rules:
+
+- Never commit `.env.local`.
+- Never paste real keys into documentation.
+- Never use `NEXT_PUBLIC_` for secret API keys.
+- Never call FortyGuard directly from client-side browser code.
+- Rotate a key immediately if it is accidentally committed or shared.
 
 ---
 
-## Using the Python client directly
+## 15. Team Responsibilities
 
-Outside a notebook:
+### Member 1 — AI + Backend
 
-```python
-from dotenv import load_dotenv; load_dotenv()
-from fortyguard import FortyGuardClient
+Owns:
 
-client = FortyGuardClient()  # picks up FORTYGUARD_API_KEY from .env
+- FortyGuard integration,
+- server-side API wrappers,
+- polling/task handling,
+- typed responses,
+- agent tools,
+- LLM agent orchestration,
+- deterministic resource-allocation constraints,
+- backend tests,
+- API/security integration.
 
-response = client.create_heatmap(
-    polygon_aoi={
-        "type": "FeatureCollection",
-        "features": [{
-            "type": "Feature", "properties": {},
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[
-                    [-74.017, 40.705], [-74.003, 40.705],
-                    [-74.003, 40.718], [-74.017, 40.718],
-                    [-74.017, 40.705],
-                ]],
-            },
-        }],
-    },
-    start_date="2024-07-15",
-    start_time="14:00",
-    filter_type=1,        # 1=single hour, 2=range of hours, 3=single day, 4=range of days
-    granularity=100,      # meters: 60, 80, or 100
-)
+Suggested branch:
 
-print(response["activity_id"])
-print(response["result"]["stats_data"])
+```text
+feat/fortyguard-api
 ```
 
-### Analysis heatmaps (`analytic_type`)
+Later:
 
-`create_heatmap` defaults to `analytic_type="tcm"` — the classic snapshot. Over a
-multi-hour or multi-day window (`filter_type` 2 or 4) you can ask for three
-analysis heatmaps instead, each derived from the same time series:
-
-| `analytic_type` | What each cell shows | Units | Extra params |
-|-----------------|----------------------|-------|--------------|
-| `tcm` *(default)* | Snapshot temperature | °C | — |
-| `time_of_measure` | **UTC hour-of-day** (0–23) of the cell's peak | hour | — |
-| `exceedance` | **Count of hours** the cell spends past `threshold` | hour | `threshold` (°C), `direction` |
-| `persistence` | **Longest continuous run** of such hours | hour | `threshold` (°C), `direction` |
-
-```python
-response = client.create_heatmap(
-    polygon_aoi=aoi,
-    start_date="2024-07-15",
-    end_date="2024-07-21",
-    filter_type=4,               # range of days
-    analytic_type="exceedance",
-    threshold=35.0,              # °C
-    direction="above",           # count hours above 35 °C
-)
+```text
+feat/agent-planner
 ```
 
-`threshold` and `direction` (`"above"`/`"below"`) are required for `exceedance`
-and `persistence`, and ignored for the other types.
+### Member 2 — Data Science / Analytics
 
-> **`threshold` is °C** — the same unit as the `tcm` tile temperatures, which
-> the Enterprise API also returns in **°C** (default threshold 30 °C).
+Owns:
 
-> **`exceedance` is a count of hours, not degree-hours.** A value of `6.0` means
-> the cell spent six hours past the threshold — it is not accumulated °C·h.
+- demographic dataset selection,
+- data cleaning,
+- geographic alignment,
+- exploratory analysis,
+- historical heat metrics,
+- correlation analysis,
+- risk-feature normalization,
+- risk-score validation/sensitivity analysis,
+- processed dataset/export,
+- methodology documentation.
 
-#### Response shape for analysis heatmaps
+Suggested branch:
 
-The three analysis types return a **different schema from `tcm`** — one `value`
-per tile rather than temperature fields:
-
-```jsonc
-// analytic_type = time_of_measure | exceedance | persistence
-{
-  "map_data": {                         // GeoJSON FeatureCollection
-    "features": [
-      { "properties": { "tile_id": 0, "value": 6.03 }, "geometry": {...} }
-    ]
-  },
-  "stats_data": {
-    "activity_id": "...",
-    "analytic_type": "exceedance",      // echoes the requested type
-    "units": "hour",
-    "n_cells": 150,
-    "min": 0.98, "max": 6.03, "mean": 2.46
-  }
-}
+```text
+feat/heat-analytics
 ```
 
-By contrast `tcm` returns `properties.average_temperature` / `min_temperature` /
-`max_temperature` (°C) and a `stats_data` carrying `temperature_stats` plus the
-distribution fields. So code that reads `properties.temperature` will find
-nothing on an analysis heatmap — read `properties.value` and interpret it with
-`stats_data.units`.
+### Member 3 — Frontend / Full Stack
 
-Every endpoint has its own method:
+Owns:
 
-| Method | What it does |
-|--------|--------------|
-| `client.create_heatmap(...)` | Thermal map over a polygon AOI |
-| `client.environmental_parameters(...)` | Heat index, AQI, solar irradiance at a point |
-| `client.satellite_segmentation(...)` | Land-cover classes from a satellite tile *(Premium)* |
-| `client.street_view_segmentation(...)` | Segmentation of a ground-level view *(Premium)* |
-| `client.heat_intelligence(...)` | Multi-dimensional PDF report *(Premium)* |
-| `client.fetch_api_key_usage()` | Current billing cycle summary |
-| `client.fetch_api_key_custom_usage(start_date, end_date)` | Usage over a custom window |
-| `client.get_status(activity_id)` | Raw status of a submitted task |
-| `client.wait_for(activity_id)` | Block until a task terminates |
+- dashboard layout,
+- map,
+- heatmap rendering,
+- charts,
+- priority cards/table,
+- resource form,
+- agent result panel,
+- loading/error/empty states,
+- responsiveness,
+- accessibility,
+- final visual polish.
 
-Pass `wait=False` to any analysis method to get the `activity_id` immediately and poll it yourself.
+Suggested branch:
+
+```text
+feat/dashboard
+```
+
+All members review integration PRs.
 
 ---
 
-## Project layout
+## 16. Git Workflow
 
+Protect `main` conceptually even if GitHub branch protection is not configured.
+
+```text
+main
+ |
+ +-- feat/fortyguard-api
+ +-- feat/heat-analytics
+ +-- feat/dashboard
+ +-- feat/agent-planner
 ```
-temperature-api-quickstart/
-├── README.md                 # this file
-├── requirements.txt          # pinned dependencies
-├── .env.example              # template — copy to .env
-├── docs/
-│   └── images/               # README screenshots
-├── fortyguard/               # Python client
-│   ├── client.py             # FortyGuardClient — one method per endpoint
-│   ├── exceptions.py         # FortyGuardError, TaskFailedError, TaskTimeoutError
-│   └── samples.py            # sample polygons and points for demos
-├── data/                     # YOU create this — git-ignored, not shipped with the repo
-│   ├── sample_bus_stops.csv                     # bus-stops use-case input (bring your own)
-│   ├── sample_public_parks.csv                  # parks use-case input (bring your own)
-│   ├── real_estate_san_jose_portfolio_sample.csv  # real-estate use-case input (bring your own)
-│   ├── parcel_diridon_san_jose_sample.geojson   # parcel use-case input — one polygon boundary
-│   ├── parcel_portfolio_san_jose_sample.geojson # multi-parcel screening input — 6 boundaries
-│   └── <subdirs>/            # optional: cached API responses you save to replay with CACHED=True
-│                             #   (heatmaps/, satellite/, street_view/, env_params/)
-├── outputs/                  # generated hand-off bundles — gitignored
-│   └── <usecase>_<STUDY_DATE>/  # one folder per run: CSV + PDF + maps/*.html
-└── notebooks/
-    ├── 00_setup.ipynb                     # auth + credit check — run first
-    ├── 01_create_heatmap.ipynb ... 05_heat_intelligence_report.ipynb
-    └── use_cases/                         # narrative workflows (your data × FortyGuard layers)
-        ├── README.md
-        ├── real_estate_portfolio_heat_risk.ipynb
-        ├── urban_planner_bus_stop_prioritization.ipynb
-        ├── public_parks_heat_resilience_audit.ipynb
-        ├── parcel_site_due_diligence.ipynb    # one parcel boundary, all five endpoints
-        └── parcel_portfolio_heat_screening.ipynb  # many boundaries, ranked shortlist, °F
+
+Workflow:
+
+```text
+Pull latest main
+-> create/update feature branch
+-> make one logical change
+-> test
+-> commit
+-> push
+-> open PR
+-> teammate review
+-> merge
+-> everyone pulls latest main
+```
+
+Prefer small commits such as:
+
+```text
+chore: initialize CoolCity AI project
+docs: define project scope and team plan
+feat: add FortyGuard heatmap client
+feat: add bounded task-status polling
+feat: add Phoenix heatmap visualization
+feat: prepare demographic analysis dataset
+feat: calculate zone risk scores
+feat: add resource allocation agent
+test: cover risk scoring and allocation rules
+docs: add demo and methodology notes
 ```
 
 ---
 
-## Parcel scale vs. city scale
+## 17. Development Order
 
-The three point-based use cases run over a citywide AOI (~104 km²) and rank points against each other. The two parcel notebooks work at building scale, where two things change and the workflow has to change with them.
+Do not start with the LLM.
 
-**A parcel is smaller than a tile.** The finest granularity the heatmap offers is 60 m. A 3.3-acre parcel (140 × 100 m) spans under four tiles, so there is no "hot spot within the parcel" to find, and a nearest-tile lookup would silently discard most of the site. Both parcel notebooks compute an **area-weighted mean** over every tile the boundary overlaps, weighted by overlap area.
-
-**At parcel scale the temperature snapshot is nearly flat — duration is not.** Measured across three AOI sizes:
-
-| AOI | Area | Daily-peak spread | Exceedance spread |
-|---|---|---|---|
-| Citywide (2024-07-15) | 104 km² | 5.85 °C / 10.5 °F | — |
-| Portfolio hull + 400 m (2026-08-03) | 14 km² | **0.94 °C / 1.70 °F** | **6.5 h** |
-| Single parcel + 500 m (2024-07-15) | 1.2 km² | **0.90 °C / 1.62 °F** | **15.2 h** |
-
-Peak temperature barely separates sites below city scale; hours-above-threshold does. So both parcel notebooks lead with `exceedance` and `persistence`. The single-parcel notebook uses a **citywide** percentile as its comparison; the multi-parcel one compares parcels against each other, which is what the larger AOI buys you.
-
-### Reading `heat_index_celsius` correctly
-
-The `env_params` endpoint applies your single `temperature` anchor across **all 24 hours** and varies only humidity. Heat index is a function of both, so the returned series tracks relative humidity — and because humidity peaks overnight, **the heat-index curve peaks around 2 a.m. and bottoms out mid-afternoon**. In the bundled San Jose parcel run it reads 32.5 °C at 02:00 and 27.3 °C at 14:00, while the real air temperature at 02:00 is about 16 °C.
-
-It is a humidity-sensitivity curve at a fixed temperature, not a diurnal forecast. It is only physically meaningful at the hours when actual temperature is near the anchor — the afternoon peak. Compare against a published threshold **at the hot hour** (both parcel notebooks use the hour when `apparent_temperature_celsius`, which does follow the real diurnal cycle, is highest), and take duration from the heatmap `exceedance` layer instead of counting hours in this series.
-
-On a hot day the artifact gets extreme: for 2026-08-03, a 37.2 °C anchor paired with 84% small-hours humidity produces a heat index of **159 °F (70 °C) at 05:00** — well past the end of the NWS table. The multi-parcel notebook scales its chart axis to the physically meaningful series and lets that curve clip off-scale with a note, rather than letting one artifact compress every real curve into the bottom of the panel.
-
-**`env_params` is also coarser than a parcel.** It resolves on a weather grid coarser than parcels within one district are apart — in the bundled screening run, two parcels **1.36 km apart return byte-identical arrays** (same apparent temperature, wet-bulb, humidity, air quality). Only heat index differs between them, and only because each parcel is sent its own `temperature` anchor from the heat layer. Use these curves to characterise the district; use the heatmap layers, which resolve at `GRANULARITY_M`, to discriminate between sites. The multi-parcel notebook detects identical responses and warns explicitly.
-
-### Units
-
-The API returns Celsius throughout. [`parcel_portfolio_heat_screening.ipynb`](notebooks/use_cases/parcel_portfolio_heat_screening.ipynb) displays **Fahrenheit with Celsius in brackets** — `97.4 °F (36.3 °C)` — via three helpers set once in its Setup cell (`tf()` to format, `c2f()` to convert for plotting, `add_celsius_axis()` to mirror a chart axis). Conversion happens only at display time, so stored values, CSV columns, and threshold comparisons all stay in the API's native Celsius and cannot drift from what is shown.
+```text
+1. Repo + Next.js baseline
+2. Documentation
+3. One real FortyGuard request
+4. Store/inspect returned GeoJSON + statistics
+5. Render real heatmap
+6. Build Track 7 analysis pipeline
+7. Produce real zone-level risk scores
+8. Integrate scores into dashboard
+9. Add deterministic resource-allocation logic
+10. Wrap tools with the AI agent
+11. Add explainability/evidence panel
+12. Test end-to-end
+13. Deploy
+14. Rehearse demo
+```
 
 ---
 
-## Useful things to know
+## 18. First Technical Milestone
 
-- **Coverage is U.S. only.** All endpoints operate over locations inside the United States. Polygons / points outside the U.S. will return errors or empty results — don't waste credits on AOIs in other countries.
-- **Date range.** The temperature catalog covers **2021 to today**. Pick a `start_date` on or after `2021-01-01` — earlier dates have no coverage and the request will fail with a "no data available for this area and date" error. Future dates are also unsupported (a `start_date` later than today fails).
-- **Coordinates are `[longitude, latitude]`** in GeoJSON — not the other way around.
-- **Filter types** for endpoints that take `date_time`: `1` = single hour (needs `start_time`), `2` = range of hours (same day; `start_time`+`end_time`), `3` = single day (full 24 h; needs only `start_date` — `start_time` is ignored), `4` = range of days (pass `end_date`; window capped at ~31 days).
-- **Analysis heatmaps.** `create_heatmap` accepts `analytic_type` (`tcm` / `time_of_measure` / `exceedance` / `persistence`) to derive time-of-peak, exceedance-count, or persistence maps from a multi-hour/multi-day window. `exceedance` and `persistence` also need `threshold` (**°C**, same unit as the tile readings) and `direction`. The three analysis types return `properties.value` (units in `stats_data.units`, currently `hour`) instead of the `tcm` temperature fields — see [Analysis heatmaps](#analysis-heatmaps-analytic_type).
-- **Failed tasks are free.** Credits are only deducted once a task reaches `Completed`.
-- **Heat intelligence returns a PDF**, not JSON. The client streams it to `outputs/` and returns the file path.
-- **Cached mode for use-case notebooks.** Each use-case notebook has a `CACHED` flag (default `False` — runs **live**, so you need an API key). The `data/` directory is **not** shipped with the repo (`.gitignore` excludes it); bring your own inputs. If you save a run's responses under `data/` you can flip `CACHED=True` to replay them offline, but a fresh clone starts live-only.
-- **Base URL override.** Point `FORTYGUARD_BASE_URL` at the dev environment (`https://tos-enterprise-api.dev.app.fortyguard.com`) for testing.
+The first technical milestone is intentionally small:
 
----
+> **Generate one real FortyGuard heatmap for a small Phoenix polygon and successfully retrieve the completed result.**
 
-## Troubleshooting
+Success means the team can demonstrate:
 
-| Symptom | Likely cause | Fix |
-|---------|--------------|-----|
-| `FortyGuardError: No API key provided` | `.env` missing or not loaded | Confirm `.env` sits at the repo root and contains `FORTYGUARD_API_KEY=...` |
-| `401` on any call | Wrong key or wrong tier | Check the key in the FortyGuard console; some endpoints are Premium-only |
-| `TaskTimeoutError` | Long-running task | Pass a larger `timeout=` when calling the method (e.g. `timeout=1800`) |
-| `TaskFailedError` | Invalid payload (bad polygon, bad date, area too large) | Read the error message; Basic is capped at 10 mi² heatmaps |
-| Notebook can't import `fortyguard` | Jupyter was launched from inside `notebooks/` | Launch `jupyter lab` from the repo root |
+```text
+POST /v1/heatmap
+-> activity_id
+-> bounded status polling
+-> Completed
+-> map_data
+-> stats_data
+```
+
+Do not build the final agent before this works.
 
 ---
 
-## Extending
+## 19. Testing Expectations
 
-Adding a new endpoint? Drop a new method onto `FortyGuardClient` that calls `self._submit_and_wait("/v1/your-path", payload, ...)` — the submit/poll plumbing is shared. Then add a notebook under `notebooks/` numbered after the existing ones.
+### Backend
+
+- missing API key,
+- invalid request body,
+- FortyGuard 401/403/4xx handling,
+- processing status,
+- completed status,
+- failed status,
+- bounded polling timeout,
+- malformed upstream result.
+
+### Analytics
+
+- missing values,
+- duplicate rows,
+- invalid coordinates,
+- normalization edge cases,
+- correlation method assumptions,
+- stable risk-score output,
+- sensitivity to weight changes.
+
+### Frontend
+
+- loading state,
+- API error state,
+- no-data state,
+- map rendering,
+- resource-form validation,
+- keyboard access,
+- responsive layout.
+
+### Agent
+
+- does not invent tool results,
+- handles insufficient resources,
+- handles zero resources,
+- respects resource counts,
+- references the same risk data shown by the UI,
+- produces a clear explanation,
+- returns a machine-readable structured result where possible.
+
+---
+
+## 20. Definition of Done
+
+The MVP is complete when:
+
+- a real Phoenix FortyGuard heatmap loads,
+- at least one historical/analytical heat metric is used,
+- at least one meaningful non-weather dataset is joined,
+- Track 7 correlation results are reproducible,
+- every zone can receive a documented risk score,
+- the dashboard ranks zones,
+- the user can enter a limited resource inventory,
+- the Track 6 agent calls tools and returns a valid allocation,
+- allocation never exceeds available resource counts,
+- each recommendation includes evidence,
+- secrets stay server-side,
+- the app is deployed,
+- README and project plan are current,
+- the team can demonstrate the entire flow without manually editing data mid-demo.
+
+---
+
+## 21. Challenge Context
+
+- **Build window:** 18–30 August 2026
+- **Submission deadline:** 30 August 2026, 11:59 PM GST (UTC+4)
+- **Team size:** 1–3
+- **Coverage:** U.S. locations only
+- **Challenge data range:** 1 January 2021 to present
+- **Forecast concept:** up to 12 hours ahead where supported
+- **Commercialization expectation:** solve a genuine client problem, not just produce a heatmap demo
+
+For the hackathon submission, keep analyses within the challenge-stated 2021-to-present window even if the API itself supports earlier dates.
+
+---
+
+## 22. External References
+
+FortyGuard documentation:
+
+- https://docs-api.fortyguard.com/
+- https://docs-api.fortyguard.com/docs/quickstart
+- https://docs-api.fortyguard.com/docs/create-heatmap
+- https://docs-api.fortyguard.com/docs/limitations
+- https://docs-api.fortyguard.com/docs/release-notes
+
+Phoenix:
+
+- https://www.phoenix.gov/heat
+
+Public demographic data:
+
+- https://www.census.gov/
+- https://api.census.gov/data.html
+
+---
+
+## 23. One-Sentence Pitch
+
+> **CoolCity AI combines hyperlocal temperature intelligence with demographic vulnerability analysis and a tool-using AI agent to help cities rank heat-risk zones and allocate limited cooling resources where they are needed most.**
+
+---
+
+## 24. Team Rule
+
+Before implementing a major change, ask:
+
+1. Does it improve the core resource-allocation decision?
+2. Does it strengthen Track 6 or Track 7?
+3. Can we demonstrate it reliably before the deadline?
+4. Is it supported by real data rather than an invented value?
+
+If the answer is no, it is probably outside the MVP.
+
+For detailed implementation decisions, methodology, data contracts, schedule, role handoffs, and acceptance criteria, read **`PROJECT_PLAN.md`**.
