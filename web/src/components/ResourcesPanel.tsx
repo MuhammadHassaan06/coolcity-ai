@@ -21,7 +21,7 @@ export default function ResourcesPanel({ resources }: ResourcesPanelProps) {
             Available Resources & Capacity
           </h2>
           <p className="text-[11px] text-gray-500">
-            Current operational status for cooling hubs, water distribution, and medical centers
+            Fixed Facility Capacity • Operational status for cooling hubs, water distribution, and medical centers
           </p>
         </div>
         <span className="text-[11px] font-mono text-gray-500 uppercase">

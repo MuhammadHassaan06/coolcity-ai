@@ -142,3 +142,47 @@ export const dashboardStats: DashboardStats = {
 
 export type ViewMode = "heat" | "risk";
 export type TimePeriod = "current" | "afternoon" | "historical";
+
+export interface DeployableResourceCategory {
+  id: string;
+  name: string;
+  description: string;
+  unitLabel: string;
+  defaultQuantity: number;
+  /** Prototype/demo UI safety bound (prevents extreme form entries; not official municipal limits). */
+  maxSafetyBound: number;
+}
+
+export const DEPLOYABLE_RESOURCE_CATEGORIES: DeployableResourceCategory[] = [
+  {
+    id: "mobile_cooling_units",
+    name: "Mobile Cooling Units",
+    description: "Portable climate-controlled emergency shelter trailers",
+    unitLabel: "Units",
+    defaultQuantity: 12,
+    maxSafetyBound: 100,
+  },
+  {
+    id: "water_stations",
+    name: "Water Stations",
+    description: "Mobile hydration pods & emergency bulk water distribution points",
+    unitLabel: "Stations",
+    defaultQuantity: 25,
+    maxSafetyBound: 200,
+  },
+  {
+    id: "outreach_teams",
+    name: "Outreach Teams",
+    description: "Field emergency health, wellness & hydration response personnel",
+    unitLabel: "Teams",
+    defaultQuantity: 8,
+    maxSafetyBound: 50,
+  },
+];
+
+export const DEFAULT_DEPLOYABLE_INVENTORY: Record<string, number> = {
+  mobile_cooling_units: 12,
+  water_stations: 25,
+  outreach_teams: 8,
+};
+
