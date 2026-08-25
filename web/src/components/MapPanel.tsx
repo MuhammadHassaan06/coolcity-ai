@@ -1,6 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { ViewMode, TimePeriod, priorityZones } from "@/lib/mockData";
+
+const LeafletMap = dynamic(() => import("./LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[380px] bg-slate-950 flex flex-col items-center justify-center text-slate-400 text-xs space-y-2 rounded">
+      <div className="w-5 h-5 border-2 border-slate-700 border-t-cyan-400 rounded-full animate-spin" />
+      <span className="font-mono text-[11px] text-slate-300">Initializing GIS Engine...</span>
+    </div>
+  ),
+});
 
 interface MapPanelProps {
   viewMode: ViewMode;
@@ -45,37 +56,20 @@ export default function MapPanel({
       </div>
 
       {/* Main Map Viewport Area */}
-      <div className="flex-1 bg-slate-50/50 p-6 min-h-[380px] flex flex-col items-center justify-center border-2 border-dashed border-gray-200 m-3 rounded">
-        <div className="max-w-md text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-9 h-9 rounded bg-slate-100 text-slate-600 border border-slate-200">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-              />
-            </svg>
-          </div>
-          <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-            Geographic Operations Viewport
-          </h3>
-          <div className="bg-white p-3 rounded border border-gray-200 shadow-2xs">
-            <p className="text-xs font-medium text-gray-700">
+      <div className="relative flex-1 m-2 min-h-[380px] rounded overflow-hidden border border-gray-200 bg-slate-950">
+        <LeafletMap
+          activeView={viewMode}
+          activePeriod={timePeriod}
+          selectedZone={selectedZoneId ?? null}
+        />
+
+        {/* Floating Non-Intrusive Integration Badge */}
+        <div className="absolute bottom-3 left-3 z-[500] pointer-events-none">
+          <div className="bg-slate-900/90 text-slate-200 border border-slate-700 px-3 py-1.5 rounded text-[11px] shadow-md backdrop-blur-sm flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+            <span className="font-medium">
               Live FortyGuard geographic heat layer integration pending
-            </p>
-          </div>
-          <div className="pt-1 flex items-center justify-center gap-3 text-[11px] font-mono text-gray-500">
-            <span>Lat: 33.4484° N</span>
-            <span>•</span>
-            <span>Lon: 112.0740° W</span>
-            <span>•</span>
-            <span>Target: {selectedZone ? selectedZone.name : "Citywide"}</span>
+            </span>
           </div>
         </div>
       </div>
