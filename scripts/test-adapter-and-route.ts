@@ -24,27 +24,23 @@ async function main() {
   }
 
   const rawJson = JSON.parse(fs.readFileSync(fixturePath, "utf-8"));
-  const { normalizeFortyGuardResponse } = await import("../src/lib/fortyguard/adapter");
+  const { normalizeFortyGuardResponse } = await import("../src/lib/fortyguard/normalize");
 
   const normalized = normalizeFortyGuardResponse(rawJson);
 
   console.log(">>> Normalization Succeeded!");
-  console.log("Activity ID:", normalized.activity_id);
-  console.log("Status:", normalized.status);
-  console.log("Total Zones:", normalized.stats.total_zones);
+  console.log("Source Metadata:", normalized.metadata);
+  console.log("Total Features:", normalized.mapData.features.length);
   console.log("Celsius Stats:", {
-    min: normalized.stats.min_temp_c,
-    max: normalized.stats.max_temp_c,
-    mean: normalized.stats.mean_temp_c,
-    stdDev: normalized.stats.std_dev_c,
+    min: normalized.stats.minTemperature,
+    max: normalized.stats.maxTemperature,
+    mean: normalized.stats.meanTemperature,
+    stdDev: normalized.stats.standardDeviation,
+    unit: normalized.stats.unit,
   });
-  console.log("Fahrenheit Stats:", {
-    min: normalized.stats.min_temp_f,
-    max: normalized.stats.max_temp_f,
-    mean: normalized.stats.mean_temp_f,
-    stdDev: normalized.stats.std_dev_f,
-  });
-  console.log("Sample Zone #0:", JSON.stringify(normalized.zones.features[0].properties, null, 2));
+  if (normalized.mapData.features.length > 0) {
+    console.log("Sample Feature #0 Properties:", JSON.stringify(normalized.mapData.features[0].properties, null, 2));
+  }
   console.log("==================================================");
 }
 

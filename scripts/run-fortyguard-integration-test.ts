@@ -72,17 +72,17 @@ async function runIntegrationTest() {
   // 1. Submit Request
   console.log("\n[STEP 1] Submitting heatmap request...");
   const submitResponse = await submitHeatmap({
-    polygon_aoi: PHOENIX_AOI,
-    date_time: {
-      start_date: "2024-07-15",
-      filter_type: 1,
-      start_time: "14:00",
+    aoi: PHOENIX_AOI,
+    dateTime: {
+      startDate: "2024-07-15",
+      filterType: 1,
+      startTime: "14:00",
     },
     granularity: 100,
-    analytic_type: "tcm",
+    analyticType: "tcm",
   });
 
-  const activityId = submitResponse.data.activity_id;
+  const activityId = submitResponse.data?.activity_id || "";
   console.log(`>>> [SUBMIT SUCCESS] activity_id: ${activityId}`);
   console.log(">>> Submit response metadata:", JSON.stringify({
     error: submitResponse.error || false,

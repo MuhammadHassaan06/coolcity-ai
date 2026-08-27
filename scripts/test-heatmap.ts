@@ -59,12 +59,16 @@ async function main() {
 
   console.log("Sending submitHeatmap request with Phoenix AOI...");
   const submitResult = await submitHeatmap({
-    polygon_aoi: phoenixAOI,
-    granularity: "100m" as any,
-    date_time: "2024-07-15T14:00:00Z" as any,
+    aoi: phoenixAOI,
+    granularity: 100,
+    dateTime: {
+      startDate: "2024-07-15",
+      filterType: 1,
+      startTime: "14:00",
+    },
   });
 
-  const activityId = submitResult.data.activity_id;
+  const activityId = submitResult.data?.activity_id || "";
   console.log(">>> [SUCCESS] Returned activity_id:", activityId);
 
   console.log("Fetching getHeatmapStatus for activity_id:", activityId);

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts"
   },
   "dependencies": {
     "next": "^15.1.7",
