@@ -1,0 +1,151 @@
+{
+  "_meta": {
+    "isMockData": true,
+    "disclaimer": "DEMO/SYNTHETIC MOCK DATA ONLY. This dataset contains artificial test metrics for system development and integration validation. It does NOT represent real Phoenix microclimate or census demographics.",
+    "version": "1.0.0-demo",
+    "updatedAt": "2026-08-27T00:00:00Z"
+  },
+  "zones": [
+    {
+      "id": "MOCK-Z01",
+      "name": "Synthetic District Alpha (Commercial Corridor)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-112.0790, 33.4435],
+            [-112.0690, 33.4435],
+            [-112.0690, 33.4525],
+            [-112.0790, 33.4525],
+            [-112.0790, 33.4435]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "MOCK-Z02",
+      "name": "Synthetic District Beta (High Density Residential)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-112.0690, 33.4435],
+            [-112.0590, 33.4435],
+            [-112.0590, 33.4525],
+            [-112.0690, 33.4525],
+            [-112.0690, 33.4435]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "MOCK-Z03",
+      "name": "Synthetic District Gamma (Canal Park Buffer)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-112.0590, 33.4435],
+            [-112.0490, 33.4435],
+            [-112.0490, 33.4525],
+            [-112.0590, 33.4525],
+            [-112.0590, 33.4435]
+          ]
+        ]
+      }
+    }
+  ],
+  "heatMetrics": [
+    {
+      "zoneId": "MOCK-Z01",
+      "meanTemp": 42.5,
+      "maxTemp": 45.1,
+      "temperatureUnit": "C",
+      "persistenceScore": 85.0,
+      "exceedanceScore": 88.2,
+      "historicalDeviation": 4.5,
+      "dataTimestamp": "2024-07-15T14:00:00Z"
+    },
+    {
+      "zoneId": "MOCK-Z02",
+      "meanTemp": 37.8,
+      "maxTemp": 39.2,
+      "temperatureUnit": "C",
+      "persistenceScore": 62.0,
+      "exceedanceScore": 58.0,
+      "historicalDeviation": 2.1,
+      "dataTimestamp": "2024-07-15T14:00:00Z"
+    },
+    {
+      "zoneId": "MOCK-Z03",
+      "meanTemp": 29.4,
+      "maxTemp": 31.0,
+      "temperatureUnit": "C",
+      "persistenceScore": 20.0,
+      "exceedanceScore": 15.0,
+      "historicalDeviation": -0.5,
+      "dataTimestamp": "2024-07-15T14:00:00Z"
+    }
+  ],
+  "vulnerability": [
+    {
+      "zoneId": "MOCK-Z01",
+      "povertyRate": 0.32,
+      "age65PlusRate": 0.28,
+      "noVehicleRate": 0.22,
+      "compositeScore": 82.5,
+      "sourceYear": 2022
+    },
+    {
+      "zoneId": "MOCK-Z02",
+      "povertyRate": 0.18,
+      "age65PlusRate": 0.15,
+      "noVehicleRate": 0.10,
+      "compositeScore": 48.0,
+      "sourceYear": 2022
+    },
+    {
+      "zoneId": "MOCK-Z03",
+      "povertyRate": 0.08,
+      "age65PlusRate": 0.09,
+      "noVehicleRate": 0.04,
+      "compositeScore": 22.0,
+      "sourceYear": 2022
+    }
+  ],
+  "risks": [
+    {
+      "zoneId": "MOCK-Z01",
+      "totalScore": 86.4,
+      "band": "critical",
+      "components": {
+        "heatExposure": 85.5,
+        "persistence": 85.0,
+        "vulnerability": 82.5,
+        "coolingAccessGap": 75.0
+      }
+    },
+    {
+      "zoneId": "MOCK-Z02",
+      "totalScore": 54.2,
+      "band": "moderate",
+      "components": {
+        "heatExposure": 58.0,
+        "persistence": 62.0,
+        "vulnerability": 48.0,
+        "coolingAccessGap": 40.0
+      }
+    },
+    {
+      "zoneId": "MOCK-Z03",
+      "totalScore": 20.5,
+      "band": "low",
+      "components": {
+        "heatExposure": 22.0,
+        "persistence": 20.0,
+        "vulnerability": 22.0,
+        "coolingAccessGap": 15.0
+      }
+    }
+  ]
+}

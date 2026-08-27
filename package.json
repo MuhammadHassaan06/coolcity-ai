@@ -7,9 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts"
+    "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts tests/analytics-services.test.ts src/lib/resources/__tests__/allocator.test.ts tests/allocation.test.ts tests/agent-workflow.test.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.19.0",
     "next": "^15.1.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
