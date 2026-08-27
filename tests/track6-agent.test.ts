@@ -114,8 +114,8 @@ describe("Track 6 Agentic Planning Engine Test Suite", () => {
     const plan = await runCoolCityPlanningAgent(request);
 
     assert.ok(plan);
-    assert.ok(plan.summary.includes("Operational Deployment Plan"));
-    assert.ok(plan.warnings.some((w) => w.includes("GEMINI_API_KEY not configured")));
+    assert.ok(plan.summary.includes("CoolCity Heat-Relief Deployment Plan"));
+    assert.equal(plan.warnings.length, 0, "Warnings array should remain clean when deterministic plan succeeds");
   });
 
   // TEST 7: Allocation exceeding inventory
