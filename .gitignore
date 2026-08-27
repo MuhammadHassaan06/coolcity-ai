@@ -246,3 +246,19 @@ data/street_view/*
 !data/env_params/
 data/env_params/*
 !data/env_params/env_params_parcel_*.json
+
+# Next.js and Node.js
+node_modules/
+.next/
+out/
+build/
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
