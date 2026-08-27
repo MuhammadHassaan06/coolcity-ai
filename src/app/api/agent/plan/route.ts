@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { runCoolCityAgent, GeminiConfigError } from "@/lib/agent/gemini";
-import { z } from "zod";
+import { runCoolCityPlanningAgent } from "@/lib/agent/agent";
+import { AgentPlanRequestSchema } from "@/lib/agent/schemas";
+import { AgentValidationError, GeminiConfigError } from "@/lib/agent/errors";
 
-export const maxDuration = 60; // Next.js route max duration setting
-
-const AgentPlanRequestSchema = z.object({
-  prompt: z
-    .string({ required_error: "Prompt is required" })
-    .trim()
-    .min(1, "Prompt cannot be empty"),
-});
+export const maxDuration = 60; // Next.js serverless route max duration
 
 /**
  * POST /api/agent/plan
- * Executes the CoolCity AI Autonomous Agentic Planning workflow.
+ * Track 6 Agent Planning Endpoint for CoolCity AI.
+ * Accepts goal, authoritative inventory, and optional zone scope.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -30,37 +25,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate payload against AgentPlanRequestSchema
     const validation = AgentPlanRequestSchema.safeParse(body);
     if (!validation.success) {
+      const issueMsgs = validation.error.issues.map((i) => i.message).join("; ");
       return NextResponse.json(
         {
           success: false,
-          error: "Validation failed: Prompt string is required.",
+          error: `Validation failed: ${issueMsgs}`,
           details: validation.error.flatten(),
         },
         { status: 400 }
       );
     }
 
-    const { prompt } = validation.data;
+    const requestPayload = validation.data;
 
-    // Run the agentic workflow
-    const plan = await runCoolCityAgent(prompt);
+    // Run Track 6 Agentic Workflow
+    const plan = await runCoolCityPlanningAgent(requestPayload);
 
     return NextResponse.json(
       {
         success: true,
-        plan: {
-          summary: plan.summary,
-          toolExecutions: plan.toolExecutions,
-          allocations: plan.allocations,
-          remainingInventory: plan.remainingInventory,
-          warnings: plan.warnings,
-        },
+        plan,
       },
       { status: 200 }
     );
   } catch (error: unknown) {
+    if (error instanceof AgentValidationError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: error.message,
+          details: error.details,
+        },
+        { status: 400 }
+      );
+    }
+
     if (error instanceof GeminiConfigError) {
       return NextResponse.json(
         {
