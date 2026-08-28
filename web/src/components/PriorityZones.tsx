@@ -66,22 +66,22 @@ export default function PriorityZones({
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span className="text-[10px] font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 shrink-0">
                       {zone.code}
                     </span>
                     <h3 className="font-medium text-gray-900 text-xs truncate">
                       {zone.name}
                     </h3>
                   </div>
-                  <p className="text-[11px] text-gray-500 mt-1">
+                  <p className="text-[10px] sm:text-[11px] text-gray-500 mt-1">
                     Pop: {zone.affectedPopulation.toLocaleString()} • Temp:{" "}
                     {zone.avgTemperature}°C
                   </p>
                 </div>
-                <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
+                <div className="flex flex-col items-end gap-0.5 shrink-0">
                   <span
-                    className={`px-2 py-0.5 text-[10px] font-mono font-semibold rounded border ${status.style}`}
+                    className={`px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded border ${status.style}`}
                   >
                     {status.label}
                   </span>

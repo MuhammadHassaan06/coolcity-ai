@@ -15,7 +15,7 @@ const typeLabels: Record<ResourceLocation["type"], string> = {
 export default function ResourcesPanel({ resources }: ResourcesPanelProps) {
   return (
     <div className="bg-white border border-gray-200 rounded">
-      <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex items-center justify-between">
+      <div className="border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-50 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 className="font-semibold text-gray-900 text-sm">
             Available Resources & Capacity
@@ -24,7 +24,7 @@ export default function ResourcesPanel({ resources }: ResourcesPanelProps) {
             Fixed Facility Capacity • Operational status for cooling hubs, water distribution, and medical centers
           </p>
         </div>
-        <span className="text-[11px] font-mono text-gray-500 uppercase">
+        <span className="text-[11px] font-mono text-gray-500 uppercase shrink-0">
           {resources.length} Facilities
         </span>
       </div>

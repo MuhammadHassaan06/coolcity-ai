@@ -30,7 +30,7 @@ export default function MapPanel({
   return (
     <div className="bg-white border border-gray-200 rounded flex flex-col h-full">
       {/* Top Header & Status Bar */}
-      <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex flex-wrap items-center justify-between gap-2">
+      <div className="border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-50 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 className="font-semibold text-gray-900 text-sm">
             Phoenix Operations Map
@@ -39,14 +39,14 @@ export default function MapPanel({
             GIS Viewport • City of Phoenix, Arizona
           </p>
         </div>
-        <div className="flex items-center gap-2 text-[11px]">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px]">
           <span className="px-2 py-0.5 rounded bg-white text-gray-700 font-medium border border-gray-200">
             View: <strong className="text-gray-900">{modeLabel}</strong>
           </span>
           <span className="px-2 py-0.5 rounded bg-white text-gray-700 font-medium border border-gray-200 capitalize">
             Period: <strong className="text-gray-900">{timePeriod}</strong>
           </span>
-          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-medium border border-slate-300">
+          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-medium border border-slate-300 truncate max-w-[160px] sm:max-w-none">
             Target:{" "}
             <strong className="text-slate-950">
               {selectedZone ? `${selectedZone.code}` : "All Monitored Zones"}
@@ -56,7 +56,7 @@ export default function MapPanel({
       </div>
 
       {/* Main Map Viewport Area */}
-      <div className="relative flex-1 m-2 min-h-[380px] rounded overflow-hidden border border-gray-200 bg-slate-950">
+      <div className="relative flex-1 m-2 min-h-[360px] sm:min-h-[400px] rounded overflow-hidden border border-gray-200 bg-slate-950">
         <LeafletMap
           activeView={viewMode}
           activePeriod={timePeriod}
@@ -64,10 +64,10 @@ export default function MapPanel({
         />
 
         {/* Floating Non-Intrusive Integration Badge */}
-        <div className="absolute bottom-3 left-3 z-[500] pointer-events-none">
-          <div className="bg-slate-900/90 text-slate-200 border border-slate-700 px-3 py-1.5 rounded text-[11px] shadow-md backdrop-blur-sm flex items-center space-x-2">
+        <div className="absolute bottom-2 left-2 right-2 sm:right-auto sm:bottom-3 sm:left-3 z-[500] pointer-events-none max-w-[calc(100%-16px)] sm:max-w-md">
+          <div className="bg-slate-900/90 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded text-[10px] sm:text-[11px] shadow-md backdrop-blur-sm flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-            <span className="font-medium">
+            <span className="font-medium leading-tight">
               Live FortyGuard geographic heat layer integration pending
             </span>
           </div>

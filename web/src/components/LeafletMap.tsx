@@ -36,6 +36,26 @@ function FitGeoJsonBounds({ geoData }: { geoData: GeoJSON.GeoJsonObject }) {
   return null;
 }
 
+// Ensures map canvas resizes cleanly when viewport width changes
+function MapResizeHandler() {
+  const map = useMap();
+
+  useEffect(() => {
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener("resize", handleResize);
+    const timer = setTimeout(() => map.invalidateSize(), 200);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
+  }, [map]);
+
+  return null;
+}
+
 interface LeafletMapProps {
   activeView: "heat" | "risk";
   activePeriod: "current" | "afternoon" | "historical";
@@ -90,7 +110,7 @@ export default function LeafletMap({}: LeafletMapProps) {
   };
 
   return (
-    <div className="relative w-full h-full min-h-[380px] bg-slate-950 overflow-hidden rounded">
+    <div className="relative w-full h-full min-h-[360px] sm:min-h-[400px] bg-slate-950 overflow-hidden rounded">
       {/* Interactive Leaflet Map */}
       <MapContainer
         center={PHOENIX_CENTER}
@@ -101,6 +121,7 @@ export default function LeafletMap({}: LeafletMapProps) {
         className="w-full h-full z-0"
         aria-label="City of Phoenix Interactive Map"
       >
+        <MapResizeHandler />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'

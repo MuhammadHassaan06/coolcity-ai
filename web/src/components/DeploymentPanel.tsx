@@ -73,7 +73,7 @@ export default function DeploymentPanel() {
   return (
     <div className="bg-white border border-gray-200 rounded flex flex-col h-full shadow-2xs">
       {/* Header Bar */}
-      <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex flex-wrap items-center justify-between gap-2">
+      <div className="border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-50 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 className="font-semibold text-gray-900 text-sm">
             Deployment Resource Planner
@@ -82,17 +82,17 @@ export default function DeploymentPanel() {
             Track 6 Input Module • City of Phoenix, Arizona
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 uppercase tracking-wide">
             AGENT STATUS: AWAITING TRACK 6 INTEGRATION
           </span>
         </div>
       </div>
 
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-4 bg-slate-50/30">
+      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-3.5 sm:space-y-4 bg-slate-50/30">
         {/* Future Track 6 Integration Context Notice */}
-        <div className="bg-slate-100/80 border border-slate-200 rounded p-3 text-xs text-slate-700 space-y-1.5">
-          <div className="flex items-center justify-between">
+        <div className="bg-slate-100/80 border border-slate-200 rounded p-2.5 sm:p-3 text-xs text-slate-700 space-y-1.5">
+          <div className="flex flex-wrap items-center justify-between gap-1">
             <span className="font-bold text-slate-900 uppercase tracking-wider text-[10px] font-mono">
               Future Agent Execution Inputs
             </span>

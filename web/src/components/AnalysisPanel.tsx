@@ -3,11 +3,13 @@
 export default function AnalysisPanel() {
   return (
     <div className="bg-white border border-gray-200 rounded flex flex-col h-full">
-      <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex items-center justify-between">
-        <h2 className="font-semibold text-gray-900 text-sm">
-          Heat & Vulnerability Analysis
-        </h2>
-        <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-300">
+      <div className="border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
+        <div>
+          <h2 className="font-semibold text-gray-900 text-sm">
+            Heat & Vulnerability Analysis
+          </h2>
+        </div>
+        <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-300 self-start sm:self-auto shrink-0">
           AWAITING TRACK 7 ANALYTICS INTEGRATION
         </span>
       </div>

@@ -39,16 +39,16 @@ export default function Dashboard() {
       />
 
       {/* Main Dashboard Content */}
-      <main className="flex-1 px-4 py-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-4">
+      <main className="flex-1 px-2.5 py-3 sm:px-6 sm:py-4 overflow-x-hidden">
+        <div className="max-w-7xl mx-auto space-y-3.5 sm:space-y-4">
           {/* Selected Zone Operational Filter Status */}
           {selectedZone && (
-            <div className="px-3.5 py-2 bg-slate-900 text-white rounded flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded text-[11px]">
+            <div className="px-3 py-2 bg-slate-900 text-white rounded flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
+                <span className="font-mono bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded text-[11px] shrink-0">
                   {selectedZone.code}
                 </span>
-                <span>
+                <span className="truncate">
                   <strong>Active Filter:</strong> {selectedZone.name} (Risk Score:{" "}
                   {selectedZone.riskScore}, Pop:{" "}
                   {selectedZone.affectedPopulation.toLocaleString()})
@@ -56,7 +56,7 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={() => setSelectedZoneId(undefined)}
-                className="text-slate-300 hover:text-white underline text-[11px] focus:outline-none focus:ring-1 focus:ring-slate-400 rounded px-1"
+                className="text-slate-300 hover:text-white underline text-[11px] focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-1 shrink-0"
               >
                 Clear Filter
               </button>
