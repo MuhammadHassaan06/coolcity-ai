@@ -172,12 +172,12 @@ describe("Track 6 Agentic Planning Engine Test Suite", () => {
     const request = {
       goal: "Verify evidence sources",
       inventory: { mobileCoolingUnits: 1, waterStations: 1, outreachTeams: 1 },
-      zoneIds: ["MOCK-Z01"],
+      zoneIds: ["z-006"],
     };
 
     const plan = await runCoolCityPlanningAgent(request);
 
-    const mockZ1Evidence = plan.evidence.filter((e) => e.zoneId === "MOCK-Z01");
+    const mockZ1Evidence = plan.evidence.filter((e) => e.zoneId === "z-006");
     assert.ok(mockZ1Evidence.length > 0);
 
     const validSources = new Set([

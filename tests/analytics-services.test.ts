@@ -102,23 +102,23 @@ describe("Member 2 Data Contract & Backend Services Test Suite", () => {
     assert.equal(ResourceAllocationSchema.safeParse(validAllocation).success, true);
   });
 
-  // Test 2: Default Demo Data Retrieval
-  it("2. retrieves default mock/demo dataset deterministically", async () => {
+  // Test 2: Default Member 2 Dataset Retrieval
+  it("2. retrieves default Member 2 spatial analytics dataset deterministically", async () => {
     const zones = await getZones();
     assert.ok(zones.length > 0, "Zones array should not be empty");
-    assert.equal(zones[0].id, "MOCK-Z01");
+    assert.equal(zones[0].id, "z-006");
 
-    const heat = await getZoneHeatMetrics("MOCK-Z01");
+    const heat = await getZoneHeatMetrics("z-006");
     assert.ok(heat);
-    assert.equal(heat?.meanTemp, 42.5);
+    assert.equal(heat?.meanTemp, 36.5);
 
-    const vuln = await getZoneVulnerability("MOCK-Z01");
+    const vuln = await getZoneVulnerability("z-006");
     assert.ok(vuln);
-    assert.equal(vuln?.povertyRate, 0.32);
+    assert.equal(vuln?.povertyRate, 0.3683);
 
-    const risk = await getZoneRisk("MOCK-Z01");
+    const risk = await getZoneRisk("z-006");
     assert.ok(risk);
-    assert.equal(risk?.band, "critical");
+    assert.equal(risk?.band, "high");
   });
 
   // Test 3: getAllZoneRisks Sorting
