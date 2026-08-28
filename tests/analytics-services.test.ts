@@ -23,6 +23,7 @@ import {
   resetAnalyticsStore,
 } from "../src/lib/zones/zone-service";
 import { getZoneRisk, getAllZoneRisks, calculateDevelopmentMockRisk } from "../src/lib/risk/risk-service";
+import { getRiskFormulaConfig, setRiskFormulaConfig, resetRiskFormulaConfig } from "../src/lib/risk/config";
 import {
   getSystemResourceInventory,
   updateResourceInventory,
@@ -234,5 +235,21 @@ describe("Member 2 Data Contract & Backend Services Test Suite", () => {
     assert.equal(devMockRisk.zoneId, "DEV-Z01");
     assert.ok(devMockRisk.totalScore > 0);
     assert.ok(devMockRisk.band);
+  });
+
+  // Test 7: Configurable Risk Formula Weightings
+  it("7. supports configurable risk formula weightings and default labels", () => {
+    const config = getRiskFormulaConfig();
+    assert.equal(config.label, "CoolCity prototype heuristic risk score");
+    assert.equal(config.weights.heatExposure, 0.4);
+    assert.equal(config.weights.persistence, 0.3);
+    assert.equal(config.weights.vulnerability, 0.3);
+
+    setRiskFormulaConfig({ weights: { heatExposure: 0.5, persistence: 0.25, vulnerability: 0.25 } });
+    const updated = getRiskFormulaConfig();
+    assert.equal(updated.weights.heatExposure, 0.5);
+
+    resetRiskFormulaConfig();
+    assert.equal(getRiskFormulaConfig().weights.heatExposure, 0.4);
   });
 });

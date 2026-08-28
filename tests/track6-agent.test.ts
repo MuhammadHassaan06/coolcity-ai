@@ -183,6 +183,7 @@ describe("Track 6 Agentic Planning Engine Test Suite", () => {
     const validSources = new Set([
       "FortyGuard / CoolCity Thermal Engine",
       "CoolCity Demographic Vulnerability Index",
+      "CoolCity prototype heuristic risk score",
       "CoolCity deterministic risk model",
     ]);
 
