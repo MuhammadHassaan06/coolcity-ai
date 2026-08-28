@@ -9,25 +9,35 @@ import PriorityZones from "@/components/PriorityZones";
 import ResourcesPanel from "@/components/ResourcesPanel";
 import DeploymentPanel from "@/components/DeploymentPanel";
 import AnalysisPanel from "@/components/AnalysisPanel";
+import { ViewMode, TimePeriod } from "@/types/dashboard";
 import {
-  priorityZones,
-  resources,
-  dashboardStats,
-  type ViewMode,
-  type TimePeriod,
-} from "@/lib/mockData";
+  getDataMode,
+  getDashboardSummary,
+  getPriorityZones,
+  getFacilityResources,
+  getDeployableCategories,
+  getDefaultDeployableInventory,
+} from "@/lib/dataAdapter";
 
 export default function Dashboard() {
   const [viewMode, setViewMode] = useState<ViewMode>("heat");
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("current");
   const [selectedZoneId, setSelectedZoneId] = useState<string | undefined>();
 
+  // Synchronous demo data model retrieval via frontend data access boundary
+  const dataMode = getDataMode();
+  const dashboardStats = getDashboardSummary();
+  const priorityZones = getPriorityZones();
+  const resources = getFacilityResources();
+  const deployableCategories = getDeployableCategories();
+  const defaultDeployableInventory = getDefaultDeployableInventory();
+
   const selectedZone = priorityZones.find((z) => z.id === selectedZoneId);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100/50">
       {/* Header */}
-      <Header dataMode="demo" />
+      <Header dataMode={dataMode} />
 
       {/* Control Bar */}
       <ControlBar
@@ -70,6 +80,7 @@ export default function Dashboard() {
               <MapPanel
                 viewMode={viewMode}
                 timePeriod={timePeriod}
+                selectedZone={selectedZone}
                 selectedZoneId={selectedZoneId}
               />
             </div>
@@ -95,7 +106,10 @@ export default function Dashboard() {
 
           {/* Additional Panels Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-            <DeploymentPanel />
+            <DeploymentPanel
+              categories={deployableCategories}
+              defaultInventory={defaultDeployableInventory}
+            />
             <AnalysisPanel />
           </div>
         </div>

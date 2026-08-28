@@ -1,9 +1,9 @@
 "use client";
 
-import { DashboardStats } from "@/lib/mockData";
+import { DashboardSummary } from "@/types/dashboard";
 
 interface RiskSummaryProps {
-  stats: DashboardStats;
+  stats: DashboardSummary;
 }
 
 export default function RiskSummary({ stats }: RiskSummaryProps) {

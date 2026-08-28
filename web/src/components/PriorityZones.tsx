@@ -1,15 +1,15 @@
 "use client";
 
-import { PriorityZone } from "@/lib/mockData";
+import { PriorityZoneModel } from "@/types/dashboard";
 
 interface PriorityZonesProps {
-  zones: PriorityZone[];
+  zones: PriorityZoneModel[];
   selectedZoneId?: string;
   onZoneSelect: (zoneId: string) => void;
 }
 
 const statusBadge: Record<
-  PriorityZone["status"],
+  PriorityZoneModel["status"],
   { label: string; style: string }
 > = {
   critical: {

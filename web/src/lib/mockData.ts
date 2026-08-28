@@ -1,34 +1,24 @@
 /**
- * Mock data for CoolCity AI dashboard
- * This data is for demonstration purposes only
+ * Raw demo dataset for CoolCity AI dashboard.
+ * Implements pure domain contracts defined in @/types/dashboard.
  */
 
-export interface PriorityZone {
-  id: string;
-  code: string;
-  name: string;
-  riskScore: number;
-  affectedPopulation: number;
-  avgTemperature: number;
-  status: "critical" | "high" | "moderate" | "low";
-}
+import {
+  PriorityZoneModel,
+  FacilityResourceModel,
+  ResourceMetrics,
+  DashboardSummary,
+  DeployableResourceCategory,
+  DeployableInventory,
+} from "@/types/dashboard";
 
-export interface ResourceLocation {
-  id: string;
-  name: string;
-  type: "cooling_center" | "water_distribution" | "medical";
-  capacity: number;
-  available: number;
-}
+// Export type aliases for domain contracts if needed internally
+export type PriorityZone = PriorityZoneModel;
+export type ResourceLocation = FacilityResourceModel;
+export type DashboardStats = DashboardSummary;
+export type { ResourceMetrics };
 
-export interface ResourceMetrics {
-  used: number;
-  available: number;
-  total: number;
-  utilization: number;
-}
-
-export function getResourceMetrics(resource: ResourceLocation): ResourceMetrics {
+export function getResourceMetrics(resource: FacilityResourceModel): ResourceMetrics {
   const total = resource.capacity;
   const available = resource.available;
   const used = Math.max(0, total - available);
@@ -36,16 +26,7 @@ export function getResourceMetrics(resource: ResourceLocation): ResourceMetrics 
   return { used, available, total, utilization };
 }
 
-export interface DashboardStats {
-  totalZonesMonitored: number;
-  criticalZones: number;
-  averageCityTemp: number;
-  overallRiskLevel: string;
-  activeCoolingCenters: number;
-  deployedResources: number;
-}
-
-export const priorityZones: PriorityZone[] = [
+export const priorityZones: PriorityZoneModel[] = [
   {
     id: "z-001",
     code: "PHX-Z01",
@@ -93,7 +74,7 @@ export const priorityZones: PriorityZone[] = [
   },
 ];
 
-export const resources: ResourceLocation[] = [
+export const resources: FacilityResourceModel[] = [
   {
     id: "r-001",
     name: "Downtown Community Center",
@@ -131,7 +112,7 @@ export const resources: ResourceLocation[] = [
   },
 ];
 
-export const dashboardStats: DashboardStats = {
+export const dashboardStats: DashboardSummary = {
   totalZonesMonitored: 18,
   criticalZones: 2,
   averageCityTemp: 45.3,
@@ -139,19 +120,6 @@ export const dashboardStats: DashboardStats = {
   activeCoolingCenters: 4,
   deployedResources: 1200,
 };
-
-export type ViewMode = "heat" | "risk";
-export type TimePeriod = "current" | "afternoon" | "historical";
-
-export interface DeployableResourceCategory {
-  id: string;
-  name: string;
-  description: string;
-  unitLabel: string;
-  defaultQuantity: number;
-  /** Prototype/demo UI safety bound (prevents extreme form entries; not official municipal limits). */
-  maxSafetyBound: number;
-}
 
 export const DEPLOYABLE_RESOURCE_CATEGORIES: DeployableResourceCategory[] = [
   {
@@ -180,9 +148,8 @@ export const DEPLOYABLE_RESOURCE_CATEGORIES: DeployableResourceCategory[] = [
   },
 ];
 
-export const DEFAULT_DEPLOYABLE_INVENTORY: Record<string, number> = {
+export const DEFAULT_DEPLOYABLE_INVENTORY: DeployableInventory = {
   mobile_cooling_units: 12,
   water_stations: 25,
   outreach_teams: 8,
 };
-

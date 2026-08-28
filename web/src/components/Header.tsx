@@ -1,7 +1,9 @@
 "use client";
 
+import { DataMode } from "@/types/dashboard";
+
 interface HeaderProps {
-  dataMode: "live" | "demo";
+  dataMode: DataMode;
 }
 
 export default function Header({ dataMode }: HeaderProps) {

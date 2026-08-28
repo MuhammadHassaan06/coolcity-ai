@@ -1,12 +1,13 @@
 "use client";
 
-import { ResourceLocation, getResourceMetrics } from "@/lib/mockData";
+import { FacilityResourceModel } from "@/types/dashboard";
+import { getResourceMetrics } from "@/lib/dataAdapter";
 
 interface ResourcesPanelProps {
-  resources: ResourceLocation[];
+  resources: FacilityResourceModel[];
 }
 
-const typeLabels: Record<ResourceLocation["type"], string> = {
+const typeLabels: Record<FacilityResourceModel["type"], string> = {
   cooling_center: "Cooling Center",
   water_distribution: "Water Station",
   medical: "Medical Hub",

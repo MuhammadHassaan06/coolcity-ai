@@ -1,6 +1,6 @@
 "use client";
 
-import { ViewMode, TimePeriod } from "@/lib/mockData";
+import { ViewMode, TimePeriod } from "@/types/dashboard";
 
 interface ControlBarProps {
   studyArea: string;

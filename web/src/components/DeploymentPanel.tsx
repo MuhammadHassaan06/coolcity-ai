@@ -1,14 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
+import { DeployableResourceCategory, DeployableInventory } from "@/types/dashboard";
 import {
-  DEPLOYABLE_RESOURCE_CATEGORIES,
-  DEFAULT_DEPLOYABLE_INVENTORY,
-} from "@/lib/mockData";
+  getDeployableCategories,
+  getDefaultDeployableInventory,
+} from "@/lib/dataAdapter";
 
-export default function DeploymentPanel() {
-  const [inventory, setInventory] = useState<Record<string, number>>(
-    DEFAULT_DEPLOYABLE_INVENTORY
+interface DeploymentPanelProps {
+  categories?: DeployableResourceCategory[];
+  defaultInventory?: DeployableInventory;
+}
+
+export default function DeploymentPanel({
+  categories = getDeployableCategories(),
+  defaultInventory = getDefaultDeployableInventory(),
+}: DeploymentPanelProps = {}) {
+  const [inventory, setInventory] = useState<DeployableInventory>(
+    defaultInventory
   );
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isPreviewPrepared, setIsPreviewPrepared] = useState<boolean>(false);
@@ -64,7 +73,7 @@ export default function DeploymentPanel() {
 
   // Reset to demo defaults
   const handleReset = () => {
-    setInventory(DEFAULT_DEPLOYABLE_INVENTORY);
+    setInventory(defaultInventory);
     setValidationError(null);
     setIsPreviewPrepared(false);
     setPreparedTimestamp(null);
@@ -117,7 +126,7 @@ export default function DeploymentPanel() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {DEPLOYABLE_RESOURCE_CATEGORIES.map((cat) => {
+            {categories.map((cat) => {
               const currentVal = inventory[cat.id] ?? 0;
               const inputId = `resource-input-${cat.id}`;
 
@@ -179,7 +188,7 @@ export default function DeploymentPanel() {
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-[11px] font-mono text-gray-700 text-center">
-            {DEPLOYABLE_RESOURCE_CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <div key={cat.id} className="bg-gray-50 p-1.5 rounded border border-gray-150">
                 <span className="block text-[9px] text-gray-400 uppercase truncate">
                   {cat.name}

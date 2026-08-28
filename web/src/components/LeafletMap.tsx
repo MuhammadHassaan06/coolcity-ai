@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { ViewMode, TimePeriod, SpatialLayerData } from "@/types/dashboard";
 
 // Fix default Leaflet marker icon paths in Next.js environment if needed
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
@@ -57,12 +58,16 @@ function MapResizeHandler() {
 }
 
 interface LeafletMapProps {
-  activeView: "heat" | "risk";
-  activePeriod: "current" | "afternoon" | "historical";
+  activeView: ViewMode;
+  activePeriod: TimePeriod;
   selectedZone: string | null;
+  spatialData?: SpatialLayerData;
 }
 
-export default function LeafletMap({}: LeafletMapProps) {
+export default function LeafletMap({
+  spatialData,
+}: LeafletMapProps) {
+  void spatialData;
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);

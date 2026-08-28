@@ -1,7 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { ViewMode, TimePeriod, priorityZones } from "@/lib/mockData";
+import {
+  ViewMode,
+  TimePeriod,
+  PriorityZoneModel,
+  SpatialLayerData,
+} from "@/types/dashboard";
 
 const LeafletMap = dynamic(() => import("./LeafletMap"), {
   ssr: false,
@@ -16,16 +21,19 @@ const LeafletMap = dynamic(() => import("./LeafletMap"), {
 interface MapPanelProps {
   viewMode: ViewMode;
   timePeriod: TimePeriod;
+  selectedZone?: PriorityZoneModel;
   selectedZoneId?: string;
+  spatialData?: SpatialLayerData;
 }
 
 export default function MapPanel({
   viewMode,
   timePeriod,
+  selectedZone,
   selectedZoneId,
+  spatialData,
 }: MapPanelProps) {
   const modeLabel = viewMode === "heat" ? "Heat Exposure" : "Risk Index";
-  const selectedZone = priorityZones.find((z) => z.id === selectedZoneId);
 
   return (
     <div className="bg-white border border-gray-200 rounded flex flex-col h-full">
@@ -60,7 +68,8 @@ export default function MapPanel({
         <LeafletMap
           activeView={viewMode}
           activePeriod={timePeriod}
-          selectedZone={selectedZoneId ?? null}
+          selectedZone={selectedZoneId ?? selectedZone?.id ?? null}
+          spatialData={spatialData}
         />
 
         {/* Floating Non-Intrusive Integration Badge */}
