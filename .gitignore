@@ -246,3 +246,9 @@ data/street_view/*
 !data/env_params/
 data/env_params/*
 !data/env_params/env_params_parcel_*.json
+
+# Track 7 compact processed outputs used for integration/handoff
+!data/processed/
+data/processed/*
+!data/processed/processed_zone_metrics.csv
+!data/processed/processed_zone_metrics.json
