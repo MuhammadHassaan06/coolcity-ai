@@ -1,0 +1,131 @@
+{
+  "study_unit": "Census Tract",
+  "tract_count": 230,
+  "methodology_note": "Pearson and Spearman correlations calculated at the Census Tract level (N=230) after mean-aggregating tile thermal data. Tile-level analysis (N=48,199) was superseded to eliminate pseudoreplication and false statistical significance.",
+  "heat_metrics_tested": [
+    "intensity_score",
+    "temperature"
+  ],
+  "correlations": [
+    {
+      "variable": "poverty_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 230,
+      "pearson_r": -0.1222,
+      "pearson_p_value": 0.06419175157473828,
+      "spearman_rho": -0.1505,
+      "spearman_p_value": 0.02246351030218374,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "elderly_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 230,
+      "pearson_r": 0.1336,
+      "pearson_p_value": 0.042974067137089615,
+      "spearman_rho": 0.1347,
+      "spearman_p_value": 0.04122096307087829,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "no_vehicle_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 230,
+      "pearson_r": 0.0896,
+      "pearson_p_value": 0.17576154996165744,
+      "spearman_rho": 0.1401,
+      "spearman_p_value": 0.03368178278583142,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "minority_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 230,
+      "pearson_r": -0.3437,
+      "pearson_p_value": 8.89736014984297e-08,
+      "spearman_rho": -0.4047,
+      "spearman_p_value": 1.7801246542386328e-10,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "unemployment_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 230,
+      "pearson_r": 0.0036,
+      "pearson_p_value": 0.9571156394806664,
+      "spearman_rho": -0.0144,
+      "spearman_p_value": 0.8283623671140999,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "disability_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 230,
+      "pearson_r": 0.0415,
+      "pearson_p_value": 0.5314969228717515,
+      "spearman_rho": 0.0436,
+      "spearman_p_value": 0.5105456985822235,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "poverty_rate",
+      "heat_metric": "temperature",
+      "sample_size": 230,
+      "pearson_r": -0.1222,
+      "pearson_p_value": 0.06419175157473646,
+      "spearman_rho": -0.1505,
+      "spearman_p_value": 0.02246351030218374,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "elderly_rate",
+      "heat_metric": "temperature",
+      "sample_size": 230,
+      "pearson_r": 0.1336,
+      "pearson_p_value": 0.04297406713708917,
+      "spearman_rho": 0.1347,
+      "spearman_p_value": 0.04122096307087829,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "no_vehicle_rate",
+      "heat_metric": "temperature",
+      "sample_size": 230,
+      "pearson_r": 0.0896,
+      "pearson_p_value": 0.17576154996166202,
+      "spearman_rho": 0.1401,
+      "spearman_p_value": 0.03368178278583142,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "minority_rate",
+      "heat_metric": "temperature",
+      "sample_size": 230,
+      "pearson_r": -0.3437,
+      "pearson_p_value": 8.897360149842902e-08,
+      "spearman_rho": -0.4047,
+      "spearman_p_value": 1.7801246542386328e-10,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "unemployment_rate",
+      "heat_metric": "temperature",
+      "sample_size": 230,
+      "pearson_r": 0.0036,
+      "pearson_p_value": 0.95711563948067,
+      "spearman_rho": -0.0144,
+      "spearman_p_value": 0.8283623671140999,
+      "is_statistically_significant": false
+    },
+    {
+      "variable": "disability_rate",
+      "heat_metric": "temperature",
+      "sample_size": 230,
+      "pearson_r": 0.0415,
+      "pearson_p_value": 0.5314969228717515,
+      "spearman_rho": 0.0436,
+      "spearman_p_value": 0.5105456985822235,
+      "is_statistically_significant": false
+    }
+  ]
+}
