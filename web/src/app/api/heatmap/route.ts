@@ -19,8 +19,8 @@ export const maxDuration = 60; // Next.js route max duration setting (serverless
 /**
  * POST /api/heatmap
  * Accepts a validated CoolCity-specific heatmap request.
- * Supports mode: "single" | "batch-plan".
- * In "batch-plan" mode, performs a dry-run tiling breakdown of the supplied boundary without live network calls.
+ * Supports mode: "batch-plan" (default offline dry-run) | "single" | "batch-execute".
+ * Enforces strict daily limit safety guard and confirmation header for live execution.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -42,14 +42,20 @@ export async function POST(req: NextRequest) {
     }
 
     const coolCityRequest = validationResult.data as unknown as CoolCityHeatmapRequest & {
-      mode?: "single" | "batch-plan";
+      mode?: "single" | "batch-plan" | "batch-execute";
+      maxAreaSqMi?: number;
       maxChunkSpanDegrees?: number;
+      dailyRequestLimit?: number;
     };
 
-    // Dry-run batch planning mode
-    if (coolCityRequest.mode === "batch-plan") {
+    const requestMode = coolCityRequest.mode || "batch-plan";
+
+    // 1. Offline Dry-Run Batch Planning Mode (Default)
+    if (requestMode === "batch-plan") {
       const plan = generateTilingPlan(coolCityRequest.aoi, {
+        maxAreaSqMi: coolCityRequest.maxAreaSqMi,
         maxChunkSpanDegrees: coolCityRequest.maxChunkSpanDegrees,
+        dailyRequestLimit: coolCityRequest.dailyRequestLimit,
       });
 
       return NextResponse.json(
@@ -63,7 +69,48 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Submit request to FortyGuard
+    // 2. Batch Execution Guard Checks
+    if (requestMode === "batch-execute") {
+      const confirmHeader = req.headers.get("x-confirm-batch-execution");
+      if (confirmHeader !== "true") {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: "BATCH_EXECUTION_UNCONFIRMED",
+              message:
+                "Live batch execution requires explicit confirmation header 'x-confirm-batch-execution: true'. Default mode is dry-run planning only.",
+            },
+          },
+          { status: 400 }
+        );
+      }
+
+      const plan = generateTilingPlan(coolCityRequest.aoi, {
+        maxAreaSqMi: coolCityRequest.maxAreaSqMi,
+        dailyRequestLimit: coolCityRequest.dailyRequestLimit,
+      });
+
+      if (!plan.fitsWithinDailyLimit) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: "DAILY_LIMIT_EXCEEDED",
+              message: `Batch execution rejected: Planned requests (${plan.plannedRequests}) exceed configured daily limit (${plan.configuredDailyRequestLimit}). Daily limit safety guard active.`,
+            },
+            plan: {
+              plannedRequests: plan.plannedRequests,
+              configuredDailyRequestLimit: plan.configuredDailyRequestLimit,
+              fitsWithinDailyLimit: false,
+            },
+          },
+          { status: 422 }
+        );
+      }
+    }
+
+    // 3. Single / Confirmed Live Request to FortyGuard
     const submitResponse = await submitHeatmap(coolCityRequest);
     const activityId = submitResponse?.data?.activity_id;
 
@@ -73,7 +120,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Perform bounded server-side polling (max 40s to prevent gateway timeout)
+    // 4. Perform bounded server-side polling (max 40s to prevent gateway timeout)
     const startTime = Date.now();
     const maxPollMs = 40000;
     const pollIntervalMs = 3000;
@@ -117,7 +164,7 @@ export async function POST(req: NextRequest) {
       await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
     }
 
-    // 3. Polling timeout reached
+    // 5. Polling timeout reached
     throw new FortyGuardTimeoutError("Heatmap generation timed out during status polling.");
   } catch (error: unknown) {
     const { response, httpStatus } = toCoolCityErrorResponse(error);

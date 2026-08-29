@@ -1,5 +1,7 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 import { CoolCityHeatmapRequestSchema } from "../src/lib/validation/fortyguard";
 import { normalizeFortyGuardResponse } from "../src/lib/fortyguard/normalize";
 import { FortyGuardStatusResponse } from "../src/lib/fortyguard/types";
@@ -90,10 +92,63 @@ describe("FortyGuard Backend Adapter Test Suite", () => {
     assert.equal(normalized.mapData.features[0].properties.averageTemperatureC, 39.7388);
   });
 
-  it("3. performs full-city dry-run spatial tiling without network calls", () => {
-    const plan = generateTilingPlan(mockSampleAoIPolygon, { maxChunkSpanDegrees: 0.005 });
-    assert.ok(plan.totalSubPolygons > 0);
-    assert.equal(typeof plan.estimatedRequests, "number");
-    assert.equal(plan.subPolygons[0].type, "Feature");
+  it("3. performs full-city dry-run spatial tiling using 10 sq mi max area target", () => {
+    const boundaryPath = path.resolve(__dirname, "../public/data/phoenix-city-boundary.geojson");
+    const geojson = JSON.parse(fs.readFileSync(boundaryPath, "utf-8"));
+
+    const plan = generateTilingPlan(geojson, { maxAreaSqMi: 10.0, dailyRequestLimit: 30 });
+    assert.equal(plan.configuredMaxAreaSqMi, 10.0);
+    assert.equal(plan.chunksExceedingMaxArea, 0);
+    assert.ok(plan.maxChunkAreaSqMi <= 10.0);
+    assert.ok(plan.plannedRequests > 0);
+    assert.equal(plan.fitsWithinDailyLimit, false); // 64 > 30
+    assert.ok(plan.warnings.length > 0);
+  });
+
+  it("4. performs full-city dry-run spatial tiling using 50 sq mi max area target", () => {
+    const boundaryPath = path.resolve(__dirname, "../public/data/phoenix-city-boundary.geojson");
+    const geojson = JSON.parse(fs.readFileSync(boundaryPath, "utf-8"));
+
+    const plan = generateTilingPlan(geojson, { maxAreaSqMi: 50.0, dailyRequestLimit: 30 });
+    assert.equal(plan.configuredMaxAreaSqMi, 50.0);
+    assert.equal(plan.chunksExceedingMaxArea, 0);
+    assert.ok(plan.maxChunkAreaSqMi <= 50.0);
+    assert.ok(plan.plannedRequests <= 30);
+    assert.equal(plan.fitsWithinDailyLimit, true);
+    assert.equal(plan.warnings.length, 0);
+  });
+
+  it("5. rejects malformed, zero, or negative max area configuration", () => {
+    assert.throws(() => {
+      generateTilingPlan(mockSampleAoIPolygon, { maxAreaSqMi: 0 });
+    }, /Invalid maxAreaSqMi configuration/);
+
+    assert.throws(() => {
+      generateTilingPlan(mockSampleAoIPolygon, { maxAreaSqMi: -15 });
+    }, /Invalid maxAreaSqMi configuration/);
+  });
+
+  it("6. supports Polygon, MultiPolygon, Feature, and FeatureCollection geometries", () => {
+    const polygonGeom = mockSampleAoIPolygon;
+    const featureGeom = { type: "Feature", geometry: mockSampleAoIPolygon };
+    const featureColl = { type: "FeatureCollection", features: [featureGeom] };
+
+    const plan1 = generateTilingPlan(polygonGeom, { maxAreaSqMi: 10 });
+    const plan2 = generateTilingPlan(featureGeom, { maxAreaSqMi: 10 });
+    const plan3 = generateTilingPlan(featureColl, { maxAreaSqMi: 10 });
+
+    assert.ok(plan1.plannedRequests > 0);
+    assert.ok(plan2.plannedRequests > 0);
+    assert.ok(plan3.plannedRequests > 0);
+  });
+
+  it("7. verifies area-aware planner replaces unscalable 640-request fixed degree grid", () => {
+    const boundaryPath = path.resolve(__dirname, "../public/data/phoenix-city-boundary.geojson");
+    const geojson = JSON.parse(fs.readFileSync(boundaryPath, "utf-8"));
+
+    const planDefault = generateTilingPlan(geojson, { maxAreaSqMi: 25.0 });
+    assert.ok(planDefault.plannedRequests < 640);
+    assert.equal(planDefault.plannedRequests, 35); // 35 planned requests vs 640 fixed degree tiles
+    assert.equal(planDefault.planningOnly, true);
   });
 });
