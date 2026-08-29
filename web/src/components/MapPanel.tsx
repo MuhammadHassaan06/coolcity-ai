@@ -77,7 +77,7 @@ export default function MapPanel({
           <div className="bg-slate-900/90 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded text-[10px] sm:text-[11px] shadow-md backdrop-blur-sm flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
             <span className="font-medium leading-tight">
-              Live FortyGuard geographic heat layer integration pending
+              Official Phoenix boundary • Full-city heat analytics
             </span>
           </div>
         </div>

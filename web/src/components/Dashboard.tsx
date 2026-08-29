@@ -41,7 +41,7 @@ export default function Dashboard() {
 
       {/* Control Bar */}
       <ControlBar
-        studyArea="City of Phoenix, Arizona (Partial Study Area)"
+        studyArea="City of Phoenix, Arizona (Full-City Coverage)"
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         timePeriod={timePeriod}

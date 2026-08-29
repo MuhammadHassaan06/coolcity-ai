@@ -19,7 +19,6 @@ lib/
 lib64/
 parts/
 sdist/
-var/
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -97,8 +96,6 @@ ipython_config.py
 
 # UV
 #   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
 #uv.lock
 
 # poetry
@@ -215,19 +212,6 @@ outputs/
 .scratch/
 
 # Project data — sample CSVs, cached API responses, live captures.
-# By default nothing under data/ ships with the repo; users bring their own
-# input files and any cached responses they want to reuse.
-#
-# ...with one deliberate exception: the two parcel use-case notebooks ship
-# their inputs AND their cached API responses, so they run end-to-end on a
-# fresh clone with no API key and no credits spent. A parcel boundary is not
-# something a user can invent the way they can invent a point list, and these
-# two notebooks are the ones we demo. ~6.9 MB, mostly base64 imagery in the
-# satellite / street-view responses.
-#
-# Note the shape: git will not descend into an excluded *directory*, so each
-# level has to be re-excluded with `dir/*` before a file inside it can be
-# re-included. `data/` on its own would make every negation below a no-op.
 data/*
 !data/parcel_diridon_san_jose_sample.geojson
 !data/parcel_portfolio_san_jose_sample.geojson
@@ -248,5 +232,7 @@ data/street_view/*
 data/env_params/*
 !data/env_params/env_params_parcel_*.json
 
-# Local live FortyGuard validation artifacts
-web/data/live-validation/
+# Local live FortyGuard validation & full-city run artifacts
+web/data/
+data/full-city-run/
+scratch/

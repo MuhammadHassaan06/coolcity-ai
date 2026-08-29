@@ -1,7 +1,7 @@
 {
   "analysis_type": "Census-Tract Level Weighting Sensitivity Analysis",
   "statistical_unit": "Census Tract",
-  "tract_count": 230,
+  "tract_count": 359,
   "scenarios": {
     "Scenario_A": {
       "intensity_weight": 0.4,
@@ -21,63 +21,63 @@
   },
   "spearman_rank_correlation_with_baseline": {
     "Scenario_A_vs_B": {
-      "rho": 0.9862,
-      "p_value": 4.767276880763109e-180
+      "rho": 0.9895,
+      "p_value": 4.0567746583425703e-302
     },
     "Scenario_C_vs_B": {
-      "rho": 0.9906,
-      "p_value": 7.381010774550995e-199
+      "rho": 0.988,
+      "p_value": 9.269323267473446e-292
     }
   },
   "risk_band_shifts_from_baseline": {
     "Scenario_A_vs_B": {
-      "tracts_changed": 62,
-      "percentage": 27.0
+      "tracts_changed": 52,
+      "percentage": 14.5
     },
     "Scenario_C_vs_B": {
-      "tracts_changed": 26,
-      "percentage": 11.3
+      "tracts_changed": 113,
+      "percentage": 31.5
     }
   },
   "top_10_prioritization_stability": {
     "top_10_baseline_geoids": [
+      "04013114900",
       "04013113900",
-      "04013092311",
-      "04013092307",
-      "04013092402",
       "04013113301",
-      "04013106100",
+      "04013114302",
       "04013107403",
-      "04013981000",
-      "04013106801",
-      "04013092500"
+      "04013115300",
+      "04013114301",
+      "04013114000",
+      "04013117300",
+      "04013113100"
     ],
     "top_10_scenario_A_geoids": [
-      "04013113900",
-      "04013092311",
-      "04013107403",
-      "04013113301",
-      "04013092402",
-      "04013092307",
       "04013114900",
-      "04013106100",
-      "04013981000",
-      "04013106801"
+      "04013113900",
+      "04013113301",
+      "04013107403",
+      "04013114302",
+      "04013115300",
+      "04013117300",
+      "04013112202",
+      "04013114000",
+      "04013114301"
     ],
     "top_10_scenario_C_geoids": [
-      "04013092311",
-      "04013092307",
+      "04013114900",
       "04013113900",
-      "04013092402",
-      "04013981000",
-      "04013106100",
+      "04013114302",
       "04013113301",
-      "04013113701",
-      "04013092500",
-      "04013110802"
+      "04013115300",
+      "04013114301",
+      "04013114000",
+      "04013114100",
+      "04013113100",
+      "04013107403"
     ],
     "overlap_A_with_baseline": "9 / 10",
-    "overlap_C_with_baseline": "8 / 10"
+    "overlap_C_with_baseline": "9 / 10"
   },
   "disclaimer": "Sensitivity analysis demonstrates prioritization stability under heuristic weight shifts. It does NOT imply clinical or epidemiological validation of any weight choice."
 }

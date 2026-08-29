@@ -12,7 +12,7 @@ export default function RiskSummary({ stats }: RiskSummaryProps) {
       <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex items-center justify-between">
         <h2 className="font-semibold text-gray-900 text-sm">City Risk Summary</h2>
         <span className="text-[10px] font-mono text-gray-500 uppercase bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-          Partial Phoenix Study Area
+          Full-City Phoenix Coverage
         </span>
       </div>
       <div className="p-3">

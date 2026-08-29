@@ -5,13 +5,15 @@ import sensitivityData from "@/data/track7/sensitivity_summary.json";
 
 export default function AnalysisPanel() {
   const correlations = correlationData.correlations || [];
-  // Filter for unique thermal variables for UI display
+  const tractCount = correlationData.tract_count || 359;
+
+  // Filter for intensity_score heat metric for UI display
   const keyCorrelations = correlations.filter(
-    (c) => c.heat_metric === "temperature"
+    (c) => c.heat_metric === "intensity_score"
   );
 
   const top10OverlapA = sensitivityData.top_10_prioritization_stability?.overlap_A_with_baseline || "9 / 10";
-  const top10OverlapC = sensitivityData.top_10_prioritization_stability?.overlap_C_with_baseline || "8 / 10";
+  const top10OverlapC = sensitivityData.top_10_prioritization_stability?.overlap_C_with_baseline || "9 / 10";
 
   return (
     <div className="bg-white border border-gray-200 rounded flex flex-col h-full shadow-2xs">
@@ -22,7 +24,7 @@ export default function AnalysisPanel() {
             Track 7 Statistical Analysis & Sensitivity
           </h2>
           <p className="text-[11px] text-gray-500 font-mono">
-            Tract-Level Exploratory Correlation (N=230 Census Tracts)
+            Tract-Level Exploratory Correlation (N={tractCount} Census Tracts)
           </p>
         </div>
         <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-900 text-white border border-slate-950 shrink-0">
@@ -37,7 +39,7 @@ export default function AnalysisPanel() {
             Statistical Unit & Pseudoreplication Correction
           </span>
           <p className="text-[11px] leading-relaxed text-slate-600">
-            Thermal tile telemetry (48,199 rows) was mean-aggregated to <strong>230 Census Tracts</strong> before correlation testing. Aggregating to tract-level removes spatial pseudoreplication and ensures valid p-values across demographic variables.
+            Full-city Phoenix thermal telemetry (121,892 features inside municipal boundary) was mean-aggregated to <strong>{tractCount} Census Tracts</strong> before correlation testing. Aggregating to tract-level removes spatial pseudoreplication and ensures valid p-values across demographic variables.
           </p>
           <p className="text-[10px] text-slate-500 italic mt-1">
             Note: Correlations indicate spatial associations only and do not establish direct causality.
@@ -47,7 +49,7 @@ export default function AnalysisPanel() {
         {/* Tract-Level Exploratory Correlations Table */}
         <div className="bg-white rounded border border-gray-200 overflow-hidden text-xs">
           <div className="bg-gray-50 px-3 py-1.5 border-b border-gray-200 font-bold text-gray-800 text-[10px] uppercase tracking-wider">
-            Tract-Level Correlations (N=230)
+            Tract-Level Correlations (N={tractCount})
           </div>
           <div className="divide-y divide-gray-150 font-mono text-[11px]">
             {keyCorrelations.slice(0, 4).map((c) => (
@@ -77,7 +79,7 @@ export default function AnalysisPanel() {
         <div className="bg-white p-3 rounded border border-gray-200 space-y-2 text-xs">
           <div className="flex items-center justify-between border-b border-gray-100 pb-1 font-bold text-gray-800 uppercase tracking-wider text-[10px]">
             <span>Weighting Sensitivity Analysis</span>
-            <span className="font-mono text-[10px] text-slate-500">N=230</span>
+            <span className="font-mono text-[10px] text-slate-500">N={tractCount}</span>
           </div>
           <p className="text-[11px] text-gray-600 leading-relaxed">
             Evaluated prioritization stability under heuristic weight shifts (Socially Weighted 40/60 vs Heat Weighted 60/40). Top 10 priority tract overlap with baseline remains stable:

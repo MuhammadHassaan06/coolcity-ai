@@ -11,7 +11,8 @@
     "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts tests/analytics-services.test.ts tests/allocation.test.ts tests/agent-workflow.test.ts tests/track6-agent.test.ts",
     "sync-data": "node scripts/sync-track7-data.mjs",
     "test-tiling": "npx tsx scripts/test-phoenix-tiling.ts",
-    "validate-chunk": "npx tsx -r ./tests/mock-server-only.cjs scripts/validate-live-chunk.ts"
+    "validate-chunk": "npx tsx -r ./tests/mock-server-only.cjs scripts/validate-live-chunk.ts",
+    "collect-full-city": "npx tsx -r ./tests/mock-server-only.cjs scripts/collect-full-city-heat.ts"
   },
   "dependencies": {
     "@google/genai": "^2.19.0",
