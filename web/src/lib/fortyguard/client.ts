@@ -21,13 +21,27 @@ export async function submitHeatmap(
   const apiKey = getApiKey();
   const url = `${FORTYGUARD_BASE_URL}/heatmap`;
 
+  const rawReq = (requestPayload as unknown) as Record<string, unknown>;
+  const rawDateTime = (rawReq.date_time || rawReq.dateTime || {}) as Record<string, unknown>;
+
+  const upstreamPayload = {
+    polygon_aoi: rawReq.polygon_aoi || rawReq.aoi,
+    date_time: {
+      start_date: rawDateTime.start_date || rawDateTime.startDate || "2024-07-15",
+      filter_type: rawDateTime.filter_type ?? rawDateTime.filterType ?? 1,
+      start_time: rawDateTime.start_time || rawDateTime.startTime || "14:00",
+    },
+    granularity: rawReq.granularity ?? 100,
+    analytic_type: rawReq.analytic_type || rawReq.analyticType || "tcm",
+  };
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "api-key": apiKey,
     },
-    body: JSON.stringify(requestPayload),
+    body: JSON.stringify(upstreamPayload),
   });
 
   if (!response.ok) {

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts tests/analytics-services.test.ts tests/allocation.test.ts tests/agent-workflow.test.ts tests/track6-agent.test.ts",
     "sync-data": "node scripts/sync-track7-data.mjs",
-    "test-tiling": "npx tsx scripts/test-phoenix-tiling.ts"
+    "test-tiling": "npx tsx scripts/test-phoenix-tiling.ts",
+    "validate-chunk": "npx tsx -r ./tests/mock-server-only.cjs scripts/validate-live-chunk.ts"
   },
   "dependencies": {
     "@google/genai": "^2.19.0",

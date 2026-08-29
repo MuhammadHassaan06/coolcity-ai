@@ -247,3 +247,6 @@ data/street_view/*
 !data/env_params/
 data/env_params/*
 !data/env_params/env_params_parcel_*.json
+
+# Local live FortyGuard validation artifacts
+web/data/live-validation/
