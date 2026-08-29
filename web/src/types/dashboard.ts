@@ -11,6 +11,7 @@ export interface PriorityZoneModel {
   id: string;
   code: string;
   name: string;
+  geoid: string;
   riskScore: number;
   affectedPopulation: number;
   avgTemperature: number;

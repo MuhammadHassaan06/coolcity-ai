@@ -1,0 +1,20 @@
+{
+  "studyArea": "Central Phoenix Heat Corridor",
+  "coverageStatus": "partial-study-area",
+  "statisticalUnit": "Census Tract",
+  "tileCount": 48199,
+  "tractCount": 230,
+  "representedTractPopulation": 964706,
+  "representedTractPopulationNote": "sum of Census populations for tracts represented/intersected by the current heat study area",
+  "riskModelStatus": "prototype heuristic weighting",
+  "riskFormula": "0.50 * intensity_score + 0.50 * vulnerability_score",
+  "persistenceAvailable": false,
+  "historicalBaselineVerified": false,
+  "canonicalOutputs": [
+    "data/processed/phoenix_tract_risk.json",
+    "data/processed/phoenix_tract_risk.csv",
+    "data/processed/correlation_summary.json",
+    "data/processed/sensitivity_summary.json",
+    "data/processed/track7_summary.json"
+  ]
+}

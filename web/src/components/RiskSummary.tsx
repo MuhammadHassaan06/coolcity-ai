@@ -8,25 +8,25 @@ interface RiskSummaryProps {
 
 export default function RiskSummary({ stats }: RiskSummaryProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded">
+    <div className="bg-white border border-gray-200 rounded shadow-2xs">
       <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex items-center justify-between">
         <h2 className="font-semibold text-gray-900 text-sm">City Risk Summary</h2>
-        <span className="text-[11px] font-mono text-gray-500 uppercase">
-          Status Overview
+        <span className="text-[10px] font-mono text-gray-500 uppercase bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+          Partial Phoenix Study Area
         </span>
       </div>
       <div className="p-3">
         <div className="grid grid-cols-2 gap-2.5">
           <div className="bg-gray-50/80 border border-gray-200 rounded p-2.5">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-              Critical Zones
+              Critical Tracts
             </p>
             <div className="flex items-baseline gap-1.5 mt-1">
               <span className="text-xl font-bold text-red-700">
                 {stats.criticalZones}
               </span>
               <span className="text-[11px] text-gray-600">
-                / {stats.totalZonesMonitored} total
+                / {stats.totalZonesMonitored} tracts
               </span>
             </div>
             <p className="text-[10px] text-gray-500 mt-0.5">High urgency response</p>
@@ -42,13 +42,13 @@ export default function RiskSummary({ stats }: RiskSummaryProps) {
               </span>
             </div>
             <p className="text-[10px] font-medium text-amber-800 mt-0.5">
-              Demo risk band
+              Authoritative Track 7 composite
             </p>
           </div>
 
           <div className="bg-gray-50/80 border border-gray-200 rounded p-2.5">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-              Avg City Temp
+              Avg Surface Temp
             </p>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="text-xl font-bold text-gray-900">
@@ -56,7 +56,7 @@ export default function RiskSummary({ stats }: RiskSummaryProps) {
               </span>
               <span className="text-xs font-semibold text-gray-600">°C</span>
             </div>
-            <p className="text-[10px] text-gray-500 mt-0.5">Across monitored zones</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">FortyGuard study area mean</p>
           </div>
 
           <div className="bg-gray-50/80 border border-gray-200 rounded p-2.5">

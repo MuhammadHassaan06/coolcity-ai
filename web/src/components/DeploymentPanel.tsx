@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { DeployableResourceCategory, DeployableInventory } from "@/types/dashboard";
+import { AgentPlanResponse } from "@/types/agent";
+import { ResourceAllocation } from "@/types/allocation";
 import {
   getDeployableCategories,
   getDefaultDeployableInventory,
@@ -10,17 +12,19 @@ import {
 interface DeploymentPanelProps {
   categories?: DeployableResourceCategory[];
   defaultInventory?: DeployableInventory;
+  selectedZoneId?: string;
 }
 
 export default function DeploymentPanel({
   categories = getDeployableCategories(),
   defaultInventory = getDefaultDeployableInventory(),
+  selectedZoneId,
 }: DeploymentPanelProps = {}) {
-  const [inventory, setInventory] = useState<DeployableInventory>(
-    defaultInventory
-  );
+  const [inventory, setInventory] = useState<DeployableInventory>(defaultInventory);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [isPreviewPrepared, setIsPreviewPrepared] = useState<boolean>(false);
+  const [isPlanning, setIsPlanning] = useState<boolean>(false);
+  const [planResult, setPlanResult] = useState<AgentPlanResponse | null>(null);
+  const [planningMode, setPlanningMode] = useState<"agent" | "deterministic-fallback">("agent");
   const [preparedTimestamp, setPreparedTimestamp] = useState<string | null>(null);
 
   // Compute live total deployable resources
@@ -29,15 +33,13 @@ export default function DeploymentPanel({
     0
   );
 
-  // Handle numeric input updates with strict validation & demo safety bounds
+  // Handle numeric input updates
   const handleQuantityChange = (
     id: string,
     rawValue: string,
     maxSafetyBound: number
   ) => {
-    // Clear previous validation alert & preview when inputs change
     setValidationError(null);
-    setIsPreviewPrepared(false);
 
     if (rawValue.trim() === "") {
       setInventory((prev) => ({ ...prev, [id]: 0 }));
@@ -45,37 +47,69 @@ export default function DeploymentPanel({
     }
 
     const parsed = parseInt(rawValue, 10);
-
     if (isNaN(parsed)) {
       setInventory((prev) => ({ ...prev, [id]: 0 }));
       return;
     }
 
-    // Normalize: integer, min 0, max prototype safety bound
     const sanitized = Math.min(maxSafetyBound, Math.max(0, Math.floor(parsed)));
     setInventory((prev) => ({ ...prev, [id]: sanitized }));
   };
 
-  // Prepare deployment request preview (local-only)
-  const handlePrepareRequest = () => {
+  // Submit allocation request to POST /api/agent/plan
+  const handleGeneratePlan = async () => {
     if (totalResources === 0) {
       setValidationError(
-        "Cannot prepare deployment request: At least one deployable resource unit must be allocated (Total: 0)."
+        "Cannot generate deployment plan: At least one deployable resource unit must be available in inventory."
       );
-      setIsPreviewPrepared(false);
       return;
     }
 
     setValidationError(null);
-    setPreparedTimestamp(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-    setIsPreviewPrepared(true);
+    setIsPlanning(true);
+
+    const payload = {
+      goal: selectedZoneId
+        ? `Deploy heat relief resources targeting priority Census Tract GEOID ${selectedZoneId}`
+        : "Deploy heat relief resources to highest-risk Census Tracts in Phoenix study area",
+      inventory: {
+        mobileCoolingUnits: inventory.mobile_cooling_units ?? 0,
+        waterStations: inventory.water_stations ?? 0,
+        outreachTeams: inventory.outreach_teams ?? 0,
+      },
+      zoneIds: selectedZoneId ? [selectedZoneId] : undefined,
+    };
+
+    try {
+      const res = await fetch("/api/agent/plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to generate deployment plan from backend");
+      }
+
+      const plan: AgentPlanResponse = data.plan;
+      setPlanResult(plan);
+      setPlanningMode(plan.metadata?.mode === "agent" ? "agent" : "deterministic-fallback");
+      setPreparedTimestamp(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An unexpected error occurred while communicating with agent service";
+      setValidationError(errMsg);
+    } finally {
+      setIsPlanning(false);
+    }
   };
 
   // Reset to demo defaults
   const handleReset = () => {
     setInventory(defaultInventory);
     setValidationError(null);
-    setIsPreviewPrepared(false);
+    setPlanResult(null);
     setPreparedTimestamp(null);
   };
 
@@ -88,29 +122,27 @@ export default function DeploymentPanel({
             Deployment Resource Planner
           </h2>
           <p className="text-[11px] text-gray-500 font-mono">
-            Track 6 Input Module • City of Phoenix, Arizona
+            Track 6 Agentic Optimizer • City of Phoenix, Arizona
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 uppercase tracking-wide">
-            AGENT STATUS: AWAITING TRACK 6 INTEGRATION
+          <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-900 border border-emerald-300 uppercase tracking-wide">
+            TRACK 6 ACTIVE
           </span>
         </div>
       </div>
 
       <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-3.5 sm:space-y-4 bg-slate-50/30">
-        {/* Future Track 6 Integration Context Notice */}
+        {/* Track 6 Agent Execution Context Notice */}
         <div className="bg-slate-100/80 border border-slate-200 rounded p-2.5 sm:p-3 text-xs text-slate-700 space-y-1.5">
           <div className="flex flex-wrap items-center justify-between gap-1">
             <span className="font-bold text-slate-900 uppercase tracking-wider text-[10px] font-mono">
-              Future Agent Execution Inputs
+              Agentic Resource Allocation
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">Input Staging Only</span>
+            <span className="text-[10px] text-slate-500 font-mono">POST /api/agent/plan</span>
           </div>
           <p className="text-[11px] leading-relaxed text-slate-600">
-            Configure mobile resource inventory to submit to the future allocation agent.
-            The upcoming Track 6 agent will consume: <strong>(1) priority-zone microclimate risk</strong>,{" "}
-            <strong>(2) available deployable inventory</strong>, and <strong>(3) service allocation constraints</strong> to compute emergency deployment recommendations.
+            Submits municipal resource inventory to the Track 6 agent. The backend optimizes allocations across <strong>Track 7 Census Tract risk scores</strong> while enforcing strict inventory caps via the <strong>deterministic allocator engine</strong>.
           </p>
         </div>
 
@@ -118,10 +150,10 @@ export default function DeploymentPanel({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
-              Prototype Deployable Inventory
+              Staging Inventory
             </h3>
             <span className="text-[10px] text-gray-500 font-mono">
-              Demo UI safety bounds enforced
+              {selectedZoneId ? `Focused on GEOID: ${selectedZoneId}` : "All Monitored Tracts"}
             </span>
           </div>
 
@@ -160,15 +192,11 @@ export default function DeploymentPanel({
                           handleQuantityChange(cat.id, e.target.value, cat.maxSafetyBound)
                         }
                         className="w-20 px-2 py-1 text-xs font-mono font-bold bg-white text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-right"
-                        aria-describedby={`${inputId}-hint`}
                       />
                       <span className="text-[11px] text-gray-600 font-medium">
                         {cat.unitLabel}
                       </span>
                     </div>
-                    <span id={`${inputId}-hint`} className="text-[9px] text-gray-400 font-mono">
-                      Max {cat.maxSafetyBound}
-                    </span>
                   </div>
                 </div>
               );
@@ -183,7 +211,7 @@ export default function DeploymentPanel({
               Deployable Inventory Summary
             </span>
             <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-              Total: {totalResources} Units
+              Total Available: {totalResources} Units
             </span>
           </div>
 
@@ -199,7 +227,7 @@ export default function DeploymentPanel({
           </div>
         </div>
 
-        {/* Textual ARIA Validation Banner */}
+        {/* Validation Alert */}
         {validationError && (
           <div
             role="alert"
@@ -216,56 +244,88 @@ export default function DeploymentPanel({
           </div>
         )}
 
-        {/* Local Deployment Request Preview Panel (Inline) */}
-        {isPreviewPrepared && (
+        {/* Live Agent Plan Results Display */}
+        {planResult && (
           <div
             aria-live="polite"
             className="bg-slate-900 text-slate-100 border border-slate-700 rounded p-3.5 space-y-3 shadow-md"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div className="flex flex-wrap items-center justify-between border-b border-slate-800 pb-2 gap-2">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <h4 className="font-bold text-xs uppercase tracking-wider text-slate-100">
-                  Preview Only — No Agent Request Sent
+                  Recommended Deployment Plan
                 </h4>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">
-                Staged at {preparedTimestamp}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700">
+                  {planningMode === "agent" ? "AI-assisted plan" : "Deterministic fallback plan"}
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">
+                  {preparedTimestamp}
+                </span>
+              </div>
+            </div>
+
+            {/* Executive Summary */}
+            <p className="text-[11px] text-slate-200 leading-relaxed font-sans bg-slate-950 p-2.5 rounded border border-slate-800">
+              {planResult.summary}
+            </p>
+
+            {/* Resource Allocation Table */}
+            <div className="space-y-1.5">
+              <h5 className="text-[10px] font-mono uppercase font-bold text-slate-400">
+                Tract-Level Resource Allocations
+              </h5>
+              <div className="bg-slate-950 rounded border border-slate-800 overflow-hidden text-[11px] font-mono">
+                <table className="w-full text-left divide-y divide-slate-800">
+                  <thead className="bg-slate-900 text-slate-400 text-[10px] uppercase">
+                    <tr>
+                      <th className="p-2">Census Tract</th>
+                      <th className="p-2">Resource Type</th>
+                      <th className="p-2 text-center">Quantity Allocated</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 text-slate-200">
+                    {planResult.allocations.map((alloc: ResourceAllocation, idx: number) => (
+                      <tr key={`${alloc.zoneId}-${alloc.resourceType}-${idx}`}>
+                        <td className="p-2 text-slate-100 font-bold">{alloc.zoneId}</td>
+                        <td className="p-2 text-slate-300 font-mono capitalize">
+                          {alloc.resourceType.replace(/_/g, " ")}
+                        </td>
+                        <td className="p-2 text-center text-emerald-400 font-bold">
+                          {alloc.allocatedQuantity ?? alloc.quantity ?? 0}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Remaining Inventory Summary */}
+            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1.5 rounded border border-slate-800">
+              <span>Remaining Inventory:</span>
+              <span>
+                Cooling: {planResult.remainingInventory.mobileCoolingUnits} • Water: {planResult.remainingInventory.waterStations} • Teams: {planResult.remainingInventory.outreachTeams}
               </span>
             </div>
 
-            <div className="text-[11px] text-slate-300 space-y-1.5">
-              <div className="flex justify-between text-slate-400 font-mono text-[10px]">
-                <span>Target Study Area: City of Phoenix, Arizona</span>
-                <span>Mode: Local Staging Preview</span>
+            {/* Evidence & Warnings */}
+            {planResult.warnings && planResult.warnings.length > 0 && (
+              <div className="text-[10px] text-amber-300 bg-amber-950/40 p-2 rounded border border-amber-800/60 space-y-1">
+                {planResult.warnings.map((w: string, idx: number) => (
+                  <p key={idx}>⚠️ {w}</p>
+                ))}
               </div>
-
-              <div className="grid grid-cols-3 gap-2 bg-slate-950 p-2 rounded border border-slate-800 font-mono text-center">
-                <div>
-                  <span className="text-[9px] text-slate-400 block uppercase truncate">Cooling Units</span>
-                  <strong className="text-emerald-400 text-xs">{inventory.mobile_cooling_units ?? 0}</strong>
-                </div>
-                <div>
-                  <span className="text-[9px] text-slate-400 block uppercase truncate">Water Stations</span>
-                  <strong className="text-cyan-400 text-xs">{inventory.water_stations ?? 0}</strong>
-                </div>
-                <div>
-                  <span className="text-[9px] text-slate-400 block uppercase truncate">Outreach Teams</span>
-                  <strong className="text-amber-400 text-xs">{inventory.outreach_teams ?? 0}</strong>
-                </div>
-              </div>
-
-              <p className="text-[10px] text-slate-400 italic">
-                Note: This is a local UI preparation preview. No external API request or agent optimization has been executed.
-              </p>
-            </div>
+            )}
 
             <div className="flex justify-end pt-1">
               <button
-                onClick={() => setIsPreviewPrepared(false)}
+                onClick={() => setPlanResult(null)}
                 className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded text-[11px] font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
               >
-                Dismiss Preview
+                Dismiss Plan
               </button>
             </div>
           </div>
@@ -275,18 +335,27 @@ export default function DeploymentPanel({
         <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-gray-200">
           <button
             type="button"
-            onClick={handlePrepareRequest}
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded border border-slate-950 shadow-2xs transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-1"
+            disabled={isPlanning}
+            onClick={handleGeneratePlan}
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-500 text-white font-medium text-xs rounded border border-slate-950 shadow-2xs transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 flex items-center gap-2"
           >
-            Prepare Deployment Request
+            {isPlanning ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Generating Agent Plan...</span>
+              </>
+            ) : (
+              <span>Generate Agent Allocation Plan</span>
+            )}
           </button>
 
           <button
             type="button"
+            disabled={isPlanning}
             onClick={handleReset}
             className="px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-700 font-medium text-xs rounded border border-gray-300 shadow-2xs transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900"
           >
-            Reset Demo Inputs
+            Reset Inventory
           </button>
         </div>
       </div>

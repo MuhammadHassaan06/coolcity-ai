@@ -1,0 +1,32 @@
+[
+  {
+    "id": "tract-04013113900",
+    "code": "04013113900",
+    "name": "Census Tract 1139",
+    "geoid": "04013113900",
+    "riskScore": 72.38,
+    "status": "high",
+    "avgTemperature": 36.39,
+    "affectedPopulation": 1532
+  },
+  {
+    "id": "tract-04013092311",
+    "code": "04013092311",
+    "name": "Census Tract 923.11",
+    "geoid": "04013092311",
+    "riskScore": 84.12,
+    "status": "critical",
+    "avgTemperature": 38.50,
+    "affectedPopulation": 2410
+  },
+  {
+    "id": "tract-04013092307",
+    "code": "04013092307",
+    "name": "Census Tract 923.07",
+    "geoid": "04013092307",
+    "riskScore": 41.05,
+    "status": "moderate",
+    "avgTemperature": 32.10,
+    "affectedPopulation": 980
+  }
+]

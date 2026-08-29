@@ -1,0 +1,83 @@
+{
+  "analysis_type": "Census-Tract Level Weighting Sensitivity Analysis",
+  "statistical_unit": "Census Tract",
+  "tract_count": 230,
+  "scenarios": {
+    "Scenario_A": {
+      "intensity_weight": 0.4,
+      "vulnerability_weight": 0.6,
+      "label": "Socially Weighted (40/60)"
+    },
+    "Scenario_B": {
+      "intensity_weight": 0.5,
+      "vulnerability_weight": 0.5,
+      "label": "Equal Baseline (50/50)"
+    },
+    "Scenario_C": {
+      "intensity_weight": 0.6,
+      "vulnerability_weight": 0.4,
+      "label": "Heat Weighted (60/40)"
+    }
+  },
+  "spearman_rank_correlation_with_baseline": {
+    "Scenario_A_vs_B": {
+      "rho": 0.9862,
+      "p_value": 4.767276880763109e-180
+    },
+    "Scenario_C_vs_B": {
+      "rho": 0.9906,
+      "p_value": 7.381010774550995e-199
+    }
+  },
+  "risk_band_shifts_from_baseline": {
+    "Scenario_A_vs_B": {
+      "tracts_changed": 62,
+      "percentage": 27.0
+    },
+    "Scenario_C_vs_B": {
+      "tracts_changed": 26,
+      "percentage": 11.3
+    }
+  },
+  "top_10_prioritization_stability": {
+    "top_10_baseline_geoids": [
+      "04013113900",
+      "04013092311",
+      "04013092307",
+      "04013092402",
+      "04013113301",
+      "04013106100",
+      "04013107403",
+      "04013981000",
+      "04013106801",
+      "04013092500"
+    ],
+    "top_10_scenario_A_geoids": [
+      "04013113900",
+      "04013092311",
+      "04013107403",
+      "04013113301",
+      "04013092402",
+      "04013092307",
+      "04013114900",
+      "04013106100",
+      "04013981000",
+      "04013106801"
+    ],
+    "top_10_scenario_C_geoids": [
+      "04013092311",
+      "04013092307",
+      "04013113900",
+      "04013092402",
+      "04013981000",
+      "04013106100",
+      "04013113301",
+      "04013113701",
+      "04013092500",
+      "04013110802"
+    ],
+    "overlap_A_with_baseline": "9 / 10",
+    "overlap_C_with_baseline": "8 / 10"
+  },
+  "disclaimer": "Sensitivity analysis demonstrates prioritization stability under heuristic weight shifts. It does NOT imply clinical or epidemiological validation of any weight choice."
+}

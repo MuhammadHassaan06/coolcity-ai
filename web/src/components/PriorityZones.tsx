@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { PriorityZoneModel } from "@/types/dashboard";
 
 interface PriorityZonesProps {
@@ -35,21 +36,51 @@ export default function PriorityZones({
   selectedZoneId,
   onZoneSelect,
 }: PriorityZonesProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAll, setShowAll] = useState(false);
+
+  // Filter zones by search query if user types
+  const filtered = zones.filter(
+    (z) =>
+      z.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      z.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Display top 10 by default unless showing all or searching
+  const displayLimit = showAll || searchQuery.trim() !== "" ? filtered.length : 10;
+  const displayZones = filtered.slice(0, displayLimit);
+
   return (
-    <div className="bg-white border border-gray-200 rounded">
-      <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex items-center justify-between">
+    <div className="bg-white border border-gray-200 rounded flex flex-col h-full shadow-2xs">
+      {/* Header Bar */}
+      <div className="border-b border-gray-200 px-4 py-2.5 bg-gray-50 flex items-center justify-between gap-2">
         <div>
-          <h2 className="font-semibold text-gray-900 text-sm">Priority Zones</h2>
+          <h2 className="font-semibold text-gray-900 text-sm">
+            Priority Census Tracts
+          </h2>
           <p className="text-[11px] text-gray-500">
-            Demo operational monitoring sectors
+            Track 7 composite risk score ranking
           </p>
         </div>
-        <span className="text-[11px] font-mono text-gray-500 uppercase">
-          {zones.length} Zones
+        <span className="text-[11px] font-mono text-gray-500 uppercase shrink-0">
+          {zones.length} Tracts
         </span>
       </div>
-      <div className="divide-y divide-gray-200">
-        {zones.map((zone) => {
+
+      {/* Filter / Search Bar */}
+      <div className="px-3 py-2 border-b border-gray-200 bg-slate-50/50 flex items-center justify-between gap-2">
+        <input
+          type="text"
+          placeholder="Filter by GEOID or name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-2.5 py-1 text-xs font-mono bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-800"
+        />
+      </div>
+
+      {/* List Container */}
+      <div className="divide-y divide-gray-200 overflow-y-auto max-h-[420px] flex-1">
+        {displayZones.map((zone) => {
           const isSelected = selectedZoneId === zone.id;
           const status = statusBadge[zone.status];
 
@@ -75,7 +106,7 @@ export default function PriorityZones({
                     </h3>
                   </div>
                   <p className="text-[10px] sm:text-[11px] text-gray-500 mt-1">
-                    Pop: {zone.affectedPopulation.toLocaleString()} • Temp:{" "}
+                    Tract Pop: {zone.affectedPopulation.toLocaleString()} • Temp:{" "}
                     {zone.avgTemperature}°C
                   </p>
                 </div>
@@ -93,6 +124,22 @@ export default function PriorityZones({
             </button>
           );
         })}
+      </div>
+
+      {/* Footer Controls */}
+      <div className="p-2 border-t border-gray-200 bg-gray-50 flex items-center justify-between text-[11px]">
+        <span className="text-gray-500 font-mono text-[10px]">
+          Showing {displayZones.length} of {filtered.length} Census Tracts
+        </span>
+        {filtered.length > 10 && searchQuery.trim() === "" && (
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="text-slate-700 hover:text-slate-950 font-medium underline text-[11px]"
+          >
+            {showAll ? "Show Top 10 Only" : `View All ${filtered.length} Tracts`}
+          </button>
+        )}
       </div>
     </div>
   );

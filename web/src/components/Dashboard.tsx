@@ -24,7 +24,7 @@ export default function Dashboard() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("current");
   const [selectedZoneId, setSelectedZoneId] = useState<string | undefined>();
 
-  // Synchronous demo data model retrieval via frontend data access boundary
+  // Synchronous track 7 data model retrieval via frontend data access boundary
   const dataMode = getDataMode();
   const dashboardStats = getDashboardSummary();
   const priorityZones = getPriorityZones();
@@ -32,7 +32,7 @@ export default function Dashboard() {
   const deployableCategories = getDeployableCategories();
   const defaultDeployableInventory = getDefaultDeployableInventory();
 
-  const selectedZone = priorityZones.find((z) => z.id === selectedZoneId);
+  const selectedZone = priorityZones.find((z) => z.id === selectedZoneId || z.code === selectedZoneId || z.geoid === selectedZoneId);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100/50">
@@ -41,7 +41,7 @@ export default function Dashboard() {
 
       {/* Control Bar */}
       <ControlBar
-        studyArea="City of Phoenix, Arizona"
+        studyArea="City of Phoenix, Arizona (Partial Study Area)"
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         timePeriod={timePeriod}
@@ -59,8 +59,8 @@ export default function Dashboard() {
                   {selectedZone.code}
                 </span>
                 <span className="truncate">
-                  <strong>Active Filter:</strong> {selectedZone.name} (Risk Score:{" "}
-                  {selectedZone.riskScore}, Pop:{" "}
+                  <strong>Active Focus:</strong> {selectedZone.name} (Track 7 Risk Score:{" "}
+                  {selectedZone.riskScore}, Tract Pop:{" "}
                   {selectedZone.affectedPopulation.toLocaleString()})
                 </span>
               </div>
@@ -109,6 +109,7 @@ export default function Dashboard() {
             <DeploymentPanel
               categories={deployableCategories}
               defaultInventory={defaultDeployableInventory}
+              selectedZoneId={selectedZone?.geoid || selectedZoneId}
             />
             <AnalysisPanel />
           </div>
