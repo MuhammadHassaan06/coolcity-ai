@@ -1,7 +1,4 @@
-import { Zone } from "./zone";
-import { HeatMetrics } from "./heat";
-import { Vulnerability } from "./vulnerability";
-import { ZoneRisk } from "./risk";
+import { CanonicalTractRecord } from "./zone";
 import { ResourceInventory } from "./resource";
 import { ResourceAllocation } from "./allocation";
 
@@ -9,11 +6,9 @@ import { ResourceAllocation } from "./allocation";
  * Input Context Contract for AI Optimization Agent
  */
 export interface AgentRecommendationInput {
-  zones: Zone[];
-  heatMetrics: Record<string, HeatMetrics>;
-  vulnerabilities: Record<string, Vulnerability>;
-  risks: Record<string, ZoneRisk>;
+  zones: CanonicalTractRecord[];
   inventory: ResourceInventory;
+  zoneIds?: string[];
 }
 
 /**
@@ -21,7 +16,15 @@ export interface AgentRecommendationInput {
  */
 export interface AgentRecommendation {
   summary: string;
+  priorityZones: string[];
   allocations: ResourceAllocation[];
-  recommendedActions: string[];
-  timestamp: string;
+  remainingInventory: ResourceInventory;
+  evidence: Array<{
+    zoneId: string;
+    type: string;
+    metric: string;
+    value: string | number;
+    source: string;
+  }>;
+  warnings: string[];
 }

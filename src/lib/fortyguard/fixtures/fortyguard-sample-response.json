@@ -1,0 +1,46 @@
+{
+  "error": false,
+  "status_code": 200,
+  "message": "Completed",
+  "data": {
+    "activity_id": "59de67ca-1570-41b9-9bee-6c8a58e27a1a",
+    "status": "Completed",
+    "result": {
+      "map_data": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "id": "0",
+            "type": "Feature",
+            "properties": {
+              "tile_id": 0,
+              "average_temperature": 39.7388,
+              "min_temperature": 39.7388,
+              "max_temperature": 39.7388
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [-112.077544, 33.44447],
+                  [-112.076492, 33.444479],
+                  [-112.076503, 33.44541],
+                  [-112.077556, 33.445401],
+                  [-112.077544, 33.44447]
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "stats_data": {
+        "temperature_stats": {
+          "minimum": 39.6957,
+          "maximum": 39.7523,
+          "mean": 39.7224,
+          "standard_deviation": 0.015
+        }
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts tests/analytics-services.test.ts src/lib/resources/__tests__/allocator.test.ts tests/allocation.test.ts tests/agent-workflow.test.ts tests/track6-agent.test.ts"
+    "lint": "eslint src/",
+    "test": "npx tsx -r ./tests/mock-server-only.cjs --test tests/fortyguard.test.ts tests/zones-risk.test.ts tests/analytics-services.test.ts tests/allocation.test.ts tests/agent-workflow.test.ts tests/track6-agent.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.19.0",

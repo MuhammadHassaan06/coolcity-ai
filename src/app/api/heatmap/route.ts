@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   submitHeatmap,
   getHeatmapStatus,
-  normalizeFortyGuardResponse,
 } from "@/lib/fortyguard/client";
+import { normalizeFortyGuardResponse } from "@/lib/fortyguard/normalize";
+import { generateTilingPlan } from "@/lib/fortyguard/tiling";
 import { CoolCityHeatmapRequest } from "@/lib/fortyguard/types";
 import { CoolCityHeatmapRequestSchema, ActivityIdSchema } from "@/lib/validation/fortyguard";
 import {
@@ -18,8 +19,8 @@ export const maxDuration = 60; // Next.js route max duration setting (serverless
 /**
  * POST /api/heatmap
  * Accepts a validated CoolCity-specific heatmap request.
- * Submits task to FortyGuard API, polls until completion/failure/timeout,
- * and returns a clean normalized CoolCity response contract.
+ * Supports mode: "single" | "batch-plan".
+ * In "batch-plan" mode, performs a dry-run tiling breakdown of the supplied boundary without live network calls.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -40,7 +41,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const coolCityRequest = validationResult.data as unknown as CoolCityHeatmapRequest;
+    const coolCityRequest = validationResult.data as unknown as CoolCityHeatmapRequest & {
+      mode?: "single" | "batch-plan";
+      maxChunkSpanDegrees?: number;
+    };
+
+    // Dry-run batch planning mode
+    if (coolCityRequest.mode === "batch-plan") {
+      const plan = generateTilingPlan(coolCityRequest.aoi, {
+        maxChunkSpanDegrees: coolCityRequest.maxChunkSpanDegrees,
+      });
+
+      return NextResponse.json(
+        {
+          success: true,
+          mode: "batch-plan",
+          dryRun: true,
+          plan,
+        },
+        { status: 200 }
+      );
+    }
 
     // 1. Submit request to FortyGuard
     const submitResponse = await submitHeatmap(coolCityRequest);

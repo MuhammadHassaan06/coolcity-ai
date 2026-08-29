@@ -14,8 +14,9 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
 lib64/
+!src/lib/
 parts/
 sdist/
 var/
@@ -25,6 +26,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+tsconfig.tsbuildinfo
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

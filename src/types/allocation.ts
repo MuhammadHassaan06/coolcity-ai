@@ -1,8 +1,5 @@
 import { ResourceInventory } from "./resource";
 
-/**
- * Resource Allocation Decision Contract
- */
 export type ResourceType =
   | "mobile_cooling_unit"
   | "water_station"
@@ -22,22 +19,20 @@ export interface ResourceAllocationRequest {
 export interface AllocatedResourceItem {
   zoneId: string;
   resourceType: ResourceType;
-  requestedQuantity: number;
-  allocatedQuantity: number;
-  wasCapped: boolean;
-  wasRejected: boolean;
+  quantity: number;
+  allocatedQuantity?: number;
+  requestedQuantity?: number;
+  wasCapped?: boolean;
+  wasRejected?: boolean;
+  reasons: string[];
 }
+
+export type ResourceAllocation = AllocatedResourceItem;
 
 export interface AllocationResult {
   success: boolean;
   allocations: AllocatedResourceItem[];
   reasons: string[];
   remainingInventory: ResourceInventory;
-}
-
-export interface ResourceAllocation {
-  resourceType: ResourceType;
-  quantity: number;
-  zoneId: string;
-  reasons: string[];
+  warnings: string[];
 }

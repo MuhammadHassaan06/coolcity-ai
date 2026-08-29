@@ -44,10 +44,10 @@ describe("Gemini Agentic Workflow & Tool Calling Architecture Test Suite", () =>
   // TEST 1: Tool declarations structure
   it("1. verifies tool declarations schema for Gemini Function Calling", () => {
     assert.equal(track6ToolDeclarations.length, 1);
-    const decls = track6ToolDeclarations[0].functionDeclarations;
+    const decls = (track6ToolDeclarations[0] as { functionDeclarations: Array<Record<string, unknown>> }).functionDeclarations;
     assert.equal(decls.length, 7);
 
-    const names = decls.map((d) => d.name);
+    const names = decls.map((d: Record<string, unknown>) => d.name);
     assert.ok(names.includes("get_zone_heat_data"));
     assert.ok(names.includes("get_historical_heat_metrics"));
     assert.ok(names.includes("get_zone_vulnerability"));
