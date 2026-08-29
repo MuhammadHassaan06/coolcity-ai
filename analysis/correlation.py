@@ -291,4 +291,69 @@ def analyze_track7_correlations(
                 "is_statistically_significant": False
             })
 
-    return pd.DataFrame(results)
+    return pd.DataFrame(results)
+
+
+def export_correlation_summary_json(
+    df: pd.DataFrame,
+    output_path: Optional[str] = None
+) -> dict:
+    """
+    Computes tract-level correlations for key demographic indicators against heat metrics
+    and exports a compact, machine-readable JSON summary artifact to data/processed/correlation_summary.json.
+    """
+    import json
+    from pathlib import Path
+    
+    if output_path is None:
+        project_root = Path(__file__).parent.parent
+        output_path = project_root / "data" / "processed" / "correlation_summary.json"
+    else:
+        output_path = Path(output_path)
+        
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    demo_vars = ["poverty_rate", "elderly_rate", "no_vehicle_rate", "minority_rate", "unemployment_rate", "disability_rate"]
+    available_demo = [c for c in demo_vars if c in df.columns]
+    
+    heat_cols = []
+    if "intensity_score" in df.columns:
+        heat_cols.append("intensity_score")
+    if "temperature" in df.columns or "average_temperature" in df.columns:
+        temp_c = "temperature" if "temperature" in df.columns else "average_temperature"
+        heat_cols.append(temp_c)
+        
+    correlations_list = []
+    
+    for h_col in heat_cols:
+        res_df = analyze_track7_correlations(df, heat_col=h_col, demo_cols=available_demo)
+        for _, row in res_df.iterrows():
+            correlations_list.append({
+                "variable": row["demographic_variable"],
+                "heat_metric": h_col,
+                "sample_size": int(row["sample_size"]),
+                "pearson_r": None if pd.isna(row["pearson_r"]) else float(row["pearson_r"]),
+                "pearson_p_value": None if pd.isna(row["pearson_p_value"]) else float(row["pearson_p_value"]),
+                "spearman_rho": None if pd.isna(row["spearman_r"]) else float(row["spearman_r"]),
+                "spearman_p_value": None if pd.isna(row["spearman_p_value"]) else float(row["spearman_p_value"]),
+                "is_statistically_significant": bool(row["is_statistically_significant"])
+            })
+            
+    summary_data = {
+        "study_unit": "Census Tract",
+        "tract_count": int(df["geoid"].nunique()) if "geoid" in df.columns else len(df),
+        "methodology_note": (
+            "Pearson and Spearman correlations calculated at the Census Tract level (N=230) "
+            "after mean-aggregating tile thermal data. Tile-level analysis (N=48,199) was "
+            "superseded to eliminate pseudoreplication and false statistical significance."
+        ),
+        "heat_metrics_tested": heat_cols,
+        "correlations": correlations_list
+    }
+    
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(summary_data, f, indent=2, ensure_ascii=False)
+        
+    logger.info(f"Saved correlation summary JSON to {output_path}")
+    return summary_data
+

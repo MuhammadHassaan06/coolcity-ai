@@ -78,7 +78,11 @@ def get_fortyguard_api_keys() -> List[str]:
     return keys
 
 def assign_phoenix_district(lat: float, lon: float) -> str:
-    """Classifies geographic coordinates into Phoenix municipal district / neighborhood."""
+    """
+    [LEGACY / HEURISTIC] Classifies coordinates into informal 10-zone bounding boxes.
+    NOTE: Track 7 analytics and frontend handoff metrics use official U.S. Census 
+    Tract GEOIDs (geoid) as the primary spatial unit, not synthetic coordinate boxes.
+    """
     if lat < 33.43:
         return "South Mountain / Laveen"
     elif lat < 33.47:

@@ -1,24 +1,31 @@
 """
-CoolCity AI - Track 7 Zone-Level Metrics Aggregation
-=====================================================
-Aggregates tile-level real data (48,199 FortyGuard tiles + Census demographics)
-into district-level zone metrics compatible with the frontend PriorityZoneModel
-contract defined in web/src/types/dashboard.ts.
+CoolCity AI - Track 7 Census Tract Metrics Aggregation Engine
+==============================================================
+Aggregates tile-level data (48,199 FortyGuard tiles + Census demographics)
+into Census Tract level metrics (~230 Census Tracts) fully compatible with
+the frontend PriorityZoneModel contract defined in web/src/types/dashboard.ts.
 
 Reads:
   - data/processed/phoenix_risk_scored_tiles.csv  (tile-level pipeline output)
 
 Outputs:
-  - data/processed/processed_zone_metrics.json
-  - data/processed/processed_zone_metrics.csv
+  - data/processed/phoenix_tract_risk.json (compact tract-level handoff)
+  - data/processed/phoenix_tract_risk.csv (compact tract-level handoff)
 
-These files are the Track 7 handoff artifacts for frontend integration.
+GEOGRAPHIC IDENTIFIER & POPULATION NOTE:
+-----------------------------------------
+- The primary verified spatial unit is the 11-character U.S. Census Tract (GEOID),
+  e.g. '04013113900' (State 04 + County 013 + Tract 113900). Leading zeros are
+  strictly preserved and validated as string identifiers.
+- affectedPopulation represents the total Census population residing within the
+  intersected tract geometries. It is NOT an estimate of patients medically affected by heat.
 """
 
 import sys
 import json
 import logging
 from pathlib import Path
+from typing import Optional, Dict, Any, List
 
 # Ensure UTF-8 output on Windows consoles
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -31,21 +38,42 @@ import numpy as np
 import pandas as pd
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger("ZoneMetrics")
+logger = logging.getLogger("TractMetrics")
 
-# Phoenix district-to-zone-code mapping (stable identifiers for frontend)
-DISTRICT_ZONE_MAP = {
-    "Central City / Downtown Phoenix":      {"code": "PHX-Z01", "zone_id": "z-001"},
-    "Midtown / Encanto Village":            {"code": "PHX-Z02", "zone_id": "z-002"},
-    "Maryvale West / Encanto":              {"code": "PHX-Z03", "zone_id": "z-003"},
-    "Southwest Maryvale / Industrial":      {"code": "PHX-Z04", "zone_id": "z-004"},
-    "South Mountain / Laveen":              {"code": "PHX-Z05", "zone_id": "z-005"},
-    "Sky Harbor / East Lake":               {"code": "PHX-Z06", "zone_id": "z-006"},
-    "Camelback East / Arcadia":             {"code": "PHX-Z07", "zone_id": "z-007"},
-    "North Mountain / Sunnyslope":          {"code": "PHX-Z08", "zone_id": "z-008"},
-    "Alhambra / Glendale Border":           {"code": "PHX-Z09", "zone_id": "z-009"},
-    "Paradise Valley Border / Camelback":   {"code": "PHX-Z10", "zone_id": "z-010"},
-}
+
+def normalize_and_validate_geoid(raw_val: Any) -> str:
+    """
+    Normalizes and validates a Census Tract GEOID string identifier.
+    
+    For Arizona (FIPS state code '04'), an 11-character GEOID string starts with '04'.
+    If numeric parsing stripped the leading zero resulting in 10 digits starting with '4'
+    (e.g., '4013113900'), this function restores the leading '0' to yield '04013113900'.
+    
+    Raises ValueError if GEOID is null, non-digit, or cannot be normalized to 11 digits.
+    """
+    if pd.isna(raw_val) or raw_val is None:
+        raise ValueError("Encountered null or missing Census Tract GEOID identifier.")
+    
+    geoid_str = str(raw_val).strip()
+    
+    # Remove floating point suffix if parsed as float (e.g. "4013113900.0")
+    if geoid_str.endswith(".0"):
+        geoid_str = geoid_str[:-2]
+        
+    # Restore Arizona leading zero if stripped (10 digits starting with '4')
+    if len(geoid_str) == 10 and geoid_str.startswith("4"):
+        geoid_str = "0" + geoid_str
+        
+    if not geoid_str.isdigit():
+        raise ValueError(f"Invalid non-digit Census Tract GEOID identifier: '{geoid_str}'.")
+        
+    if len(geoid_str) != 11:
+        raise ValueError(
+            f"Invalid Census Tract GEOID length ({len(geoid_str)} chars): '{geoid_str}'. "
+            "U.S. Census Tract GEOIDs must be exactly 11 FIPS characters."
+        )
+        
+    return geoid_str
 
 
 def classify_risk_status(risk_score: float) -> str:
@@ -69,25 +97,26 @@ def classify_risk_status(risk_score: float) -> str:
         return "low"
 
 
-def generate_zone_metrics(
-    tiles_csv_path: str = None,
-    output_dir: str = None
+def generate_tract_zone_metrics(
+    tiles_csv_path: Optional[str] = None,
+    output_dir: Optional[str] = None
 ) -> pd.DataFrame:
     """
-    Aggregates tile-level data into zone-level metrics.
+    Aggregates tile-level data into Census Tract level metrics.
 
-    Zone-Level Aggregation Logic:
-      - riskScore: Mean of final_risk_score across all tiles in the zone
-      - avgTemperature: Mean of temperature (°C) across all tiles
-      - affectedPopulation: Sum of unique Census Tract total_population values
-                            (de-duplicated by geoid to avoid double-counting)
-      - status: Classified from the zone-level riskScore using standard risk bands
-      - Additional derived metrics for analytics (not exposed to frontend)
+    Tract-Level Aggregation Logic:
+      - Primary Unit: 11-character Census Tract GEOID (e.g., '04013113900')
+      - riskScore: Mean of final_risk_score across all thermal tiles in the tract
+      - avgTemperature: Mean of temperature (°C) across all thermal tiles in the tract
+      - total_population: Verified tract-level population (validated constant per GEOID)
+      - affectedPopulation: Single verified tract total_population associated with tract geometry
+                            (NOTE: Documented as population residing in tract, NOT medical heat cases)
+      - status: Classified from tract riskScore using standard risk bands
 
     Returns
     -------
     pd.DataFrame
-        Zone-level metrics DataFrame.
+        Tract-level metrics DataFrame (one row per unique GEOID).
     """
     # Resolve paths
     project_root = Path(__file__).parent.parent
@@ -103,121 +132,140 @@ def generate_zone_metrics(
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load tile-level data
+    if not tiles_csv_path.exists():
+        raise FileNotFoundError(f"Input tile dataset not found at {tiles_csv_path}")
+
+    # Load tile-level data with explicit string parsing for geoid
     logger.info(f"Loading tile-level data from {tiles_csv_path}...")
-    df = pd.read_csv(tiles_csv_path)
-    logger.info(f"Loaded {len(df)} tiles across {df['district'].nunique()} districts.")
+    df = pd.read_csv(tiles_csv_path, dtype={"geoid": str})
+    total_tile_rows = len(df)
+    
+    if "geoid" not in df.columns:
+        raise KeyError("Required geographic identifier column 'geoid' missing from input dataset.")
 
-    zones = []
+    # Normalize and validate all GEOIDs as 11-character string identifiers
+    df["geoid"] = df["geoid"].apply(normalize_and_validate_geoid)
 
-    for district_name, zone_info in DISTRICT_ZONE_MAP.items():
-        district_tiles = df[df["district"] == district_name]
+    # Filter out missing GEOIDs
+    valid_df = df[df["geoid"].notna() & (df["geoid"] != "")].copy()
+    valid_geoid_count = valid_df["geoid"].nunique()
+    logger.info(f"Loaded {total_tile_rows} tiles across {valid_geoid_count} unique 11-character Census Tract GEOIDs.")
 
-        if district_tiles.empty:
-            logger.warning(f"No tiles found for district '{district_name}'. Skipping.")
-            continue
+    # Check temperature column name ('temperature' or 'average_temperature')
+    temp_col = "temperature" if "temperature" in valid_df.columns else "average_temperature"
 
-        # De-duplicate population by Census Tract GEOID to avoid counting
-        # the same tract population multiple times across tiles
-        unique_tracts = district_tiles.drop_duplicates(subset=["geoid"])
-        affected_pop = int(unique_tracts["total_population"].sum())
+    tract_records = []
 
-        # Zone-level aggregated risk score (mean of tile-level final_risk_score)
-        zone_risk_score = round(float(district_tiles["final_risk_score"].mean()), 2)
+    # Group strictly by Census Tract GEOID
+    grouped = valid_df.groupby("geoid")
 
-        # Zone-level average temperature in Celsius
-        zone_avg_temp = round(float(district_tiles["temperature"].mean()), 2)
+    for geoid_str, group in grouped:
+        # Final validation of GEOID string length and format
+        if len(geoid_str) != 11 or not geoid_str.isdigit():
+            raise ValueError(f"Malformed Census Tract GEOID encountered after grouping: '{geoid_str}'")
 
-        # Risk status classification
-        zone_status = classify_risk_status(zone_risk_score)
+        # 1. Demographic & Population Validation
+        if "total_population" in group.columns:
+            pop_uniques = group["total_population"].dropna().unique()
+            if len(pop_uniques) > 1:
+                raise ValueError(
+                    f"Conflicting total_population values found inside Census Tract GEOID {geoid_str}: {pop_uniques}. "
+                    "Demographic attributes must be constant within a GEOID."
+                )
+            tract_pop = int(pop_uniques[0]) if len(pop_uniques) > 0 else 0
+        else:
+            tract_pop = 0
 
-        # ---- Frontend PriorityZoneModel fields ----
-        zone_record = {
-            # PriorityZoneModel contract fields
-            "id": zone_info["zone_id"],
-            "code": zone_info["code"],
-            "name": district_name,
-            "riskScore": zone_risk_score,
-            "affectedPopulation": affected_pop,
-            "avgTemperature": zone_avg_temp,
-            "status": zone_status,
+        # 2. Tract Name formatting (preserve human-readable census_tract label if present)
+        if "census_tract" in group.columns and pd.notna(group["census_tract"].iloc[0]):
+            raw_name = str(group["census_tract"].iloc[0]).strip()
+            name_str = raw_name if raw_name.startswith("Census Tract") else f"Census Tract {raw_name}"
+        else:
+            name_str = f"Census Tract {geoid_str}"
 
-            # ---- Additional Track 7 analytics fields (for reference/debugging) ----
-            # These are NOT in the current frontend contract.
-            # They are included for analytics transparency and future contract extension.
-            "_tileCount": int(len(district_tiles)),
-            "_uniqueCensusTracts": int(district_tiles["geoid"].nunique()),
-            "_avgVulnerabilityScore": round(float(district_tiles["vulnerability_score"].mean()), 2),
-            "_avgIntensityScore": round(float(district_tiles["intensity_score"].mean()), 2),
-            "_avgTemperatureF": round(float(district_tiles["temperature_f"].mean()), 2),
-            "_avgTempAnomalyC": round(float(district_tiles["temp_anomaly_c"].mean()), 2),
-            "_avgPovertyRate": round(float(district_tiles["poverty_rate"].mean()), 4),
-            "_avgElderlyRate": round(float(district_tiles["elderly_rate"].mean()), 4),
-            "_avgNoVehicleRate": round(float(district_tiles["no_vehicle_rate"].mean()), 4),
-            "_riskBandDistribution": {
-                "critical": int((district_tiles["risk_level"] == "Critical").sum()),
-                "high": int((district_tiles["risk_level"] == "High").sum()),
-                "moderate": int((district_tiles["risk_level"] == "Moderate").sum()),
-                "low": int((district_tiles["risk_level"] == "Low").sum()),
-            },
+        # 3. Aggregated Heat & Risk Metrics
+        tract_risk_score = round(float(group["final_risk_score"].mean()), 2)
+        tract_avg_temp = round(float(group[temp_col].mean()), 2)
+        tract_status = classify_risk_status(tract_risk_score)
+
+        # 4. Clean Frontend PriorityZoneModel contract record (NO private _ debug fields)
+        record = {
+            "id": f"tract-{geoid_str}",
+            "code": geoid_str,
+            "name": name_str,
+            "geoid": geoid_str,
+            "riskScore": tract_risk_score,
+            "status": tract_status,
+            "avgTemperature": tract_avg_temp,
+            "affectedPopulation": tract_pop,
         }
 
-        zones.append(zone_record)
+        tract_records.append(record)
 
-    # Sort zones by riskScore descending (highest risk first)
-    zones.sort(key=lambda z: z["riskScore"], reverse=True)
+    # Sort by riskScore descending (highest risk tract first)
+    tract_records.sort(key=lambda r: r["riskScore"], reverse=True)
+
+    # Verify duplicate GEOIDs do not exist in output
+    output_geoids = [r["geoid"] for r in tract_records]
+    if len(output_geoids) != len(set(output_geoids)):
+        raise ValueError("Duplicate GEOIDs detected in tract-level output records.")
 
     # ---- Export JSON ----
-    json_path = output_dir / "processed_zone_metrics.json"
+    json_path = output_dir / "phoenix_tract_risk.json"
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(zones, f, indent=2, ensure_ascii=False)
-    logger.info(f"Saved {len(zones)} zone records to {json_path}")
+        json.dump(tract_records, f, indent=2, ensure_ascii=False)
+    logger.info(f"Saved {len(tract_records)} clean Census Tract records to {json_path}")
 
     # ---- Export CSV ----
-    # For CSV, flatten the _riskBandDistribution dict into separate columns
-    csv_records = []
-    for z in zones:
-        flat = {k: v for k, v in z.items() if k != "_riskBandDistribution"}
-        rbd = z.get("_riskBandDistribution", {})
-        flat["_riskBand_critical"] = rbd.get("critical", 0)
-        flat["_riskBand_high"] = rbd.get("high", 0)
-        flat["_riskBand_moderate"] = rbd.get("moderate", 0)
-        flat["_riskBand_low"] = rbd.get("low", 0)
-        csv_records.append(flat)
-
-    csv_df = pd.DataFrame(csv_records)
-    csv_path = output_dir / "processed_zone_metrics.csv"
+    csv_df = pd.DataFrame(tract_records)
+    csv_path = output_dir / "phoenix_tract_risk.csv"
     csv_df.to_csv(csv_path, index=False)
-    logger.info(f"Saved {len(csv_df)} zone records to {csv_path}")
+    logger.info(f"Saved {len(csv_df)} clean Census Tract records to {csv_path}")
 
-    # ---- Print Summary ----
+    # ---- Validation Report ----
     print("\n" + "=" * 80)
-    print("PROCESSED ZONE METRICS SUMMARY")
+    print("CENSUS TRACT AGGREGATION VALIDATION REPORT")
     print("=" * 80)
-    print(f"Total zones: {len(zones)}")
-    print(f"Source tiles: {len(df)}")
+    print(f"Tile input rows:            {total_tile_rows}")
+    print(f"Unique GEOIDs in data:      {valid_geoid_count}")
+    print(f"Tract records output:       {len(tract_records)}")
+    print(f"Confirm (Output == GEOIDs): {len(tract_records) == valid_geoid_count}")
+    print(f"Confirm (All GEOIDs 11-ch): {all(len(r['geoid']) == 11 for r in tract_records)}")
     print()
+    print("Risk Status Distribution:")
+    status_counts = pd.Series([r["status"] for r in tract_records]).value_counts().to_dict()
+    for s_name in ["critical", "high", "moderate", "low"]:
+        print(f"  - {s_name.capitalize():<10}: {status_counts.get(s_name, 0)} tracts")
 
-    # Frontend-facing fields only
-    frontend_cols = ["id", "code", "name", "riskScore", "affectedPopulation", "avgTemperature", "status"]
-    summary_df = pd.DataFrame([{k: z[k] for k in frontend_cols} for z in zones])
-    print(summary_df.to_string(index=False))
     print()
+    print("Temperature & Risk Score Summaries:")
+    temps = [r["avgTemperature"] for r in tract_records]
+    risks = [r["riskScore"] for r in tract_records]
+    print(f"  - avgTemperature range: {min(temps):.2f}°C to {max(temps):.2f}°C (Mean: {np.mean(temps):.2f}°C)")
+    print(f"  - riskScore range:      {min(risks):.2f} to {max(risks):.2f} (Mean: {np.mean(risks):.2f})")
 
-    # DashboardSummary helper values
-    total_zones = len(zones)
-    critical_zones = sum(1 for z in zones if z["status"] == "critical")
-    avg_city_temp = round(float(df["temperature"].mean()), 2)
-    overall_risk = classify_risk_status(float(df["final_risk_score"].mean()))
-    print("DashboardSummary derived values:")
-    print(f"  totalZonesMonitored: {total_zones}")
-    print(f"  criticalZones: {critical_zones}")
-    print(f"  averageCityTemp: {avg_city_temp} deg C")
-    print(f"  overallRiskLevel: {overall_risk}")
+    # Population comparison
+    wrong_pop = int(df["total_population"].sum()) if "total_population" in df.columns else 0
+    correct_pop = sum(r["affectedPopulation"] for r in tract_records)
+    print()
+    print("Population Aggregations:")
+    print(f"  - WRONG (Summed across all 48,199 tiles):               {wrong_pop:,}")
+    print(f"  - CORRECT (Deduplicated sum for 230 represented tracts): {correct_pop:,}")
+    print("  * Description: sum of Census populations for tracts represented/intersected by the current heat study area.")
     print("=" * 80)
 
-    return pd.DataFrame(zones)
+    return csv_df
+
+
+def generate_zone_metrics(
+    tiles_csv_path: Optional[str] = None,
+    output_dir: Optional[str] = None
+) -> pd.DataFrame:
+    """Wrapper function preserving backward compatibility for pipeline callers."""
+    return generate_tract_zone_metrics(tiles_csv_path=tiles_csv_path, output_dir=output_dir)
 
 
 if __name__ == "__main__":
-    generate_zone_metrics()
+    generate_tract_zone_metrics()
+
+

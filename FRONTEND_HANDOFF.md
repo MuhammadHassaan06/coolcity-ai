@@ -1,67 +1,55 @@
 # Track 7 → Frontend Handoff Document
 **From:** Member 2 (Data Analytics / Track 7)  
 **To:** Member 1 (Frontend / AI Agent)  
-**Date:** 2026-08-28  
+**Date:** 2026-08-29  
 **Branch:** `feat/heat-analytics`  
-**Status:** ✅ Stable & Complete (48,199 real spatial tiles, zero synthetic data)
+**Status:** ✅ Stable & Complete (230 Census Tracts, 11-character GEOIDs, zero synthetic zones)
 
 ---
 
-## 1. Processed CSV/JSON Sample
+## 1. Canonical Processed Handoff Artifacts
 
-### Output Files (in `data/processed/`)
+### Core Handoff Files (in `data/processed/`)
 
-| File | Records | Size | Format |
-|:---|:---:|:---:|:---|
-| `phoenix_risk_scored_tiles.csv` | 48,199 | ~11 MB | Flat CSV, comma-separated |
-| `phoenix_risk_scored_tiles.json` | 48,199 | ~45 MB | Array of JSON objects |
-| `phoenix_risk_scored_tiles.geojson` | 48,199 | ~56 MB | GeoJSON FeatureCollection (EPSG:4326) |
-| `processed_zone_metrics.csv` | Small | ~1.6 KB | Zone-aggregated summary |
-| `processed_zone_metrics.json` | Small | ~6.3 KB | Zone-aggregated summary (JSON) |
+| File | Records | Format | Primary Use Case |
+|:---|:---:|:---|:---|
+| `phoenix_tract_risk.json` | 230 | Array of JSON objects (~57 KB) | **Canonical Frontend Dashboard Priority Zone Input** |
+| `phoenix_tract_risk.csv` | 230 | Flat CSV (~20 KB) | Tabular analytics inspection & export |
+| `correlation_summary.json` | 12 | JSON summary (~2.5 KB) | Machine-readable tract-level statistical correlations |
+| `sensitivity_summary.json` | 3 scenarios | JSON summary (~1.8 KB) | Weighting sensitivity & ranking stability report |
+| `track7_summary.json` | Metadata | JSON summary (~1.0 KB) | Track 7 master pipeline status & coverage metadata |
 
-### Sample Record (JSON)
+*Note: Legacy synthetic coordinate zone files (`processed_zone_metrics.*`) are deleted and deprecated.*
+
+### Canonical JSON Handoff Contract (`phoenix_tract_risk.json`)
+
+Matches `PriorityZoneModel` in `web/src/types/dashboard.ts`:
 
 ```json
-{
-  "tile_id": "FG-PHX-00000",
-  "average_temperature": 35.624,
-  "min_temperature": 28.42,
-  "max_temperature": 40.26,
-  "latitude": 33.380007,
-  "longitude": -112.069137,
-  "temperature": 35.62,
-  "temperature_f": 96.12,
-  "district": "South Mountain / Laveen",
-  "geoid": "04013116500",
-  "census_tract": "Census Tract 1165",
-  "poverty_rate": 0.444,
-  "elderly_rate": 0.107,
-  "no_vehicle_rate": 0.045,
-  "unemployment_rate": 0.027,
-  "disability_rate": 0.179,
-  "minority_rate": 0.894,
-  "total_population": 4973.0,
-  "baseline_temp_c": 39.5,
-  "baseline_temp_f": 103.1,
-  "temp_anomaly_c": -3.88,
-  "temp_anomaly_f": -6.98,
-  "intensity_score": 46.0,
-  "hours_above_threshold": null,
-  "persistence_score": null,
-  "poverty_rate_norm": 0.4338,
-  "elderly_rate_norm": 0.2344,
-  "no_vehicle_rate_norm": 0.0915,
-  "vulnerability_score": 25.32,
-  "final_risk_score": 35.66,
-  "risk_level": "Moderate"
-}
+[
+  {
+    "id": "tract-04013113900",
+    "code": "04013113900",
+    "name": "Census Tract 1139",
+    "geoid": "04013113900",
+    "riskScore": 72.38,
+    "status": "high",
+    "avgTemperature": 36.39,
+    "affectedPopulation": 1532
+  },
+  {
+    "id": "tract-04013092311",
+    "code": "04013092311",
+    "name": "Census Tract 923.11",
+    "geoid": "04013092311",
+    "riskScore": 70.13,
+    "status": "high",
+    "avgTemperature": 36.63,
+    "affectedPopulation": 2750
+  }
+]
 ```
 
-### Sample CSV Header Row
-
-```
-tile_id,average_temperature,min_temperature,max_temperature,latitude,longitude,temperature,temperature_f,district,geoid,census_tract,poverty_rate,elderly_rate,no_vehicle_rate,unemployment_rate,disability_rate,minority_rate,total_population,baseline_temp_c,baseline_temp_f,temp_anomaly_c,temp_anomaly_f,intensity_score,hours_above_threshold,persistence_score,poverty_rate_norm,elderly_rate_norm,no_vehicle_rate_norm,vulnerability_score,final_risk_score,risk_level
-```
 
 ---
 

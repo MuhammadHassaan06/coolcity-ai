@@ -250,5 +250,8 @@ data/env_params/*
 # Track 7 compact processed outputs used for integration/handoff
 !data/processed/
 data/processed/*
-!data/processed/processed_zone_metrics.csv
-!data/processed/processed_zone_metrics.json
+!data/processed/phoenix_tract_risk.csv
+!data/processed/phoenix_tract_risk.json
+!data/processed/correlation_summary.json
+!data/processed/sensitivity_summary.json
+!data/processed/track7_summary.json

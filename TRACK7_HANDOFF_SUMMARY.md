@@ -3,81 +3,78 @@
 **Track:** Track 7 (Data Analysis & Correlation) & Track 6 Integration  
 **Lead:** Member 2 (Data Science)  
 **Target Roles:** Member 1 (AI Agent / Orchestration) & Member 3 (Dashboard / Frontend)  
-**Status:** ✅ Completed & Validated with 100% Real Ingestion Data (Zero Synthetic/Random Data)
+**Status:** ✅ Completed & Validated with Real Ingestion Data & Census-Tract Aggregation
 
 ---
 
-## 1. Executive Summary & Real Data Findings
+## 1. Executive Summary & Geographic Scope
 
-Track 7 has been updated to use **100% real empirical data** with zero synthetic or random values:
-1. **FortyGuard Real Thermal Ingestion**: High-resolution thermal data from FortyGuard tOS Enterprise API (`/v1/heatmap`) covering **48,199 spatial tiles** (100m resolution) across the Phoenix Urban Heat Island (UHI) Corridor (Maryvale, Downtown Phoenix / Central City, South Mountain, Encanto, Alhambra, Camelback East, Sky Harbor).
-2. **U.S. Census Bureau ACS 5-Year Demographics**: Real Census Tract boundaries from Census TIGERweb (State FIPS `04`, County FIPS `013`) and official ACS 5-Year socioeconomic indicators (Poverty Rate, Elderly 65+ Share, Households with Zero Vehicle Access, Unemployment, Disability, Minority rates) across 230 intersected Census Tracts.
-3. **Climatological Baseline & Anomalies**: Anomaly calculation relative to the Phoenix multi-year summer climatological baseline ($39.50^\circ\text{C} / 103.10^\circ\text{F}$).
-4. **Composite Risk Formulation**:
-   $$\text{Final Risk Score} = (\text{Intensity Score} \times 0.50) + (\text{Vulnerability Score} \times 0.50)$$
-   *(When real multi-temporal persistence is unavailable from a single daily snapshot, persistence is honestly marked unavailable and weights are allocated across active components, preserving the exact 0–100 scale).*
-
----
-
-## 2. Statistical Correlation Matrix (SciPy Engine)
-
-Calculated across **48,199 real Phoenix spatial tiles**:
-
-| Demographic Variable | Sample Size | Pearson $r$ | Pearson $p$-value | Spearman $r$ | Spearman $p$-value | Statistically Significant ($p < 0.05$) |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Poverty Rate** (`poverty_rate`) | 48,199 | **-0.1214** | $9.36 \times 10^{-158}$ | **-0.1386** | $3.01 \times 10^{-205}$ | ✅ **True** |
-| **No-Vehicle Rate** (`no_vehicle_rate`) | 48,199 | **+0.1108** | $2.04 \times 10^{-131}$ | **+0.1510** | $1.33 \times 10^{-243}$ | ✅ **True** |
-| **Elderly Rate (65+)** (`elderly_rate`) | 48,199 | **+0.0525** | $8.36 \times 10^{-31}$ | **+0.0871** | $8.13 \times 10^{-82}$ | ✅ **True** |
-| **Unemployment Rate** (`unemployment_rate`)| 48,199 | **-0.0883** | $2.11 \times 10^{-83}$ | **-0.0757** | $1.07 \times 10^{-61}$ | ✅ **True** |
-| **Disability Rate** (`disability_rate`) | 48,199 | **+0.0267** | $5.54 \times 10^{-9}$ | **+0.0492** | $5.04 \times 10^{-27}$ | ✅ **True** |
-| **Minority Rate** (`minority_rate`) | 48,199 | **-0.2602** | $< 1.0 \times 10^{-300}$ | **-0.3389** | $< 1.0 \times 10^{-300}$ | ✅ **True** |
+- **Study Scope**: Central Phoenix Heat Island Corridor (Partial study area covering 48,199 FortyGuard thermal tiles across 230 U.S. Census Tracts). Full-city coverage is pending Member 1 API expansion.
+- **Statistical Unit**: U.S. Census Tract (`geoid` enforced as an 11-character string, e.g., `'04013113900'`).
+- **Data Ingestion**:
+  - **FortyGuard Thermal Ingestion**: High-resolution thermal data from FortyGuard tOS Enterprise API (`/v1/heatmap`) covering 48,199 spatial tiles (100m resolution).
+  - **U.S. Census Bureau ACS 5-Year Demographics**: Real Census Tract boundaries from Census TIGERweb (State FIPS `04`, County FIPS `013`) and official ACS 5-Year socioeconomic indicators across 230 intersected Census Tracts.
+- **Composite Risk Formulation (Prototype Heuristic Weighting)**:
+  $$\text{Final Risk Score} = (\text{Intensity Score} \times 0.50) + (\text{Vulnerability Score} \times 0.50)$$
+  *(When multi-temporal persistence is unavailable from a single daily snapshot, persistence is marked unavailable and weights are allocated 50/50 across active components, preserving the exact 0–100 scale).*
 
 ---
 
-## 3. Real Metric Ranges & Distribution
+## 2. Corrected Census-Tract Correlation Matrix (SciPy Engine)
 
-- **Total Real Spatial Tiles**: `48,199`
-- **Area of Interest (AOI)**: Phoenix Heat Corridor ($33.3795^\circ\text{N} - 33.5605^\circ\text{N}$, $-112.2205^\circ\text{W} - -111.9595^\circ\text{W}$)
-- **Temperature Range ($^\circ\text{C}$)**: `34.70°C` to `36.70°C` (Mean: `36.07°C`)
-- **Temperature Range ($^\circ\text{F}$)**: `94.46°F` to `98.06°F` (Mean: `96.93°F`)
-- **Historical Summer Baseline ($^\circ\text{C}$)**: `39.50°C` (`103.10°F`)
-- **Temperature Anomaly ($^\circ\text{C}$)**: Range `-4.80°C` to `-2.80°C` (Mean: `-3.43°C`)
-- **Vulnerability Score (0 - 100)**: Range `6.23` to `61.15` (Mean: `23.30`)
-- **Final Risk Score (0 - 100)**: Range `6.79` to `78.19` (Mean: `45.92`)
-- **Risk Bands (Exact Scale)**:
-  * **Critical ($\ge 75.00$)**: `87 tiles` (0.2%)
-  * **High ($50.00 - 74.99$)**: `19,475 tiles` (40.4%)
-  * **Moderate ($25.00 - 49.99$)**: `27,845 tiles` (57.8%)
-  * **Low ($< 25.00$)**: `792 tiles` (1.6%)
+Statistical unit: **Census Tract ($N = 230$)**. Tile-level correlation ($N = 48,199$) was superseded to eliminate pseudoreplication and false statistical significance.
 
----
+| Demographic Variable | Field Name | Tract $N$ | Pearson $r$ | Pearson $p$-value | Spearman $\rho$ | Spearman $p$-value | Statistically Significant ($p < 0.05$) |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Minority Rate** | `minority_rate` | 230 | **-0.3437** | $8.90 \times 10^{-8}$ | **-0.4047** | $1.78 \times 10^{-10}$ | ✅ **True** |
+| **Elderly Rate (65+)** | `elderly_rate` | 230 | **+0.1336** | $4.30 \times 10^{-2}$ | **+0.1347** | $4.12 \times 10^{-2}$ | ✅ **True** |
+| **Poverty Rate** | `poverty_rate` | 230 | **-0.1222** | $6.42 \times 10^{-2}$ | **-0.1505** | $2.25 \times 10^{-2}$ | ❌ **False** ($p \ge 0.05$) |
+| **No-Vehicle Rate** | `no_vehicle_rate` | 230 | **+0.0896** | $1.76 \times 10^{-1}$ | **+0.1401** | $3.37 \times 10^{-2}$ | ❌ **False** ($p \ge 0.05$) |
+| **Disability Rate** | `disability_rate` | 230 | **+0.0415** | $5.31 \times 10^{-1}$ | **+0.0436** | $5.11 \times 10^{-1}$ | ❌ **False** ($p \ge 0.05$) |
+| **Unemployment Rate**| `unemployment_rate`| 230 | **+0.0036** | $9.57 \times 10^{-1}$ | **-0.0144** | $8.28 \times 10^{-1}$ | ❌ **False** ($p \ge 0.05$) |
 
-## 4. Top Critical Hotspots Requiring Priority Intervention
-
-| Tile ID | District / Neighborhood | Census Tract | Temp (°C) | Poverty Rate | Elderly Rate | No-Vehicle Rate | Vulnerability Score | Final Risk Score | Risk Level |
-|:---|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| `FG-PHX-15908` | Sky Harbor / East Lake | Census Tract 1139 | 36.62°C | 73.4% | 3.9% | 49.2% | 60.39 | **78.19** | 🔴 **Critical** |
-| `FG-PHX-16149` | Sky Harbor / East Lake | Census Tract 1139 | 36.62°C | 73.4% | 3.9% | 49.2% | 60.39 | **78.19** | 🔴 **Critical** |
-| `FG-PHX-15183` | Sky Harbor / East Lake | Census Tract 1139 | 36.62°C | 73.4% | 3.9% | 49.2% | 60.39 | **78.19** | 🔴 **Critical** |
-| `FG-PHX-15184` | Sky Harbor / East Lake | Census Tract 1139 | 36.62°C | 73.4% | 3.9% | 49.2% | 60.39 | **78.19** | 🔴 **Critical** |
-| `FG-PHX-16390` | Sky Harbor / East Lake | Census Tract 1139 | 36.62°C | 73.4% | 3.9% | 49.2% | 60.39 | **78.19** | 🔴 **Critical** |
+*Exploratory statistical association across geographic units. No causal claim is made, and spatial autocorrelation may remain.*
 
 ---
 
-## 5. Deliverables & Integration Contract
+## 3. Weighting Sensitivity Analysis (2-Component Model)
+
+Evaluated across 230 Census Tracts:
+- **Scenario A (40% Heat / 60% Vulnerability)**: Spearman $\rho = 0.9862$ with baseline B. 62 tracts (27.0%) shifted risk band. 9/10 top hotspot overlap.
+- **Scenario B (50% Heat / 50% Vulnerability)**: Current baseline.
+- **Scenario C (60% Heat / 40% Vulnerability)**: Spearman $\rho = 0.9906$ with baseline B. 26 tracts (11.3%) shifted risk band. 8/10 top hotspot overlap.
+
+*Demonstrates high prioritization stability under reasonable heuristic weight changes.*
+
+---
+
+## 4. Key Limitations & Disclaimers
+
+1. **Risk Formula Status**: Prototype heuristic weighting for spatial prioritization testing. Not clinically validated, not official City of Phoenix policy, and does not predict medical outcomes.
+2. **Risk Bands**: Equal-width prototype categories (Low < 25, Moderate 25-49.99, High 50-74.99, Critical >= 75), not epidemiological thresholds.
+3. **Population Metric**: `affectedPopulation` (964,706 deduplicated across 230 represented tracts) represents total Census population residing within intersected tract boundaries. Not a count of heat-stroke cases or medically affected individuals.
+4. **Historical Baseline**: Default 39.5°C anomaly calculation disabled due to lack of a verified NOAA/NWS source dataset in repository evidence.
+5. **Persistence Data**: Marked unavailable (`null`) for single snapshot dataset.
+6. **Synthetic Zones Deprecated**: Legacy coordinate-based zone boxes (e.g. `PHX-Z01`) are deprecated in favor of official 11-character Census Tract GEOIDs.
+
+---
+
+## 5. Canonical Frontend Handoff Deliverables
 
 The processed data artifacts are saved under `data/processed/`:
 
-1. **`data/processed/phoenix_risk_scored_tiles.csv`** (48,199 records, complete tabular dataset)
-2. **`data/processed/phoenix_risk_scored_tiles.json`** (48,199 records, array of JSON objects matching frontend interfaces)
-3. **`data/processed/phoenix_risk_scored_tiles.geojson`** (48,199 Polygon features with CRS `EPSG:4326`)
-4. **`analysis/DATA_DICTIONARY.md`** (Complete specification of field names, units, raw vs. derived, sources, and methods)
+1. **`data/processed/phoenix_tract_risk.json`** (230 compact Census Tract records, primary frontend handoff)
+2. **`data/processed/phoenix_tract_risk.csv`** (230 compact Census Tract records in flat CSV format)
+3. **`data/processed/correlation_summary.json`** (Tract-level Pearson and Spearman correlation results)
+4. **`data/processed/sensitivity_summary.json`** (Machine-readable weighting sensitivity summary)
+5. **`data/processed/track7_summary.json`** (Master Track 7 metadata and pipeline state summary)
 
 ---
 
 ## 6. How to Run the Pipeline
 
 ```bash
-# Run the pipeline with active venv
+# Run the complete Track 7 analytics & validation orchestrator
 .\venv\Scripts\python.exe analysis/heat_analysis_main.py
 ```
+
