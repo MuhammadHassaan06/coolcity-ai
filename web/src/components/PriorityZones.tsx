@@ -39,11 +39,12 @@ export default function PriorityZones({
   const [searchQuery, setSearchQuery] = useState("");
   const [showAll, setShowAll] = useState(false);
 
-  // Filter zones by search query if user types
+  // Filter zones by search query (GEOID, code, or name)
   const filtered = zones.filter(
     (z) =>
       z.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      z.name.toLowerCase().includes(searchQuery.toLowerCase())
+      z.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      z.geoid.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Display top 10 by default unless showing all or searching
@@ -81,13 +82,18 @@ export default function PriorityZones({
       {/* List Container */}
       <div className="divide-y divide-gray-200 overflow-y-auto max-h-[420px] flex-1">
         {displayZones.map((zone) => {
-          const isSelected = selectedZoneId === zone.id;
+          const isSelected = Boolean(
+            selectedZoneId &&
+              (selectedZoneId === zone.id ||
+                selectedZoneId === zone.geoid ||
+                selectedZoneId === zone.code)
+          );
           const status = statusBadge[zone.status];
 
           return (
             <button
               key={zone.id}
-              onClick={() => onZoneSelect(zone.id)}
+              onClick={() => onZoneSelect(zone.geoid || zone.id)}
               aria-pressed={isSelected}
               className={`w-full text-left px-4 py-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-800 ${
                 isSelected
@@ -124,6 +130,12 @@ export default function PriorityZones({
             </button>
           );
         })}
+
+        {filtered.length === 0 && (
+          <div className="p-6 text-center text-xs text-gray-500 font-mono">
+            No Census Tracts matching &quot;{searchQuery}&quot;
+          </div>
+        )}
       </div>
 
       {/* Footer Controls */}
@@ -135,9 +147,9 @@ export default function PriorityZones({
           <button
             type="button"
             onClick={() => setShowAll((prev) => !prev)}
-            className="text-slate-700 hover:text-slate-950 font-medium underline text-[11px]"
+            className="text-slate-700 hover:text-slate-950 font-medium underline text-[11px] focus:outline-none focus:ring-2 focus:ring-slate-800 rounded px-1"
           >
-            {showAll ? "Show Top 10 Only" : `View All ${filtered.length} Tracts`}
+            {showAll ? "Show Top 10 Tracts" : `View All ${filtered.length} Tracts`}
           </button>
         )}
       </div>
