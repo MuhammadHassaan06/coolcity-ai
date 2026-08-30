@@ -1,0 +1,36 @@
+{
+  "studyArea": "City of Phoenix (Full-City Snapshot)",
+  "coverageStatus": "full-city",
+  "boundary": "City of Phoenix",
+  "snapshotDate": "2024-07-15",
+  "snapshotTime": "14:00",
+  "thermalFeatureCount": 121892,
+  "rawThermalFeatureCount": 221420,
+  "excludedOutsideFeatures": 99528,
+  "statisticalUnit": "Census Tract",
+  "tractCount": 359,
+  "representedTractPopulation": 1542520,
+  "representedTractPopulationNote": "sum of Census populations for Phoenix-intersecting represented tracts",
+  "temperatureSummary": {
+    "minC": 37.51,
+    "maxC": 40.06,
+    "meanC": 39.04
+  },
+  "riskScoreSummary": {
+    "minScore": 10.48,
+    "maxScore": 73.15,
+    "meanScore": 44.66
+  },
+  "riskModelStatus": "prototype heuristic weighting",
+  "riskFormula": "0.50 * intensity_score + 0.50 * vulnerability_score",
+  "persistenceAvailable": false,
+  "historicalBaselineVerified": false,
+  "canonicalOutputs": [
+    "data/processed/phoenix_tract_risk.json",
+    "data/processed/phoenix_tract_risk.csv",
+    "data/processed/correlation_summary.json",
+    "data/processed/sensitivity_summary.json",
+    "data/processed/track7_summary.json"
+  ],
+  "snapshotId": "2024-07-15-1400"
+}

@@ -1,0 +1,3592 @@
+[
+  {
+    "id": "tract-04013113900",
+    "code": "04013113900",
+    "name": "Census Tract 1139",
+    "geoid": "04013113900",
+    "riskScore": 77.02,
+    "status": "critical",
+    "avgTemperature": 40.57,
+    "affectedPopulation": 1532
+  },
+  {
+    "id": "tract-04013114900",
+    "code": "04013114900",
+    "name": "Census Tract 1149",
+    "geoid": "04013114900",
+    "riskScore": 75.95,
+    "status": "critical",
+    "avgTemperature": 40.54,
+    "affectedPopulation": 2717
+  },
+  {
+    "id": "tract-04013113301",
+    "code": "04013113301",
+    "name": "Census Tract 1133.01",
+    "geoid": "04013113301",
+    "riskScore": 70.46,
+    "status": "high",
+    "avgTemperature": 40.54,
+    "affectedPopulation": 3748
+  },
+  {
+    "id": "tract-04013107403",
+    "code": "04013107403",
+    "name": "Census Tract 1074.03",
+    "geoid": "04013107403",
+    "riskScore": 69.04,
+    "status": "high",
+    "avgTemperature": 40.29,
+    "affectedPopulation": 2200
+  },
+  {
+    "id": "tract-04013114302",
+    "code": "04013114302",
+    "name": "Census Tract 1143.02",
+    "geoid": "04013114302",
+    "riskScore": 68.96,
+    "status": "high",
+    "avgTemperature": 40.58,
+    "affectedPopulation": 2711
+  },
+  {
+    "id": "tract-04013117300",
+    "code": "04013117300",
+    "name": "Census Tract 1173",
+    "geoid": "04013117300",
+    "riskScore": 68.41,
+    "status": "high",
+    "avgTemperature": 40.51,
+    "affectedPopulation": 2173
+  },
+  {
+    "id": "tract-04013112202",
+    "code": "04013112202",
+    "name": "Census Tract 1122.02",
+    "geoid": "04013112202",
+    "riskScore": 66.33,
+    "status": "high",
+    "avgTemperature": 40.46,
+    "affectedPopulation": 4028
+  },
+  {
+    "id": "tract-04013981000",
+    "code": "04013981000",
+    "name": "Census Tract 9810",
+    "geoid": "04013981000",
+    "riskScore": 66.3,
+    "status": "high",
+    "avgTemperature": 40.68,
+    "affectedPopulation": 580
+  },
+  {
+    "id": "tract-04013115300",
+    "code": "04013115300",
+    "name": "Census Tract 1153",
+    "geoid": "04013115300",
+    "riskScore": 65.24,
+    "status": "high",
+    "avgTemperature": 40.52,
+    "affectedPopulation": 2765
+  },
+  {
+    "id": "tract-04013941000",
+    "code": "04013941000",
+    "name": "Census Tract 9410",
+    "geoid": "04013941000",
+    "riskScore": 64.68,
+    "status": "high",
+    "avgTemperature": 40.42,
+    "affectedPopulation": 2985
+  },
+  {
+    "id": "tract-04013114301",
+    "code": "04013114301",
+    "name": "Census Tract 1143.01",
+    "geoid": "04013114301",
+    "riskScore": 64.5,
+    "status": "high",
+    "avgTemperature": 40.58,
+    "affectedPopulation": 868
+  },
+  {
+    "id": "tract-04013113100",
+    "code": "04013113100",
+    "name": "Census Tract 1131",
+    "geoid": "04013113100",
+    "riskScore": 63.8,
+    "status": "high",
+    "avgTemperature": 40.49,
+    "affectedPopulation": 5837
+  },
+  {
+    "id": "tract-04013112601",
+    "code": "04013112601",
+    "name": "Census Tract 1126.01",
+    "geoid": "04013112601",
+    "riskScore": 63.78,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 3507
+  },
+  {
+    "id": "tract-04013106801",
+    "code": "04013106801",
+    "name": "Census Tract 1068.01",
+    "geoid": "04013106801",
+    "riskScore": 63.52,
+    "status": "high",
+    "avgTemperature": 40.24,
+    "affectedPopulation": 4706
+  },
+  {
+    "id": "tract-04013114100",
+    "code": "04013114100",
+    "name": "Census Tract 1141",
+    "geoid": "04013114100",
+    "riskScore": 63.36,
+    "status": "high",
+    "avgTemperature": 40.55,
+    "affectedPopulation": 2061
+  },
+  {
+    "id": "tract-04013114000",
+    "code": "04013114000",
+    "name": "Census Tract 1140",
+    "geoid": "04013114000",
+    "riskScore": 63.17,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 1865
+  },
+  {
+    "id": "tract-04013113502",
+    "code": "04013113502",
+    "name": "Census Tract 1135.02",
+    "geoid": "04013113502",
+    "riskScore": 63.16,
+    "status": "high",
+    "avgTemperature": 40.67,
+    "affectedPopulation": 3243
+  },
+  {
+    "id": "tract-04013109703",
+    "code": "04013109703",
+    "name": "Census Tract 1097.03",
+    "geoid": "04013109703",
+    "riskScore": 62.81,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 2980
+  },
+  {
+    "id": "tract-04013114704",
+    "code": "04013114704",
+    "name": "Census Tract 1147.04",
+    "geoid": "04013114704",
+    "riskScore": 62.78,
+    "status": "high",
+    "avgTemperature": 40.55,
+    "affectedPopulation": 1988
+  },
+  {
+    "id": "tract-04013114200",
+    "code": "04013114200",
+    "name": "Census Tract 1142",
+    "geoid": "04013114200",
+    "riskScore": 62.76,
+    "status": "high",
+    "avgTemperature": 40.54,
+    "affectedPopulation": 933
+  },
+  {
+    "id": "tract-04013109102",
+    "code": "04013109102",
+    "name": "Census Tract 1091.02",
+    "geoid": "04013109102",
+    "riskScore": 62.34,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 6646
+  },
+  {
+    "id": "tract-04013109200",
+    "code": "04013109200",
+    "name": "Census Tract 1092",
+    "geoid": "04013109200",
+    "riskScore": 62.3,
+    "status": "high",
+    "avgTemperature": 40.4,
+    "affectedPopulation": 4463
+  },
+  {
+    "id": "tract-04013114600",
+    "code": "04013114600",
+    "name": "Census Tract 1146",
+    "geoid": "04013114600",
+    "riskScore": 61.25,
+    "status": "high",
+    "avgTemperature": 40.5,
+    "affectedPopulation": 1364
+  },
+  {
+    "id": "tract-04013115801",
+    "code": "04013115801",
+    "name": "Census Tract 1158.01",
+    "geoid": "04013115801",
+    "riskScore": 61.22,
+    "status": "high",
+    "avgTemperature": 40.38,
+    "affectedPopulation": 4247
+  },
+  {
+    "id": "tract-04013083000",
+    "code": "04013083000",
+    "name": "Census Tract 830",
+    "geoid": "04013083000",
+    "riskScore": 61.21,
+    "status": "high",
+    "avgTemperature": 40.34,
+    "affectedPopulation": 7221
+  },
+  {
+    "id": "tract-04013117200",
+    "code": "04013117200",
+    "name": "Census Tract 1172",
+    "geoid": "04013117200",
+    "riskScore": 60.94,
+    "status": "high",
+    "avgTemperature": 40.55,
+    "affectedPopulation": 1136
+  },
+  {
+    "id": "tract-04013113701",
+    "code": "04013113701",
+    "name": "Census Tract 1137.01",
+    "geoid": "04013113701",
+    "riskScore": 60.92,
+    "status": "high",
+    "avgTemperature": 40.55,
+    "affectedPopulation": 5599
+  },
+  {
+    "id": "tract-04013114500",
+    "code": "04013114500",
+    "name": "Census Tract 1145",
+    "geoid": "04013114500",
+    "riskScore": 60.84,
+    "status": "high",
+    "avgTemperature": 40.55,
+    "affectedPopulation": 4224
+  },
+  {
+    "id": "tract-04013116733",
+    "code": "04013116733",
+    "name": "Census Tract 1167.33",
+    "geoid": "04013116733",
+    "riskScore": 60.77,
+    "status": "high",
+    "avgTemperature": 39.53,
+    "affectedPopulation": 8
+  },
+  {
+    "id": "tract-04013107404",
+    "code": "04013107404",
+    "name": "Census Tract 1074.04",
+    "geoid": "04013107404",
+    "riskScore": 60.55,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 1256
+  },
+  {
+    "id": "tract-04013109001",
+    "code": "04013109001",
+    "name": "Census Tract 1090.01",
+    "geoid": "04013109001",
+    "riskScore": 60.54,
+    "status": "high",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 5037
+  },
+  {
+    "id": "tract-04013111402",
+    "code": "04013111402",
+    "name": "Census Tract 1114.02",
+    "geoid": "04013111402",
+    "riskScore": 60.49,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 3471
+  },
+  {
+    "id": "tract-04013116800",
+    "code": "04013116800",
+    "name": "Census Tract 1168",
+    "geoid": "04013116800",
+    "riskScore": 60.02,
+    "status": "high",
+    "avgTemperature": 40.51,
+    "affectedPopulation": 2659
+  },
+  {
+    "id": "tract-04013113503",
+    "code": "04013113503",
+    "name": "Census Tract 1135.03",
+    "geoid": "04013113503",
+    "riskScore": 59.98,
+    "status": "high",
+    "avgTemperature": 40.58,
+    "affectedPopulation": 4826
+  },
+  {
+    "id": "tract-04013108601",
+    "code": "04013108601",
+    "name": "Census Tract 1086.01",
+    "geoid": "04013108601",
+    "riskScore": 59.95,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 2441
+  },
+  {
+    "id": "tract-04013115500",
+    "code": "04013115500",
+    "name": "Census Tract 1155",
+    "geoid": "04013115500",
+    "riskScore": 59.84,
+    "status": "high",
+    "avgTemperature": 40.65,
+    "affectedPopulation": 3864
+  },
+  {
+    "id": "tract-04013115400",
+    "code": "04013115400",
+    "name": "Census Tract 1154",
+    "geoid": "04013115400",
+    "riskScore": 59.83,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 1688
+  },
+  {
+    "id": "tract-04013110802",
+    "code": "04013110802",
+    "name": "Census Tract 1108.02",
+    "geoid": "04013110802",
+    "riskScore": 59.76,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 2401
+  },
+  {
+    "id": "tract-04013113602",
+    "code": "04013113602",
+    "name": "Census Tract 1136.02",
+    "geoid": "04013113602",
+    "riskScore": 59.66,
+    "status": "high",
+    "avgTemperature": 40.64,
+    "affectedPopulation": 4292
+  },
+  {
+    "id": "tract-04013107601",
+    "code": "04013107601",
+    "name": "Census Tract 1076.01",
+    "geoid": "04013107601",
+    "riskScore": 59.48,
+    "status": "high",
+    "avgTemperature": 40.29,
+    "affectedPopulation": 2980
+  },
+  {
+    "id": "tract-04013113204",
+    "code": "04013113204",
+    "name": "Census Tract 1132.04",
+    "geoid": "04013113204",
+    "riskScore": 59.36,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 2484
+  },
+  {
+    "id": "tract-04013110501",
+    "code": "04013110501",
+    "name": "Census Tract 1105.01",
+    "geoid": "04013110501",
+    "riskScore": 59.32,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 3445
+  },
+  {
+    "id": "tract-04013114402",
+    "code": "04013114402",
+    "name": "Census Tract 1144.02",
+    "geoid": "04013114402",
+    "riskScore": 59.26,
+    "status": "high",
+    "avgTemperature": 40.57,
+    "affectedPopulation": 1756
+  },
+  {
+    "id": "tract-04013109003",
+    "code": "04013109003",
+    "name": "Census Tract 1090.03",
+    "geoid": "04013109003",
+    "riskScore": 59.22,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 6402
+  },
+  {
+    "id": "tract-04013117000",
+    "code": "04013117000",
+    "name": "Census Tract 1170",
+    "geoid": "04013117000",
+    "riskScore": 59.06,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 7015
+  },
+  {
+    "id": "tract-04013112700",
+    "code": "04013112700",
+    "name": "Census Tract 1127",
+    "geoid": "04013112700",
+    "riskScore": 59.01,
+    "status": "high",
+    "avgTemperature": 40.53,
+    "affectedPopulation": 7787
+  },
+  {
+    "id": "tract-04013110901",
+    "code": "04013110901",
+    "name": "Census Tract 1109.01",
+    "geoid": "04013110901",
+    "riskScore": 59.01,
+    "status": "high",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 3528
+  },
+  {
+    "id": "tract-04013112602",
+    "code": "04013112602",
+    "name": "Census Tract 1126.02",
+    "geoid": "04013112602",
+    "riskScore": 58.78,
+    "status": "high",
+    "avgTemperature": 40.49,
+    "affectedPopulation": 8704
+  },
+  {
+    "id": "tract-04013112302",
+    "code": "04013112302",
+    "name": "Census Tract 1123.02",
+    "geoid": "04013112302",
+    "riskScore": 58.56,
+    "status": "high",
+    "avgTemperature": 40.41,
+    "affectedPopulation": 7282
+  },
+  {
+    "id": "tract-04013106100",
+    "code": "04013106100",
+    "name": "Census Tract 1061",
+    "geoid": "04013106100",
+    "riskScore": 58.54,
+    "status": "high",
+    "avgTemperature": 40.11,
+    "affectedPopulation": 5835
+  },
+  {
+    "id": "tract-04013114800",
+    "code": "04013114800",
+    "name": "Census Tract 1148",
+    "geoid": "04013114800",
+    "riskScore": 58.49,
+    "status": "high",
+    "avgTemperature": 40.51,
+    "affectedPopulation": 3120
+  },
+  {
+    "id": "tract-04013113202",
+    "code": "04013113202",
+    "name": "Census Tract 1132.02",
+    "geoid": "04013113202",
+    "riskScore": 58.44,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 2141
+  },
+  {
+    "id": "tract-04013114401",
+    "code": "04013114401",
+    "name": "Census Tract 1144.01",
+    "geoid": "04013114401",
+    "riskScore": 58.28,
+    "status": "high",
+    "avgTemperature": 40.55,
+    "affectedPopulation": 1687
+  },
+  {
+    "id": "tract-04013105900",
+    "code": "04013105900",
+    "name": "Census Tract 1059",
+    "geoid": "04013105900",
+    "riskScore": 58.13,
+    "status": "high",
+    "avgTemperature": 40.22,
+    "affectedPopulation": 5360
+  },
+  {
+    "id": "tract-04013113201",
+    "code": "04013113201",
+    "name": "Census Tract 1132.01",
+    "geoid": "04013113201",
+    "riskScore": 57.87,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 2244
+  },
+  {
+    "id": "tract-04013107800",
+    "code": "04013107800",
+    "name": "Census Tract 1078",
+    "geoid": "04013107800",
+    "riskScore": 57.84,
+    "status": "high",
+    "avgTemperature": 40.18,
+    "affectedPopulation": 2523
+  },
+  {
+    "id": "tract-04013116000",
+    "code": "04013116000",
+    "name": "Census Tract 1160",
+    "geoid": "04013116000",
+    "riskScore": 57.63,
+    "status": "high",
+    "avgTemperature": 40.5,
+    "affectedPopulation": 6848
+  },
+  {
+    "id": "tract-04013104401",
+    "code": "04013104401",
+    "name": "Census Tract 1044.01",
+    "geoid": "04013104401",
+    "riskScore": 57.54,
+    "status": "high",
+    "avgTemperature": 40.08,
+    "affectedPopulation": 5551
+  },
+  {
+    "id": "tract-04013106701",
+    "code": "04013106701",
+    "name": "Census Tract 1067.01",
+    "geoid": "04013106701",
+    "riskScore": 57.5,
+    "status": "high",
+    "avgTemperature": 40.24,
+    "affectedPopulation": 4559
+  },
+  {
+    "id": "tract-04013112900",
+    "code": "04013112900",
+    "name": "Census Tract 1129",
+    "geoid": "04013112900",
+    "riskScore": 57.5,
+    "status": "high",
+    "avgTemperature": 40.49,
+    "affectedPopulation": 4630
+  },
+  {
+    "id": "tract-04013112507",
+    "code": "04013112507",
+    "name": "Census Tract 1125.07",
+    "geoid": "04013112507",
+    "riskScore": 57.41,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 3292
+  },
+  {
+    "id": "tract-04013112201",
+    "code": "04013112201",
+    "name": "Census Tract 1122.01",
+    "geoid": "04013112201",
+    "riskScore": 57.41,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 5002
+  },
+  {
+    "id": "tract-04013109402",
+    "code": "04013109402",
+    "name": "Census Tract 1094.02",
+    "geoid": "04013109402",
+    "riskScore": 57.22,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 4744
+  },
+  {
+    "id": "tract-04013112519",
+    "code": "04013112519",
+    "name": "Census Tract 1125.19",
+    "geoid": "04013112519",
+    "riskScore": 57.11,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 5173
+  },
+  {
+    "id": "tract-04013112301",
+    "code": "04013112301",
+    "name": "Census Tract 1123.01",
+    "geoid": "04013112301",
+    "riskScore": 57.0,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 5989
+  },
+  {
+    "id": "tract-04013109401",
+    "code": "04013109401",
+    "name": "Census Tract 1094.01",
+    "geoid": "04013109401",
+    "riskScore": 56.76,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 3383
+  },
+  {
+    "id": "tract-04013111602",
+    "code": "04013111602",
+    "name": "Census Tract 1116.02",
+    "geoid": "04013111602",
+    "riskScore": 56.65,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 4646
+  },
+  {
+    "id": "tract-04013116300",
+    "code": "04013116300",
+    "name": "Census Tract 1163",
+    "geoid": "04013116300",
+    "riskScore": 56.63,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 6181
+  },
+  {
+    "id": "tract-04013106002",
+    "code": "04013106002",
+    "name": "Census Tract 1060.02",
+    "geoid": "04013106002",
+    "riskScore": 56.6,
+    "status": "high",
+    "avgTemperature": 40.2,
+    "affectedPopulation": 2603
+  },
+  {
+    "id": "tract-04013116100",
+    "code": "04013116100",
+    "name": "Census Tract 1161",
+    "geoid": "04013116100",
+    "riskScore": 56.6,
+    "status": "high",
+    "avgTemperature": 40.24,
+    "affectedPopulation": 4543
+  },
+  {
+    "id": "tract-04013111601",
+    "code": "04013111601",
+    "name": "Census Tract 1116.01",
+    "geoid": "04013111601",
+    "riskScore": 56.52,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 3376
+  },
+  {
+    "id": "tract-04013116736",
+    "code": "04013116736",
+    "name": "Census Tract 1167.36",
+    "geoid": "04013116736",
+    "riskScore": 56.46,
+    "status": "high",
+    "avgTemperature": 40.19,
+    "affectedPopulation": 3623
+  },
+  {
+    "id": "tract-04013104205",
+    "code": "04013104205",
+    "name": "Census Tract 1042.05",
+    "geoid": "04013104205",
+    "riskScore": 56.45,
+    "status": "high",
+    "avgTemperature": 40.12,
+    "affectedPopulation": 6257
+  },
+  {
+    "id": "tract-04013110502",
+    "code": "04013110502",
+    "name": "Census Tract 1105.02",
+    "geoid": "04013110502",
+    "riskScore": 56.41,
+    "status": "high",
+    "avgTemperature": 40.42,
+    "affectedPopulation": 3264
+  },
+  {
+    "id": "tract-04013112504",
+    "code": "04013112504",
+    "name": "Census Tract 1125.04",
+    "geoid": "04013112504",
+    "riskScore": 56.39,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 4024
+  },
+  {
+    "id": "tract-04013111800",
+    "code": "04013111800",
+    "name": "Census Tract 1118",
+    "geoid": "04013111800",
+    "riskScore": 56.33,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 4695
+  },
+  {
+    "id": "tract-04013105503",
+    "code": "04013105503",
+    "name": "Census Tract 1055.03",
+    "geoid": "04013105503",
+    "riskScore": 56.31,
+    "status": "high",
+    "avgTemperature": 40.16,
+    "affectedPopulation": 4125
+  },
+  {
+    "id": "tract-04013108902",
+    "code": "04013108902",
+    "name": "Census Tract 1089.02",
+    "geoid": "04013108902",
+    "riskScore": 56.28,
+    "status": "high",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 5188
+  },
+  {
+    "id": "tract-04013111502",
+    "code": "04013111502",
+    "name": "Census Tract 1115.02",
+    "geoid": "04013111502",
+    "riskScore": 56.28,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 6440
+  },
+  {
+    "id": "tract-04013116615",
+    "code": "04013116615",
+    "name": "Census Tract 1166.15",
+    "geoid": "04013116615",
+    "riskScore": 56.26,
+    "status": "high",
+    "avgTemperature": 40.28,
+    "affectedPopulation": 3847
+  },
+  {
+    "id": "tract-04013113702",
+    "code": "04013113702",
+    "name": "Census Tract 1137.02",
+    "geoid": "04013113702",
+    "riskScore": 56.26,
+    "status": "high",
+    "avgTemperature": 40.59,
+    "affectedPopulation": 2540
+  },
+  {
+    "id": "tract-04013115600",
+    "code": "04013115600",
+    "name": "Census Tract 1156",
+    "geoid": "04013115600",
+    "riskScore": 56.11,
+    "status": "high",
+    "avgTemperature": 40.43,
+    "affectedPopulation": 4241
+  },
+  {
+    "id": "tract-04013109002",
+    "code": "04013109002",
+    "name": "Census Tract 1090.02",
+    "geoid": "04013109002",
+    "riskScore": 55.94,
+    "status": "high",
+    "avgTemperature": 40.32,
+    "affectedPopulation": 3948
+  },
+  {
+    "id": "tract-04013106702",
+    "code": "04013106702",
+    "name": "Census Tract 1067.02",
+    "geoid": "04013106702",
+    "riskScore": 55.93,
+    "status": "high",
+    "avgTemperature": 40.23,
+    "affectedPopulation": 1290
+  },
+  {
+    "id": "tract-04013115802",
+    "code": "04013115802",
+    "name": "Census Tract 1158.02",
+    "geoid": "04013115802",
+    "riskScore": 55.86,
+    "status": "high",
+    "avgTemperature": 40.38,
+    "affectedPopulation": 3825
+  },
+  {
+    "id": "tract-04013113800",
+    "code": "04013113800",
+    "name": "Census Tract 1138",
+    "geoid": "04013113800",
+    "riskScore": 55.74,
+    "status": "high",
+    "avgTemperature": 40.57,
+    "affectedPopulation": 2581
+  },
+  {
+    "id": "tract-04013116900",
+    "code": "04013116900",
+    "name": "Census Tract 1169",
+    "geoid": "04013116900",
+    "riskScore": 55.42,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 2653
+  },
+  {
+    "id": "tract-04013113601",
+    "code": "04013113601",
+    "name": "Census Tract 1136.01",
+    "geoid": "04013113601",
+    "riskScore": 55.36,
+    "status": "high",
+    "avgTemperature": 40.58,
+    "affectedPopulation": 4911
+  },
+  {
+    "id": "tract-04013107002",
+    "code": "04013107002",
+    "name": "Census Tract 1070.02",
+    "geoid": "04013107002",
+    "riskScore": 55.2,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 3854
+  },
+  {
+    "id": "tract-04013110600",
+    "code": "04013110600",
+    "name": "Census Tract 1106",
+    "geoid": "04013110600",
+    "riskScore": 55.16,
+    "status": "high",
+    "avgTemperature": 40.42,
+    "affectedPopulation": 4758
+  },
+  {
+    "id": "tract-04013109706",
+    "code": "04013109706",
+    "name": "Census Tract 1097.06",
+    "geoid": "04013109706",
+    "riskScore": 55.1,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 3241
+  },
+  {
+    "id": "tract-04013110701",
+    "code": "04013110701",
+    "name": "Census Tract 1107.01",
+    "geoid": "04013110701",
+    "riskScore": 55.1,
+    "status": "high",
+    "avgTemperature": 40.4,
+    "affectedPopulation": 2244
+  },
+  {
+    "id": "tract-04013106600",
+    "code": "04013106600",
+    "name": "Census Tract 1066",
+    "geoid": "04013106600",
+    "riskScore": 55.06,
+    "status": "high",
+    "avgTemperature": 40.24,
+    "affectedPopulation": 3649
+  },
+  {
+    "id": "tract-04013116611",
+    "code": "04013116611",
+    "name": "Census Tract 1166.11",
+    "geoid": "04013116611",
+    "riskScore": 54.97,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 4236
+  },
+  {
+    "id": "tract-04013110902",
+    "code": "04013110902",
+    "name": "Census Tract 1109.02",
+    "geoid": "04013110902",
+    "riskScore": 54.81,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 4617
+  },
+  {
+    "id": "tract-04013112512",
+    "code": "04013112512",
+    "name": "Census Tract 1125.12",
+    "geoid": "04013112512",
+    "riskScore": 54.81,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 660
+  },
+  {
+    "id": "tract-04013108400",
+    "code": "04013108400",
+    "name": "Census Tract 1084",
+    "geoid": "04013108400",
+    "riskScore": 54.78,
+    "status": "high",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 5726
+  },
+  {
+    "id": "tract-04013112502",
+    "code": "04013112502",
+    "name": "Census Tract 1125.02",
+    "geoid": "04013112502",
+    "riskScore": 54.72,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 5997
+  },
+  {
+    "id": "tract-04013115900",
+    "code": "04013115900",
+    "name": "Census Tract 1159",
+    "geoid": "04013115900",
+    "riskScore": 54.68,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 6225
+  },
+  {
+    "id": "tract-04013104302",
+    "code": "04013104302",
+    "name": "Census Tract 1043.02",
+    "geoid": "04013104302",
+    "riskScore": 54.68,
+    "status": "high",
+    "avgTemperature": 40.14,
+    "affectedPopulation": 3909
+  },
+  {
+    "id": "tract-04013110100",
+    "code": "04013110100",
+    "name": "Census Tract 1101",
+    "geoid": "04013110100",
+    "riskScore": 54.6,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 6915
+  },
+  {
+    "id": "tract-04013111900",
+    "code": "04013111900",
+    "name": "Census Tract 1119",
+    "geoid": "04013111900",
+    "riskScore": 54.4,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 2522
+  },
+  {
+    "id": "tract-04013116606",
+    "code": "04013116606",
+    "name": "Census Tract 1166.06",
+    "geoid": "04013116606",
+    "riskScore": 54.37,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 6091
+  },
+  {
+    "id": "tract-04013107201",
+    "code": "04013107201",
+    "name": "Census Tract 1072.01",
+    "geoid": "04013107201",
+    "riskScore": 54.28,
+    "status": "high",
+    "avgTemperature": 40.33,
+    "affectedPopulation": 3129
+  },
+  {
+    "id": "tract-04013108901",
+    "code": "04013108901",
+    "name": "Census Tract 1089.01",
+    "geoid": "04013108901",
+    "riskScore": 54.18,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 2364
+  },
+  {
+    "id": "tract-04013104000",
+    "code": "04013104000",
+    "name": "Census Tract 1040",
+    "geoid": "04013104000",
+    "riskScore": 54.13,
+    "status": "high",
+    "avgTemperature": 40.16,
+    "affectedPopulation": 7646
+  },
+  {
+    "id": "tract-04013111203",
+    "code": "04013111203",
+    "name": "Census Tract 1112.03",
+    "geoid": "04013111203",
+    "riskScore": 54.1,
+    "status": "high",
+    "avgTemperature": 40.46,
+    "affectedPopulation": 1962
+  },
+  {
+    "id": "tract-04013111501",
+    "code": "04013111501",
+    "name": "Census Tract 1115.01",
+    "geoid": "04013111501",
+    "riskScore": 54.1,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 2148
+  },
+  {
+    "id": "tract-04013116400",
+    "code": "04013116400",
+    "name": "Census Tract 1164",
+    "geoid": "04013116400",
+    "riskScore": 54.08,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 5913
+  },
+  {
+    "id": "tract-04013109900",
+    "code": "04013109900",
+    "name": "Census Tract 1099",
+    "geoid": "04013109900",
+    "riskScore": 54.06,
+    "status": "high",
+    "avgTemperature": 40.42,
+    "affectedPopulation": 7676
+  },
+  {
+    "id": "tract-04013106001",
+    "code": "04013106001",
+    "name": "Census Tract 1060.01",
+    "geoid": "04013106001",
+    "riskScore": 53.98,
+    "status": "high",
+    "avgTemperature": 40.18,
+    "affectedPopulation": 1856
+  },
+  {
+    "id": "tract-04013105502",
+    "code": "04013105502",
+    "name": "Census Tract 1055.02",
+    "geoid": "04013105502",
+    "riskScore": 53.98,
+    "status": "high",
+    "avgTemperature": 40.11,
+    "affectedPopulation": 1865
+  },
+  {
+    "id": "tract-04013106802",
+    "code": "04013106802",
+    "name": "Census Tract 1068.02",
+    "geoid": "04013106802",
+    "riskScore": 53.96,
+    "status": "high",
+    "avgTemperature": 40.25,
+    "affectedPopulation": 3315
+  },
+  {
+    "id": "tract-04013108802",
+    "code": "04013108802",
+    "name": "Census Tract 1088.02",
+    "geoid": "04013108802",
+    "riskScore": 53.86,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 2118
+  },
+  {
+    "id": "tract-04013109704",
+    "code": "04013109704",
+    "name": "Census Tract 1097.04",
+    "geoid": "04013109704",
+    "riskScore": 53.86,
+    "status": "high",
+    "avgTemperature": 40.4,
+    "affectedPopulation": 2519
+  },
+  {
+    "id": "tract-04013107402",
+    "code": "04013107402",
+    "name": "Census Tract 1074.02",
+    "geoid": "04013107402",
+    "riskScore": 53.84,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 1479
+  },
+  {
+    "id": "tract-04013109601",
+    "code": "04013109601",
+    "name": "Census Tract 1096.01",
+    "geoid": "04013109601",
+    "riskScore": 53.69,
+    "status": "high",
+    "avgTemperature": 40.38,
+    "affectedPopulation": 4552
+  },
+  {
+    "id": "tract-04013112522",
+    "code": "04013112522",
+    "name": "Census Tract 1125.22",
+    "geoid": "04013112522",
+    "riskScore": 53.69,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 6843
+  },
+  {
+    "id": "tract-04013110400",
+    "code": "04013110400",
+    "name": "Census Tract 1104",
+    "geoid": "04013110400",
+    "riskScore": 53.65,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 4948
+  },
+  {
+    "id": "tract-04013112100",
+    "code": "04013112100",
+    "name": "Census Tract 1121",
+    "geoid": "04013112100",
+    "riskScore": 53.58,
+    "status": "high",
+    "avgTemperature": 40.5,
+    "affectedPopulation": 3919
+  },
+  {
+    "id": "tract-04013115200",
+    "code": "04013115200",
+    "name": "Census Tract 1152",
+    "geoid": "04013115200",
+    "riskScore": 53.51,
+    "status": "high",
+    "avgTemperature": 40.53,
+    "affectedPopulation": 3427
+  },
+  {
+    "id": "tract-04013112521",
+    "code": "04013112521",
+    "name": "Census Tract 1125.21",
+    "geoid": "04013112521",
+    "riskScore": 53.45,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 3059
+  },
+  {
+    "id": "tract-04013103208",
+    "code": "04013103208",
+    "name": "Census Tract 1032.08",
+    "geoid": "04013103208",
+    "riskScore": 53.41,
+    "status": "high",
+    "avgTemperature": 40.04,
+    "affectedPopulation": 3272
+  },
+  {
+    "id": "tract-04013108602",
+    "code": "04013108602",
+    "name": "Census Tract 1086.02",
+    "geoid": "04013108602",
+    "riskScore": 53.36,
+    "status": "high",
+    "avgTemperature": 40.38,
+    "affectedPopulation": 6667
+  },
+  {
+    "id": "tract-04013217400",
+    "code": "04013217400",
+    "name": "Census Tract 2174",
+    "geoid": "04013217400",
+    "riskScore": 53.26,
+    "status": "high",
+    "avgTemperature": 40.15,
+    "affectedPopulation": 3434
+  },
+  {
+    "id": "tract-04013109101",
+    "code": "04013109101",
+    "name": "Census Tract 1091.01",
+    "geoid": "04013109101",
+    "riskScore": 53.02,
+    "status": "high",
+    "avgTemperature": 40.34,
+    "affectedPopulation": 3798
+  },
+  {
+    "id": "tract-04013113000",
+    "code": "04013113000",
+    "name": "Census Tract 1130",
+    "geoid": "04013113000",
+    "riskScore": 53.0,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 4041
+  },
+  {
+    "id": "tract-04013111700",
+    "code": "04013111700",
+    "name": "Census Tract 1117",
+    "geoid": "04013111700",
+    "riskScore": 52.94,
+    "status": "high",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 5554
+  },
+  {
+    "id": "tract-04013116500",
+    "code": "04013116500",
+    "name": "Census Tract 1165",
+    "geoid": "04013116500",
+    "riskScore": 52.94,
+    "status": "high",
+    "avgTemperature": 40.23,
+    "affectedPopulation": 4973
+  },
+  {
+    "id": "tract-04013109801",
+    "code": "04013109801",
+    "name": "Census Tract 1098.01",
+    "geoid": "04013109801",
+    "riskScore": 52.78,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 5028
+  },
+  {
+    "id": "tract-04013110801",
+    "code": "04013110801",
+    "name": "Census Tract 1108.01",
+    "geoid": "04013110801",
+    "riskScore": 52.76,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 5025
+  },
+  {
+    "id": "tract-04013112520",
+    "code": "04013112520",
+    "name": "Census Tract 1125.20",
+    "geoid": "04013112520",
+    "riskScore": 52.66,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 4163
+  },
+  {
+    "id": "tract-04013117100",
+    "code": "04013117100",
+    "name": "Census Tract 1171",
+    "geoid": "04013117100",
+    "riskScore": 52.63,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 2920
+  },
+  {
+    "id": "tract-04013109702",
+    "code": "04013109702",
+    "name": "Census Tract 1097.02",
+    "geoid": "04013109702",
+    "riskScore": 52.6,
+    "status": "high",
+    "avgTemperature": 40.41,
+    "affectedPopulation": 5918
+  },
+  {
+    "id": "tract-04013107102",
+    "code": "04013107102",
+    "name": "Census Tract 1071.02",
+    "geoid": "04013107102",
+    "riskScore": 52.58,
+    "status": "high",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 5414
+  },
+  {
+    "id": "tract-04013107300",
+    "code": "04013107300",
+    "name": "Census Tract 1073",
+    "geoid": "04013107300",
+    "riskScore": 52.56,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 6830
+  },
+  {
+    "id": "tract-04013110001",
+    "code": "04013110001",
+    "name": "Census Tract 1100.01",
+    "geoid": "04013110001",
+    "riskScore": 52.54,
+    "status": "high",
+    "avgTemperature": 40.41,
+    "affectedPopulation": 5062
+  },
+  {
+    "id": "tract-04013107401",
+    "code": "04013107401",
+    "name": "Census Tract 1074.01",
+    "geoid": "04013107401",
+    "riskScore": 52.52,
+    "status": "high",
+    "avgTemperature": 40.29,
+    "affectedPopulation": 2681
+  },
+  {
+    "id": "tract-04013082206",
+    "code": "04013082206",
+    "name": "Census Tract 822.06",
+    "geoid": "04013082206",
+    "riskScore": 52.44,
+    "status": "high",
+    "avgTemperature": 40.52,
+    "affectedPopulation": 4429
+  },
+  {
+    "id": "tract-04013109300",
+    "code": "04013109300",
+    "name": "Census Tract 1093",
+    "geoid": "04013109300",
+    "riskScore": 52.44,
+    "status": "high",
+    "avgTemperature": 40.4,
+    "affectedPopulation": 4767
+  },
+  {
+    "id": "tract-04013104402",
+    "code": "04013104402",
+    "name": "Census Tract 1044.02",
+    "geoid": "04013104402",
+    "riskScore": 52.41,
+    "status": "high",
+    "avgTemperature": 40.11,
+    "affectedPopulation": 2474
+  },
+  {
+    "id": "tract-04013109802",
+    "code": "04013109802",
+    "name": "Census Tract 1098.02",
+    "geoid": "04013109802",
+    "riskScore": 52.4,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 4629
+  },
+  {
+    "id": "tract-04013110702",
+    "code": "04013110702",
+    "name": "Census Tract 1107.02",
+    "geoid": "04013110702",
+    "riskScore": 52.36,
+    "status": "high",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 4571
+  },
+  {
+    "id": "tract-04013111202",
+    "code": "04013111202",
+    "name": "Census Tract 1112.02",
+    "geoid": "04013111202",
+    "riskScore": 52.31,
+    "status": "high",
+    "avgTemperature": 40.41,
+    "affectedPopulation": 1792
+  },
+  {
+    "id": "tract-04013106502",
+    "code": "04013106502",
+    "name": "Census Tract 1065.02",
+    "geoid": "04013106502",
+    "riskScore": 52.25,
+    "status": "high",
+    "avgTemperature": 40.26,
+    "affectedPopulation": 3692
+  },
+  {
+    "id": "tract-04013115700",
+    "code": "04013115700",
+    "name": "Census Tract 1157",
+    "geoid": "04013115700",
+    "riskScore": 52.24,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 7457
+  },
+  {
+    "id": "tract-04013116607",
+    "code": "04013116607",
+    "name": "Census Tract 1166.07",
+    "geoid": "04013116607",
+    "riskScore": 52.23,
+    "status": "high",
+    "avgTemperature": 40.53,
+    "affectedPopulation": 4238
+  },
+  {
+    "id": "tract-04013112401",
+    "code": "04013112401",
+    "name": "Census Tract 1124.01",
+    "geoid": "04013112401",
+    "riskScore": 52.21,
+    "status": "high",
+    "avgTemperature": 40.46,
+    "affectedPopulation": 6194
+  },
+  {
+    "id": "tract-04013106300",
+    "code": "04013106300",
+    "name": "Census Tract 1063",
+    "geoid": "04013106300",
+    "riskScore": 52.2,
+    "status": "high",
+    "avgTemperature": 39.96,
+    "affectedPopulation": 5280
+  },
+  {
+    "id": "tract-04013107101",
+    "code": "04013107101",
+    "name": "Census Tract 1071.01",
+    "geoid": "04013107101",
+    "riskScore": 52.18,
+    "status": "high",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 5244
+  },
+  {
+    "id": "tract-04013106003",
+    "code": "04013106003",
+    "name": "Census Tract 1060.03",
+    "geoid": "04013106003",
+    "riskScore": 52.18,
+    "status": "high",
+    "avgTemperature": 40.2,
+    "affectedPopulation": 4037
+  },
+  {
+    "id": "tract-04013107001",
+    "code": "04013107001",
+    "name": "Census Tract 1070.01",
+    "geoid": "04013107001",
+    "riskScore": 52.08,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 4621
+  },
+  {
+    "id": "tract-04013111401",
+    "code": "04013111401",
+    "name": "Census Tract 1114.01",
+    "geoid": "04013111401",
+    "riskScore": 52.06,
+    "status": "high",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 4473
+  },
+  {
+    "id": "tract-04013318501",
+    "code": "04013318501",
+    "name": "Census Tract 3185.01",
+    "geoid": "04013318501",
+    "riskScore": 52.0,
+    "status": "high",
+    "avgTemperature": 40.21,
+    "affectedPopulation": 3369
+  },
+  {
+    "id": "tract-04013109707",
+    "code": "04013109707",
+    "name": "Census Tract 1097.07",
+    "geoid": "04013109707",
+    "riskScore": 51.91,
+    "status": "high",
+    "avgTemperature": 40.39,
+    "affectedPopulation": 5038
+  },
+  {
+    "id": "tract-04013110002",
+    "code": "04013110002",
+    "name": "Census Tract 1100.02",
+    "geoid": "04013110002",
+    "riskScore": 51.84,
+    "status": "high",
+    "avgTemperature": 40.41,
+    "affectedPopulation": 4797
+  },
+  {
+    "id": "tract-04013116605",
+    "code": "04013116605",
+    "name": "Census Tract 1166.05",
+    "geoid": "04013116605",
+    "riskScore": 51.8,
+    "status": "high",
+    "avgTemperature": 40.51,
+    "affectedPopulation": 7207
+  },
+  {
+    "id": "tract-04013111201",
+    "code": "04013111201",
+    "name": "Census Tract 1112.01",
+    "geoid": "04013111201",
+    "riskScore": 51.79,
+    "status": "high",
+    "avgTemperature": 40.18,
+    "affectedPopulation": 6230
+  },
+  {
+    "id": "tract-04013107900",
+    "code": "04013107900",
+    "name": "Census Tract 1079",
+    "geoid": "04013107900",
+    "riskScore": 51.56,
+    "status": "high",
+    "avgTemperature": 39.94,
+    "affectedPopulation": 3835
+  },
+  {
+    "id": "tract-04013082016",
+    "code": "04013082016",
+    "name": "Census Tract 820.16",
+    "geoid": "04013082016",
+    "riskScore": 51.54,
+    "status": "high",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 3178
+  },
+  {
+    "id": "tract-04013109705",
+    "code": "04013109705",
+    "name": "Census Tract 1097.05",
+    "geoid": "04013109705",
+    "riskScore": 51.42,
+    "status": "high",
+    "avgTemperature": 40.47,
+    "affectedPopulation": 1869
+  },
+  {
+    "id": "tract-04013116610",
+    "code": "04013116610",
+    "name": "Census Tract 1166.10",
+    "geoid": "04013116610",
+    "riskScore": 51.26,
+    "status": "high",
+    "avgTemperature": 40.52,
+    "affectedPopulation": 6798
+  },
+  {
+    "id": "tract-04013082028",
+    "code": "04013082028",
+    "name": "Census Tract 820.28",
+    "geoid": "04013082028",
+    "riskScore": 51.25,
+    "status": "high",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 4797
+  },
+  {
+    "id": "tract-04013104501",
+    "code": "04013104501",
+    "name": "Census Tract 1045.01",
+    "geoid": "04013104501",
+    "riskScore": 51.22,
+    "status": "high",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 4070
+  },
+  {
+    "id": "tract-04013116204",
+    "code": "04013116204",
+    "name": "Census Tract 1162.04",
+    "geoid": "04013116204",
+    "riskScore": 51.17,
+    "status": "high",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 4409
+  },
+  {
+    "id": "tract-04013116619",
+    "code": "04013116619",
+    "name": "Census Tract 1166.19",
+    "geoid": "04013116619",
+    "riskScore": 51.13,
+    "status": "high",
+    "avgTemperature": 40.5,
+    "affectedPopulation": 5161
+  },
+  {
+    "id": "tract-04013112402",
+    "code": "04013112402",
+    "name": "Census Tract 1124.02",
+    "geoid": "04013112402",
+    "riskScore": 51.06,
+    "status": "high",
+    "avgTemperature": 40.46,
+    "affectedPopulation": 6231
+  },
+  {
+    "id": "tract-04013105602",
+    "code": "04013105602",
+    "name": "Census Tract 1056.02",
+    "geoid": "04013105602",
+    "riskScore": 50.98,
+    "status": "high",
+    "avgTemperature": 40.17,
+    "affectedPopulation": 6399
+  },
+  {
+    "id": "tract-04013109603",
+    "code": "04013109603",
+    "name": "Census Tract 1096.03",
+    "geoid": "04013109603",
+    "riskScore": 50.98,
+    "status": "high",
+    "avgTemperature": 40.37,
+    "affectedPopulation": 4116
+  },
+  {
+    "id": "tract-04013105103",
+    "code": "04013105103",
+    "name": "Census Tract 1051.03",
+    "geoid": "04013105103",
+    "riskScore": 50.98,
+    "status": "high",
+    "avgTemperature": 40.12,
+    "affectedPopulation": 2969
+  },
+  {
+    "id": "tract-04013105701",
+    "code": "04013105701",
+    "name": "Census Tract 1057.01",
+    "geoid": "04013105701",
+    "riskScore": 50.96,
+    "status": "high",
+    "avgTemperature": 40.17,
+    "affectedPopulation": 3494
+  },
+  {
+    "id": "tract-04013082009",
+    "code": "04013082009",
+    "name": "Census Tract 820.09",
+    "geoid": "04013082009",
+    "riskScore": 50.94,
+    "status": "high",
+    "avgTemperature": 40.31,
+    "affectedPopulation": 5099
+  },
+  {
+    "id": "tract-04013106501",
+    "code": "04013106501",
+    "name": "Census Tract 1065.01",
+    "geoid": "04013106501",
+    "riskScore": 50.85,
+    "status": "high",
+    "avgTemperature": 40.26,
+    "affectedPopulation": 3035
+  },
+  {
+    "id": "tract-04013107202",
+    "code": "04013107202",
+    "name": "Census Tract 1072.02",
+    "geoid": "04013107202",
+    "riskScore": 50.79,
+    "status": "high",
+    "avgTemperature": 40.33,
+    "affectedPopulation": 5019
+  },
+  {
+    "id": "tract-04013116717",
+    "code": "04013116717",
+    "name": "Census Tract 1167.17",
+    "geoid": "04013116717",
+    "riskScore": 50.77,
+    "status": "high",
+    "avgTemperature": 40.25,
+    "affectedPopulation": 3190
+  },
+  {
+    "id": "tract-04013116718",
+    "code": "04013116718",
+    "name": "Census Tract 1167.18",
+    "geoid": "04013116718",
+    "riskScore": 50.74,
+    "status": "high",
+    "avgTemperature": 40.22,
+    "affectedPopulation": 2575
+  },
+  {
+    "id": "tract-04013107602",
+    "code": "04013107602",
+    "name": "Census Tract 1076.02",
+    "geoid": "04013107602",
+    "riskScore": 50.66,
+    "status": "high",
+    "avgTemperature": 40.29,
+    "affectedPopulation": 2749
+  },
+  {
+    "id": "tract-04013105702",
+    "code": "04013105702",
+    "name": "Census Tract 1057.02",
+    "geoid": "04013105702",
+    "riskScore": 50.59,
+    "status": "high",
+    "avgTemperature": 40.2,
+    "affectedPopulation": 4287
+  },
+  {
+    "id": "tract-04013107700",
+    "code": "04013107700",
+    "name": "Census Tract 1077",
+    "geoid": "04013107700",
+    "riskScore": 50.58,
+    "status": "high",
+    "avgTemperature": 40.25,
+    "affectedPopulation": 4117
+  },
+  {
+    "id": "tract-04013112515",
+    "code": "04013112515",
+    "name": "Census Tract 1125.15",
+    "geoid": "04013112515",
+    "riskScore": 50.5,
+    "status": "high",
+    "avgTemperature": 40.38,
+    "affectedPopulation": 4594
+  },
+  {
+    "id": "tract-04013112523",
+    "code": "04013112523",
+    "name": "Census Tract 1125.23",
+    "geoid": "04013112523",
+    "riskScore": 50.46,
+    "status": "high",
+    "avgTemperature": 40.46,
+    "affectedPopulation": 4435
+  },
+  {
+    "id": "tract-04013116614",
+    "code": "04013116614",
+    "name": "Census Tract 1166.14",
+    "geoid": "04013116614",
+    "riskScore": 50.46,
+    "status": "high",
+    "avgTemperature": 40.28,
+    "affectedPopulation": 3709
+  },
+  {
+    "id": "tract-04013106900",
+    "code": "04013106900",
+    "name": "Census Tract 1069",
+    "geoid": "04013106900",
+    "riskScore": 50.44,
+    "status": "high",
+    "avgTemperature": 40.29,
+    "affectedPopulation": 8260
+  },
+  {
+    "id": "tract-04013116732",
+    "code": "04013116732",
+    "name": "Census Tract 1167.32",
+    "geoid": "04013116732",
+    "riskScore": 50.35,
+    "status": "high",
+    "avgTemperature": 40.19,
+    "affectedPopulation": 4001
+  },
+  {
+    "id": "tract-04013104227",
+    "code": "04013104227",
+    "name": "Census Tract 1042.27",
+    "geoid": "04013104227",
+    "riskScore": 50.34,
+    "status": "high",
+    "avgTemperature": 40.08,
+    "affectedPopulation": 2045
+  },
+  {
+    "id": "tract-04013116612",
+    "code": "04013116612",
+    "name": "Census Tract 1166.12",
+    "geoid": "04013116612",
+    "riskScore": 50.34,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 6707
+  },
+  {
+    "id": "tract-04013109604",
+    "code": "04013109604",
+    "name": "Census Tract 1096.04",
+    "geoid": "04013109604",
+    "riskScore": 50.2,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 4428
+  },
+  {
+    "id": "tract-04013106703",
+    "code": "04013106703",
+    "name": "Census Tract 1067.03",
+    "geoid": "04013106703",
+    "riskScore": 50.18,
+    "status": "high",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 2440
+  },
+  {
+    "id": "tract-04013116621",
+    "code": "04013116621",
+    "name": "Census Tract 1166.21",
+    "geoid": "04013116621",
+    "riskScore": 50.18,
+    "status": "high",
+    "avgTemperature": 40.56,
+    "affectedPopulation": 5798
+  },
+  {
+    "id": "tract-04013111000",
+    "code": "04013111000",
+    "name": "Census Tract 1110",
+    "geoid": "04013111000",
+    "riskScore": 50.16,
+    "status": "high",
+    "avgTemperature": 40.32,
+    "affectedPopulation": 4343
+  },
+  {
+    "id": "tract-04013082207",
+    "code": "04013082207",
+    "name": "Census Tract 822.07",
+    "geoid": "04013082207",
+    "riskScore": 50.14,
+    "status": "high",
+    "avgTemperature": 40.44,
+    "affectedPopulation": 3568
+  },
+  {
+    "id": "tract-04013104217",
+    "code": "04013104217",
+    "name": "Census Tract 1042.17",
+    "geoid": "04013104217",
+    "riskScore": 50.03,
+    "status": "high",
+    "avgTemperature": 39.97,
+    "affectedPopulation": 5538
+  },
+  {
+    "id": "tract-04013112514",
+    "code": "04013112514",
+    "name": "Census Tract 1125.14",
+    "geoid": "04013112514",
+    "riskScore": 50.01,
+    "status": "high",
+    "avgTemperature": 40.46,
+    "affectedPopulation": 4533
+  },
+  {
+    "id": "tract-04013082008",
+    "code": "04013082008",
+    "name": "Census Tract 820.08",
+    "geoid": "04013082008",
+    "riskScore": 50.0,
+    "status": "high",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 5820
+  },
+  {
+    "id": "tract-04013103609",
+    "code": "04013103609",
+    "name": "Census Tract 1036.09",
+    "geoid": "04013103609",
+    "riskScore": 49.97,
+    "status": "moderate",
+    "avgTemperature": 40.09,
+    "affectedPopulation": 5706
+  },
+  {
+    "id": "tract-04013104702",
+    "code": "04013104702",
+    "name": "Census Tract 1047.02",
+    "geoid": "04013104702",
+    "riskScore": 49.96,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 3778
+  },
+  {
+    "id": "tract-04013104207",
+    "code": "04013104207",
+    "name": "Census Tract 1042.07",
+    "geoid": "04013104207",
+    "riskScore": 49.94,
+    "status": "moderate",
+    "avgTemperature": 40.17,
+    "affectedPopulation": 4298
+  },
+  {
+    "id": "tract-04013116620",
+    "code": "04013116620",
+    "name": "Census Tract 1166.20",
+    "geoid": "04013116620",
+    "riskScore": 49.92,
+    "status": "moderate",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 8046
+  },
+  {
+    "id": "tract-04013082007",
+    "code": "04013082007",
+    "name": "Census Tract 820.07",
+    "geoid": "04013082007",
+    "riskScore": 49.86,
+    "status": "moderate",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 3819
+  },
+  {
+    "id": "tract-04013105300",
+    "code": "04013105300",
+    "name": "Census Tract 1053",
+    "geoid": "04013105300",
+    "riskScore": 49.74,
+    "status": "moderate",
+    "avgTemperature": 40.01,
+    "affectedPopulation": 4868
+  },
+  {
+    "id": "tract-04013109500",
+    "code": "04013109500",
+    "name": "Census Tract 1095",
+    "geoid": "04013109500",
+    "riskScore": 49.7,
+    "status": "moderate",
+    "avgTemperature": 40.29,
+    "affectedPopulation": 5868
+  },
+  {
+    "id": "tract-04013104100",
+    "code": "04013104100",
+    "name": "Census Tract 1041",
+    "geoid": "04013104100",
+    "riskScore": 49.69,
+    "status": "moderate",
+    "avgTemperature": 40.17,
+    "affectedPopulation": 7580
+  },
+  {
+    "id": "tract-04013108501",
+    "code": "04013108501",
+    "name": "Census Tract 1085.01",
+    "geoid": "04013108501",
+    "riskScore": 49.64,
+    "status": "moderate",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 2451
+  },
+  {
+    "id": "tract-04013116735",
+    "code": "04013116735",
+    "name": "Census Tract 1167.35",
+    "geoid": "04013116735",
+    "riskScore": 49.63,
+    "status": "moderate",
+    "avgTemperature": 40.05,
+    "affectedPopulation": 3137
+  },
+  {
+    "id": "tract-04013109602",
+    "code": "04013109602",
+    "name": "Census Tract 1096.02",
+    "geoid": "04013109602",
+    "riskScore": 49.59,
+    "status": "moderate",
+    "avgTemperature": 40.32,
+    "affectedPopulation": 7841
+  },
+  {
+    "id": "tract-04013116708",
+    "code": "04013116708",
+    "name": "Census Tract 1167.08",
+    "geoid": "04013116708",
+    "riskScore": 49.5,
+    "status": "moderate",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 5235
+  },
+  {
+    "id": "tract-04013116731",
+    "code": "04013116731",
+    "name": "Census Tract 1167.31",
+    "geoid": "04013116731",
+    "riskScore": 49.5,
+    "status": "moderate",
+    "avgTemperature": 40.48,
+    "affectedPopulation": 3389
+  },
+  {
+    "id": "tract-04013103604",
+    "code": "04013103604",
+    "name": "Census Tract 1036.04",
+    "geoid": "04013103604",
+    "riskScore": 49.24,
+    "status": "moderate",
+    "avgTemperature": 40.06,
+    "affectedPopulation": 4441
+  },
+  {
+    "id": "tract-04013112518",
+    "code": "04013112518",
+    "name": "Census Tract 1125.18",
+    "geoid": "04013112518",
+    "riskScore": 49.22,
+    "status": "moderate",
+    "avgTemperature": 40.41,
+    "affectedPopulation": 5169
+  },
+  {
+    "id": "tract-04013112508",
+    "code": "04013112508",
+    "name": "Census Tract 1125.08",
+    "geoid": "04013112508",
+    "riskScore": 49.22,
+    "status": "moderate",
+    "avgTemperature": 40.26,
+    "affectedPopulation": 2412
+  },
+  {
+    "id": "tract-04013112517",
+    "code": "04013112517",
+    "name": "Census Tract 1125.17",
+    "geoid": "04013112517",
+    "riskScore": 49.14,
+    "status": "moderate",
+    "avgTemperature": 40.42,
+    "affectedPopulation": 5270
+  },
+  {
+    "id": "tract-04013082205",
+    "code": "04013082205",
+    "name": "Census Tract 822.05",
+    "geoid": "04013082205",
+    "riskScore": 49.06,
+    "status": "moderate",
+    "avgTemperature": 40.43,
+    "affectedPopulation": 6967
+  },
+  {
+    "id": "tract-04013082017",
+    "code": "04013082017",
+    "name": "Census Tract 820.17",
+    "geoid": "04013082017",
+    "riskScore": 49.02,
+    "status": "moderate",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 5146
+  },
+  {
+    "id": "tract-04013107500",
+    "code": "04013107500",
+    "name": "Census Tract 1075",
+    "geoid": "04013107500",
+    "riskScore": 48.98,
+    "status": "moderate",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 3464
+  },
+  {
+    "id": "tract-04013092720",
+    "code": "04013092720",
+    "name": "Census Tract 927.20",
+    "geoid": "04013092720",
+    "riskScore": 48.96,
+    "status": "moderate",
+    "avgTemperature": 40.28,
+    "affectedPopulation": 6920
+  },
+  {
+    "id": "tract-04013082018",
+    "code": "04013082018",
+    "name": "Census Tract 820.18",
+    "geoid": "04013082018",
+    "riskScore": 48.95,
+    "status": "moderate",
+    "avgTemperature": 40.35,
+    "affectedPopulation": 5393
+  },
+  {
+    "id": "tract-04013082212",
+    "code": "04013082212",
+    "name": "Census Tract 822.12",
+    "geoid": "04013082212",
+    "riskScore": 48.93,
+    "status": "moderate",
+    "avgTemperature": 40.4,
+    "affectedPopulation": 6211
+  },
+  {
+    "id": "tract-04013111100",
+    "code": "04013111100",
+    "name": "Census Tract 1111",
+    "geoid": "04013111100",
+    "riskScore": 48.9,
+    "status": "moderate",
+    "avgTemperature": 40.17,
+    "affectedPopulation": 4997
+  },
+  {
+    "id": "tract-04013082204",
+    "code": "04013082204",
+    "name": "Census Tract 822.04",
+    "geoid": "04013082204",
+    "riskScore": 48.88,
+    "status": "moderate",
+    "avgTemperature": 40.43,
+    "affectedPopulation": 7104
+  },
+  {
+    "id": "tract-04013618800",
+    "code": "04013618800",
+    "name": "Census Tract 6188",
+    "geoid": "04013618800",
+    "riskScore": 48.78,
+    "status": "moderate",
+    "avgTemperature": 39.99,
+    "affectedPopulation": 5478
+  },
+  {
+    "id": "tract-04013112524",
+    "code": "04013112524",
+    "name": "Census Tract 1125.24",
+    "geoid": "04013112524",
+    "riskScore": 48.7,
+    "status": "moderate",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 5060
+  },
+  {
+    "id": "tract-04013108302",
+    "code": "04013108302",
+    "name": "Census Tract 1083.02",
+    "geoid": "04013108302",
+    "riskScore": 48.62,
+    "status": "moderate",
+    "avgTemperature": 40.14,
+    "affectedPopulation": 3258
+  },
+  {
+    "id": "tract-04013108200",
+    "code": "04013108200",
+    "name": "Census Tract 1082",
+    "geoid": "04013108200",
+    "riskScore": 48.62,
+    "status": "moderate",
+    "avgTemperature": 40.13,
+    "affectedPopulation": 3109
+  },
+  {
+    "id": "tract-04013116616",
+    "code": "04013116616",
+    "name": "Census Tract 1166.16",
+    "geoid": "04013116616",
+    "riskScore": 48.58,
+    "status": "moderate",
+    "avgTemperature": 40.38,
+    "affectedPopulation": 5232
+  },
+  {
+    "id": "tract-04013105800",
+    "code": "04013105800",
+    "name": "Census Tract 1058",
+    "geoid": "04013105800",
+    "riskScore": 48.42,
+    "status": "moderate",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 6273
+  },
+  {
+    "id": "tract-04013103612",
+    "code": "04013103612",
+    "name": "Census Tract 1036.12",
+    "geoid": "04013103612",
+    "riskScore": 48.42,
+    "status": "moderate",
+    "avgTemperature": 40.07,
+    "affectedPopulation": 5155
+  },
+  {
+    "id": "tract-04013116730",
+    "code": "04013116730",
+    "name": "Census Tract 1167.30",
+    "geoid": "04013116730",
+    "riskScore": 48.38,
+    "status": "moderate",
+    "avgTemperature": 40.45,
+    "affectedPopulation": 1729
+  },
+  {
+    "id": "tract-04013105501",
+    "code": "04013105501",
+    "name": "Census Tract 1055.01",
+    "geoid": "04013105501",
+    "riskScore": 48.27,
+    "status": "moderate",
+    "avgTemperature": 40.12,
+    "affectedPopulation": 2303
+  },
+  {
+    "id": "tract-04013111300",
+    "code": "04013111300",
+    "name": "Census Tract 1113",
+    "geoid": "04013111300",
+    "riskScore": 48.21,
+    "status": "moderate",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 5679
+  },
+  {
+    "id": "tract-04013116617",
+    "code": "04013116617",
+    "name": "Census Tract 1166.17",
+    "geoid": "04013116617",
+    "riskScore": 48.16,
+    "status": "moderate",
+    "avgTemperature": 40.24,
+    "affectedPopulation": 3649
+  },
+  {
+    "id": "tract-04013105400",
+    "code": "04013105400",
+    "name": "Census Tract 1054",
+    "geoid": "04013105400",
+    "riskScore": 48.03,
+    "status": "moderate",
+    "avgTemperature": 40.04,
+    "affectedPopulation": 3677
+  },
+  {
+    "id": "tract-04013108502",
+    "code": "04013108502",
+    "name": "Census Tract 1085.02",
+    "geoid": "04013108502",
+    "riskScore": 47.96,
+    "status": "moderate",
+    "avgTemperature": 40.3,
+    "affectedPopulation": 3376
+  },
+  {
+    "id": "tract-04013106400",
+    "code": "04013106400",
+    "name": "Census Tract 1064",
+    "geoid": "04013106400",
+    "riskScore": 47.84,
+    "status": "moderate",
+    "avgTemperature": 40.24,
+    "affectedPopulation": 3265
+  },
+  {
+    "id": "tract-04013104206",
+    "code": "04013104206",
+    "name": "Census Tract 1042.06",
+    "geoid": "04013104206",
+    "riskScore": 47.8,
+    "status": "moderate",
+    "avgTemperature": 40.14,
+    "affectedPopulation": 3711
+  },
+  {
+    "id": "tract-04013116709",
+    "code": "04013116709",
+    "name": "Census Tract 1167.09",
+    "geoid": "04013116709",
+    "riskScore": 47.74,
+    "status": "moderate",
+    "avgTemperature": 40.1,
+    "affectedPopulation": 2587
+  },
+  {
+    "id": "tract-04013112516",
+    "code": "04013112516",
+    "name": "Census Tract 1125.16",
+    "geoid": "04013112516",
+    "riskScore": 47.72,
+    "status": "moderate",
+    "avgTemperature": 40.23,
+    "affectedPopulation": 4721
+  },
+  {
+    "id": "tract-04013082010",
+    "code": "04013082010",
+    "name": "Census Tract 820.10",
+    "geoid": "04013082010",
+    "riskScore": 47.7,
+    "status": "moderate",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 5517
+  },
+  {
+    "id": "tract-04013116202",
+    "code": "04013116202",
+    "name": "Census Tract 1162.02",
+    "geoid": "04013116202",
+    "riskScore": 47.69,
+    "status": "moderate",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 5017
+  },
+  {
+    "id": "tract-04013116712",
+    "code": "04013116712",
+    "name": "Census Tract 1167.12",
+    "geoid": "04013116712",
+    "riskScore": 47.63,
+    "status": "moderate",
+    "avgTemperature": 40.27,
+    "affectedPopulation": 6893
+  },
+  {
+    "id": "tract-04013104502",
+    "code": "04013104502",
+    "name": "Census Tract 1045.02",
+    "geoid": "04013104502",
+    "riskScore": 47.63,
+    "status": "moderate",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 5576
+  },
+  {
+    "id": "tract-04013106200",
+    "code": "04013106200",
+    "name": "Census Tract 1062",
+    "geoid": "04013106200",
+    "riskScore": 47.56,
+    "status": "moderate",
+    "avgTemperature": 40.07,
+    "affectedPopulation": 3410
+  },
+  {
+    "id": "tract-04013103615",
+    "code": "04013103615",
+    "name": "Census Tract 1036.15",
+    "geoid": "04013103615",
+    "riskScore": 47.5,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 5463
+  },
+  {
+    "id": "tract-04013104226",
+    "code": "04013104226",
+    "name": "Census Tract 1042.26",
+    "geoid": "04013104226",
+    "riskScore": 47.49,
+    "status": "moderate",
+    "avgTemperature": 39.97,
+    "affectedPopulation": 4173
+  },
+  {
+    "id": "tract-04013616400",
+    "code": "04013616400",
+    "name": "Census Tract 6164",
+    "geoid": "04013616400",
+    "riskScore": 47.47,
+    "status": "moderate",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 6483
+  },
+  {
+    "id": "tract-04013216830",
+    "code": "04013216830",
+    "name": "Census Tract 2168.30",
+    "geoid": "04013216830",
+    "riskScore": 47.27,
+    "status": "moderate",
+    "avgTemperature": 39.71,
+    "affectedPopulation": 2785
+  },
+  {
+    "id": "tract-04013105601",
+    "code": "04013105601",
+    "name": "Census Tract 1056.01",
+    "geoid": "04013105601",
+    "riskScore": 47.24,
+    "status": "moderate",
+    "avgTemperature": 40.13,
+    "affectedPopulation": 4061
+  },
+  {
+    "id": "tract-04013082002",
+    "code": "04013082002",
+    "name": "Census Tract 820.02",
+    "geoid": "04013082002",
+    "riskScore": 47.22,
+    "status": "moderate",
+    "avgTemperature": 40.19,
+    "affectedPopulation": 6265
+  },
+  {
+    "id": "tract-04013116727",
+    "code": "04013116727",
+    "name": "Census Tract 1167.27",
+    "geoid": "04013116727",
+    "riskScore": 47.18,
+    "status": "moderate",
+    "avgTemperature": 40.25,
+    "affectedPopulation": 3781
+  },
+  {
+    "id": "tract-04013112510",
+    "code": "04013112510",
+    "name": "Census Tract 1125.10",
+    "geoid": "04013112510",
+    "riskScore": 47.09,
+    "status": "moderate",
+    "avgTemperature": 40.36,
+    "affectedPopulation": 4743
+  },
+  {
+    "id": "tract-04013320100",
+    "code": "04013320100",
+    "name": "Census Tract 3201",
+    "geoid": "04013320100",
+    "riskScore": 47.09,
+    "status": "moderate",
+    "avgTemperature": 40.22,
+    "affectedPopulation": 3883
+  },
+  {
+    "id": "tract-04013104600",
+    "code": "04013104600",
+    "name": "Census Tract 1046",
+    "geoid": "04013104600",
+    "riskScore": 47.04,
+    "status": "moderate",
+    "avgTemperature": 39.85,
+    "affectedPopulation": 3956
+  },
+  {
+    "id": "tract-04013108301",
+    "code": "04013108301",
+    "name": "Census Tract 1083.01",
+    "geoid": "04013108301",
+    "riskScore": 46.84,
+    "status": "moderate",
+    "avgTemperature": 40.15,
+    "affectedPopulation": 3902
+  },
+  {
+    "id": "tract-04013103608",
+    "code": "04013103608",
+    "name": "Census Tract 1036.08",
+    "geoid": "04013103608",
+    "riskScore": 46.84,
+    "status": "moderate",
+    "avgTemperature": 40.13,
+    "affectedPopulation": 4259
+  },
+  {
+    "id": "tract-04013103900",
+    "code": "04013103900",
+    "name": "Census Tract 1039",
+    "geoid": "04013103900",
+    "riskScore": 46.82,
+    "status": "moderate",
+    "avgTemperature": 40.05,
+    "affectedPopulation": 6754
+  },
+  {
+    "id": "tract-04013104204",
+    "code": "04013104204",
+    "name": "Census Tract 1042.04",
+    "geoid": "04013104204",
+    "riskScore": 46.81,
+    "status": "moderate",
+    "avgTemperature": 40.03,
+    "affectedPopulation": 3152
+  },
+  {
+    "id": "tract-04013116720",
+    "code": "04013116720",
+    "name": "Census Tract 1167.20",
+    "geoid": "04013116720",
+    "riskScore": 46.68,
+    "status": "moderate",
+    "avgTemperature": 40.15,
+    "affectedPopulation": 3996
+  },
+  {
+    "id": "tract-04013105003",
+    "code": "04013105003",
+    "name": "Census Tract 1050.03",
+    "geoid": "04013105003",
+    "riskScore": 46.61,
+    "status": "moderate",
+    "avgTemperature": 40.03,
+    "affectedPopulation": 3959
+  },
+  {
+    "id": "tract-04013092719",
+    "code": "04013092719",
+    "name": "Census Tract 927.19",
+    "geoid": "04013092719",
+    "riskScore": 46.47,
+    "status": "moderate",
+    "avgTemperature": 40.21,
+    "affectedPopulation": 4895
+  },
+  {
+    "id": "tract-04013114705",
+    "code": "04013114705",
+    "name": "Census Tract 1147.05",
+    "geoid": "04013114705",
+    "riskScore": 46.38,
+    "status": "moderate",
+    "avgTemperature": 40.54,
+    "affectedPopulation": 3325
+  },
+  {
+    "id": "tract-04013618400",
+    "code": "04013618400",
+    "name": "Census Tract 6184",
+    "geoid": "04013618400",
+    "riskScore": 46.28,
+    "status": "moderate",
+    "avgTemperature": 39.94,
+    "affectedPopulation": 3687
+  },
+  {
+    "id": "tract-04013116711",
+    "code": "04013116711",
+    "name": "Census Tract 1167.11",
+    "geoid": "04013116711",
+    "riskScore": 46.25,
+    "status": "moderate",
+    "avgTemperature": 40.0,
+    "affectedPopulation": 2079
+  },
+  {
+    "id": "tract-04013116618",
+    "code": "04013116618",
+    "name": "Census Tract 1166.18",
+    "geoid": "04013116618",
+    "riskScore": 46.16,
+    "status": "moderate",
+    "avgTemperature": 40.33,
+    "affectedPopulation": 5416
+  },
+  {
+    "id": "tract-04013616500",
+    "code": "04013616500",
+    "name": "Census Tract 6165",
+    "geoid": "04013616500",
+    "riskScore": 46.11,
+    "status": "moderate",
+    "avgTemperature": 39.92,
+    "affectedPopulation": 3548
+  },
+  {
+    "id": "tract-04013618600",
+    "code": "04013618600",
+    "name": "Census Tract 6186",
+    "geoid": "04013618600",
+    "riskScore": 45.99,
+    "status": "moderate",
+    "avgTemperature": 39.94,
+    "affectedPopulation": 4352
+  },
+  {
+    "id": "tract-04013116734",
+    "code": "04013116734",
+    "name": "Census Tract 1167.34",
+    "geoid": "04013116734",
+    "riskScore": 45.98,
+    "status": "moderate",
+    "avgTemperature": 40.02,
+    "affectedPopulation": 1740
+  },
+  {
+    "id": "tract-04013082012",
+    "code": "04013082012",
+    "name": "Census Tract 820.12",
+    "geoid": "04013082012",
+    "riskScore": 45.9,
+    "status": "moderate",
+    "avgTemperature": 40.14,
+    "affectedPopulation": 7139
+  },
+  {
+    "id": "tract-04013616300",
+    "code": "04013616300",
+    "name": "Census Tract 6163",
+    "geoid": "04013616300",
+    "riskScore": 45.72,
+    "status": "moderate",
+    "avgTemperature": 39.89,
+    "affectedPopulation": 1847
+  },
+  {
+    "id": "tract-04013116715",
+    "code": "04013116715",
+    "name": "Census Tract 1167.15",
+    "geoid": "04013116715",
+    "riskScore": 45.72,
+    "status": "moderate",
+    "avgTemperature": 40.0,
+    "affectedPopulation": 1797
+  },
+  {
+    "id": "tract-04013614400",
+    "code": "04013614400",
+    "name": "Census Tract 6144",
+    "geoid": "04013614400",
+    "riskScore": 45.6,
+    "status": "moderate",
+    "avgTemperature": 39.83,
+    "affectedPopulation": 4008
+  },
+  {
+    "id": "tract-04013104202",
+    "code": "04013104202",
+    "name": "Census Tract 1042.02",
+    "geoid": "04013104202",
+    "riskScore": 45.58,
+    "status": "moderate",
+    "avgTemperature": 40.0,
+    "affectedPopulation": 4668
+  },
+  {
+    "id": "tract-04013103214",
+    "code": "04013103214",
+    "name": "Census Tract 1032.14",
+    "geoid": "04013103214",
+    "riskScore": 45.56,
+    "status": "moderate",
+    "avgTemperature": 40.04,
+    "affectedPopulation": 3781
+  },
+  {
+    "id": "tract-04013082213",
+    "code": "04013082213",
+    "name": "Census Tract 822.13",
+    "geoid": "04013082213",
+    "riskScore": 45.55,
+    "status": "moderate",
+    "avgTemperature": 40.32,
+    "affectedPopulation": 6973
+  },
+  {
+    "id": "tract-04013116203",
+    "code": "04013116203",
+    "name": "Census Tract 1162.03",
+    "geoid": "04013116203",
+    "riskScore": 45.48,
+    "status": "moderate",
+    "avgTemperature": 40.13,
+    "affectedPopulation": 7026
+  },
+  {
+    "id": "tract-04013103209",
+    "code": "04013103209",
+    "name": "Census Tract 1032.09",
+    "geoid": "04013103209",
+    "riskScore": 45.28,
+    "status": "moderate",
+    "avgTemperature": 39.79,
+    "affectedPopulation": 4814
+  },
+  {
+    "id": "tract-04013103217",
+    "code": "04013103217",
+    "name": "Census Tract 1032.17",
+    "geoid": "04013103217",
+    "riskScore": 45.26,
+    "status": "moderate",
+    "avgTemperature": 39.95,
+    "affectedPopulation": 5676
+  },
+  {
+    "id": "tract-04013105200",
+    "code": "04013105200",
+    "name": "Census Tract 1052",
+    "geoid": "04013105200",
+    "riskScore": 45.18,
+    "status": "moderate",
+    "avgTemperature": 39.9,
+    "affectedPopulation": 6259
+  },
+  {
+    "id": "tract-04013108000",
+    "code": "04013108000",
+    "name": "Census Tract 1080",
+    "geoid": "04013108000",
+    "riskScore": 45.11,
+    "status": "moderate",
+    "avgTemperature": 40.04,
+    "affectedPopulation": 2843
+  },
+  {
+    "id": "tract-04013104701",
+    "code": "04013104701",
+    "name": "Census Tract 1047.01",
+    "geoid": "04013104701",
+    "riskScore": 44.98,
+    "status": "moderate",
+    "avgTemperature": 39.82,
+    "affectedPopulation": 2944
+  },
+  {
+    "id": "tract-04013116721",
+    "code": "04013116721",
+    "name": "Census Tract 1167.21",
+    "geoid": "04013116721",
+    "riskScore": 44.85,
+    "status": "moderate",
+    "avgTemperature": 40.04,
+    "affectedPopulation": 3653
+  },
+  {
+    "id": "tract-04013116719",
+    "code": "04013116719",
+    "name": "Census Tract 1167.19",
+    "geoid": "04013116719",
+    "riskScore": 44.8,
+    "status": "moderate",
+    "avgTemperature": 40.2,
+    "affectedPopulation": 6679
+  },
+  {
+    "id": "tract-04013116714",
+    "code": "04013116714",
+    "name": "Census Tract 1167.14",
+    "geoid": "04013116714",
+    "riskScore": 44.74,
+    "status": "moderate",
+    "avgTemperature": 40.01,
+    "affectedPopulation": 3457
+  },
+  {
+    "id": "tract-04013104802",
+    "code": "04013104802",
+    "name": "Census Tract 1048.02",
+    "geoid": "04013104802",
+    "riskScore": 44.7,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 5582
+  },
+  {
+    "id": "tract-04013104301",
+    "code": "04013104301",
+    "name": "Census Tract 1043.01",
+    "geoid": "04013104301",
+    "riskScore": 44.7,
+    "status": "moderate",
+    "avgTemperature": 40.07,
+    "affectedPopulation": 3955
+  },
+  {
+    "id": "tract-04013116205",
+    "code": "04013116205",
+    "name": "Census Tract 1162.05",
+    "geoid": "04013116205",
+    "riskScore": 44.64,
+    "status": "moderate",
+    "avgTemperature": 40.07,
+    "affectedPopulation": 3975
+  },
+  {
+    "id": "tract-04013103212",
+    "code": "04013103212",
+    "name": "Census Tract 1032.12",
+    "geoid": "04013103212",
+    "riskScore": 44.56,
+    "status": "moderate",
+    "avgTemperature": 40.01,
+    "affectedPopulation": 4223
+  },
+  {
+    "id": "tract-04013103605",
+    "code": "04013103605",
+    "name": "Census Tract 1036.05",
+    "geoid": "04013103605",
+    "riskScore": 44.3,
+    "status": "moderate",
+    "avgTemperature": 39.89,
+    "affectedPopulation": 5786
+  },
+  {
+    "id": "tract-04013104212",
+    "code": "04013104212",
+    "name": "Census Tract 1042.12",
+    "geoid": "04013104212",
+    "riskScore": 44.18,
+    "status": "moderate",
+    "avgTemperature": 40.02,
+    "affectedPopulation": 6340
+  },
+  {
+    "id": "tract-04013116713",
+    "code": "04013116713",
+    "name": "Census Tract 1167.13",
+    "geoid": "04013116713",
+    "riskScore": 43.76,
+    "status": "moderate",
+    "avgTemperature": 40.12,
+    "affectedPopulation": 5684
+  },
+  {
+    "id": "tract-04013111204",
+    "code": "04013111204",
+    "name": "Census Tract 1112.04",
+    "geoid": "04013111204",
+    "riskScore": 43.67,
+    "status": "moderate",
+    "avgTemperature": 40.22,
+    "affectedPopulation": 3666
+  },
+  {
+    "id": "tract-04013616200",
+    "code": "04013616200",
+    "name": "Census Tract 6162",
+    "geoid": "04013616200",
+    "riskScore": 43.65,
+    "status": "moderate",
+    "avgTemperature": 39.87,
+    "affectedPopulation": 3553
+  },
+  {
+    "id": "tract-04013104225",
+    "code": "04013104225",
+    "name": "Census Tract 1042.25",
+    "geoid": "04013104225",
+    "riskScore": 43.53,
+    "status": "moderate",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 3629
+  },
+  {
+    "id": "tract-04013116710",
+    "code": "04013116710",
+    "name": "Census Tract 1167.10",
+    "geoid": "04013116710",
+    "riskScore": 43.46,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 5256
+  },
+  {
+    "id": "tract-04013217300",
+    "code": "04013217300",
+    "name": "Census Tract 2173",
+    "geoid": "04013217300",
+    "riskScore": 43.33,
+    "status": "moderate",
+    "avgTemperature": 39.86,
+    "affectedPopulation": 4850
+  },
+  {
+    "id": "tract-04013104219",
+    "code": "04013104219",
+    "name": "Census Tract 1042.19",
+    "geoid": "04013104219",
+    "riskScore": 43.32,
+    "status": "moderate",
+    "avgTemperature": 39.99,
+    "affectedPopulation": 3906
+  },
+  {
+    "id": "tract-04013614300",
+    "code": "04013614300",
+    "name": "Census Tract 6143",
+    "geoid": "04013614300",
+    "riskScore": 43.31,
+    "status": "moderate",
+    "avgTemperature": 39.8,
+    "affectedPopulation": 2954
+  },
+  {
+    "id": "tract-04013616600",
+    "code": "04013616600",
+    "name": "Census Tract 6166",
+    "geoid": "04013616600",
+    "riskScore": 43.2,
+    "status": "moderate",
+    "avgTemperature": 39.92,
+    "affectedPopulation": 6128
+  },
+  {
+    "id": "tract-04013104900",
+    "code": "04013104900",
+    "name": "Census Tract 1049",
+    "geoid": "04013104900",
+    "riskScore": 43.16,
+    "status": "moderate",
+    "avgTemperature": 39.91,
+    "affectedPopulation": 4050
+  },
+  {
+    "id": "tract-04013618700",
+    "code": "04013618700",
+    "name": "Census Tract 6187",
+    "geoid": "04013618700",
+    "riskScore": 43.02,
+    "status": "moderate",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 3060
+  },
+  {
+    "id": "tract-04013116725",
+    "code": "04013116725",
+    "name": "Census Tract 1167.25",
+    "geoid": "04013116725",
+    "riskScore": 42.94,
+    "status": "moderate",
+    "avgTemperature": 40.01,
+    "affectedPopulation": 5226
+  },
+  {
+    "id": "tract-04013618200",
+    "code": "04013618200",
+    "name": "Census Tract 6182",
+    "geoid": "04013618200",
+    "riskScore": 42.84,
+    "status": "moderate",
+    "avgTemperature": 39.9,
+    "affectedPopulation": 4014
+  },
+  {
+    "id": "tract-04013618300",
+    "code": "04013618300",
+    "name": "Census Tract 6183",
+    "geoid": "04013618300",
+    "riskScore": 42.8,
+    "status": "moderate",
+    "avgTemperature": 39.88,
+    "affectedPopulation": 2789
+  },
+  {
+    "id": "tract-04013103614",
+    "code": "04013103614",
+    "name": "Census Tract 1036.14",
+    "geoid": "04013103614",
+    "riskScore": 42.44,
+    "status": "moderate",
+    "avgTemperature": 39.73,
+    "affectedPopulation": 2888
+  },
+  {
+    "id": "tract-04013615202",
+    "code": "04013615202",
+    "name": "Census Tract 6152.02",
+    "geoid": "04013615202",
+    "riskScore": 42.28,
+    "status": "moderate",
+    "avgTemperature": 39.42,
+    "affectedPopulation": 3154
+  },
+  {
+    "id": "tract-04013103702",
+    "code": "04013103702",
+    "name": "Census Tract 1037.02",
+    "geoid": "04013103702",
+    "riskScore": 42.1,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 3519
+  },
+  {
+    "id": "tract-04013103216",
+    "code": "04013103216",
+    "name": "Census Tract 1032.16",
+    "geoid": "04013103216",
+    "riskScore": 41.96,
+    "status": "moderate",
+    "avgTemperature": 39.93,
+    "affectedPopulation": 5439
+  },
+  {
+    "id": "tract-04013104203",
+    "code": "04013104203",
+    "name": "Census Tract 1042.03",
+    "geoid": "04013104203",
+    "riskScore": 41.78,
+    "status": "moderate",
+    "avgTemperature": 40.0,
+    "affectedPopulation": 7413
+  },
+  {
+    "id": "tract-04013616100",
+    "code": "04013616100",
+    "name": "Census Tract 6161",
+    "geoid": "04013616100",
+    "riskScore": 41.57,
+    "status": "moderate",
+    "avgTemperature": 39.85,
+    "affectedPopulation": 3833
+  },
+  {
+    "id": "tract-04013116729",
+    "code": "04013116729",
+    "name": "Census Tract 1167.29",
+    "geoid": "04013116729",
+    "riskScore": 41.5,
+    "status": "moderate",
+    "avgTemperature": 39.89,
+    "affectedPopulation": 3722
+  },
+  {
+    "id": "tract-04013116703",
+    "code": "04013116703",
+    "name": "Census Tract 1167.03",
+    "geoid": "04013116703",
+    "riskScore": 41.5,
+    "status": "moderate",
+    "avgTemperature": 39.85,
+    "affectedPopulation": 5527
+  },
+  {
+    "id": "tract-04013618500",
+    "code": "04013618500",
+    "name": "Census Tract 6185",
+    "geoid": "04013618500",
+    "riskScore": 41.39,
+    "status": "moderate",
+    "avgTemperature": 39.96,
+    "affectedPopulation": 4405
+  },
+  {
+    "id": "tract-04013614500",
+    "code": "04013614500",
+    "name": "Census Tract 6145",
+    "geoid": "04013614500",
+    "riskScore": 41.36,
+    "status": "moderate",
+    "avgTemperature": 39.78,
+    "affectedPopulation": 4423
+  },
+  {
+    "id": "tract-04013104801",
+    "code": "04013104801",
+    "name": "Census Tract 1048.01",
+    "geoid": "04013104801",
+    "riskScore": 41.09,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 3904
+  },
+  {
+    "id": "tract-04013614700",
+    "code": "04013614700",
+    "name": "Census Tract 6147",
+    "geoid": "04013614700",
+    "riskScore": 41.08,
+    "status": "moderate",
+    "avgTemperature": 39.69,
+    "affectedPopulation": 3527
+  },
+  {
+    "id": "tract-04013105102",
+    "code": "04013105102",
+    "name": "Census Tract 1051.02",
+    "geoid": "04013105102",
+    "riskScore": 41.03,
+    "status": "moderate",
+    "avgTemperature": 39.67,
+    "affectedPopulation": 4687
+  },
+  {
+    "id": "tract-04013104218",
+    "code": "04013104218",
+    "name": "Census Tract 1042.18",
+    "geoid": "04013104218",
+    "riskScore": 40.98,
+    "status": "moderate",
+    "avgTemperature": 39.96,
+    "affectedPopulation": 3807
+  },
+  {
+    "id": "tract-04013103206",
+    "code": "04013103206",
+    "name": "Census Tract 1032.06",
+    "geoid": "04013103206",
+    "riskScore": 40.92,
+    "status": "moderate",
+    "avgTemperature": 39.82,
+    "affectedPopulation": 2278
+  },
+  {
+    "id": "tract-04013619900",
+    "code": "04013619900",
+    "name": "Census Tract 6199",
+    "geoid": "04013619900",
+    "riskScore": 40.84,
+    "status": "moderate",
+    "avgTemperature": 39.8,
+    "affectedPopulation": 6270
+  },
+  {
+    "id": "tract-04013618100",
+    "code": "04013618100",
+    "name": "Census Tract 6181",
+    "geoid": "04013618100",
+    "riskScore": 40.32,
+    "status": "moderate",
+    "avgTemperature": 39.87,
+    "affectedPopulation": 4209
+  },
+  {
+    "id": "tract-04013108100",
+    "code": "04013108100",
+    "name": "Census Tract 1081",
+    "geoid": "04013108100",
+    "riskScore": 40.25,
+    "status": "moderate",
+    "avgTemperature": 39.99,
+    "affectedPopulation": 2249
+  },
+  {
+    "id": "tract-04013614601",
+    "code": "04013614601",
+    "name": "Census Tract 6146.01",
+    "geoid": "04013614601",
+    "riskScore": 40.2,
+    "status": "moderate",
+    "avgTemperature": 39.83,
+    "affectedPopulation": 3328
+  },
+  {
+    "id": "tract-04013103207",
+    "code": "04013103207",
+    "name": "Census Tract 1032.07",
+    "geoid": "04013103207",
+    "riskScore": 40.16,
+    "status": "moderate",
+    "avgTemperature": 39.71,
+    "affectedPopulation": 2275
+  },
+  {
+    "id": "tract-04013116737",
+    "code": "04013116737",
+    "name": "Census Tract 1167.37",
+    "geoid": "04013116737",
+    "riskScore": 40.06,
+    "status": "moderate",
+    "avgTemperature": 39.72,
+    "affectedPopulation": 3431
+  },
+  {
+    "id": "tract-04013103205",
+    "code": "04013103205",
+    "name": "Census Tract 1032.05",
+    "geoid": "04013103205",
+    "riskScore": 39.8,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 2471
+  },
+  {
+    "id": "tract-04013116728",
+    "code": "04013116728",
+    "name": "Census Tract 1167.28",
+    "geoid": "04013116728",
+    "riskScore": 39.36,
+    "status": "moderate",
+    "avgTemperature": 39.94,
+    "affectedPopulation": 5362
+  },
+  {
+    "id": "tract-04013116707",
+    "code": "04013116707",
+    "name": "Census Tract 1167.07",
+    "geoid": "04013116707",
+    "riskScore": 39.2,
+    "status": "moderate",
+    "avgTemperature": 39.79,
+    "affectedPopulation": 3027
+  },
+  {
+    "id": "tract-04013103219",
+    "code": "04013103219",
+    "name": "Census Tract 1032.19",
+    "geoid": "04013103219",
+    "riskScore": 38.94,
+    "status": "moderate",
+    "avgTemperature": 39.54,
+    "affectedPopulation": 3461
+  },
+  {
+    "id": "tract-04013611700",
+    "code": "04013611700",
+    "name": "Census Tract 6117",
+    "geoid": "04013611700",
+    "riskScore": 38.83,
+    "status": "moderate",
+    "avgTemperature": 39.74,
+    "affectedPopulation": 6072
+  },
+  {
+    "id": "tract-04013105101",
+    "code": "04013105101",
+    "name": "Census Tract 1051.01",
+    "geoid": "04013105101",
+    "riskScore": 38.56,
+    "status": "moderate",
+    "avgTemperature": 39.71,
+    "affectedPopulation": 4299
+  },
+  {
+    "id": "tract-04013614800",
+    "code": "04013614800",
+    "name": "Census Tract 6148",
+    "geoid": "04013614800",
+    "riskScore": 38.42,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 4395
+  },
+  {
+    "id": "tract-04013116738",
+    "code": "04013116738",
+    "name": "Census Tract 1167.38",
+    "geoid": "04013116738",
+    "riskScore": 38.16,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 6653
+  },
+  {
+    "id": "tract-04013614602",
+    "code": "04013614602",
+    "name": "Census Tract 6146.02",
+    "geoid": "04013614602",
+    "riskScore": 37.94,
+    "status": "moderate",
+    "avgTemperature": 39.81,
+    "affectedPopulation": 3726
+  },
+  {
+    "id": "tract-04013103220",
+    "code": "04013103220",
+    "name": "Census Tract 1032.20",
+    "geoid": "04013103220",
+    "riskScore": 36.22,
+    "status": "moderate",
+    "avgTemperature": 39.58,
+    "affectedPopulation": 2549
+  },
+  {
+    "id": "tract-04013611800",
+    "code": "04013611800",
+    "name": "Census Tract 6118",
+    "geoid": "04013611800",
+    "riskScore": 35.44,
+    "status": "moderate",
+    "avgTemperature": 39.73,
+    "affectedPopulation": 7046
+  },
+  {
+    "id": "tract-04013611400",
+    "code": "04013611400",
+    "name": "Census Tract 6114",
+    "geoid": "04013611400",
+    "riskScore": 35.17,
+    "status": "moderate",
+    "avgTemperature": 39.52,
+    "affectedPopulation": 5944
+  },
+  {
+    "id": "tract-04013615001",
+    "code": "04013615001",
+    "name": "Census Tract 6150.01",
+    "geoid": "04013615001",
+    "riskScore": 32.58,
+    "status": "moderate",
+    "avgTemperature": 39.33,
+    "affectedPopulation": 6543
+  },
+  {
+    "id": "tract-04013615201",
+    "code": "04013615201",
+    "name": "Census Tract 6152.01",
+    "geoid": "04013615201",
+    "riskScore": 31.7,
+    "status": "moderate",
+    "avgTemperature": 39.4,
+    "affectedPopulation": 6260
+  },
+  {
+    "id": "tract-04013611600",
+    "code": "04013611600",
+    "name": "Census Tract 6116",
+    "geoid": "04013611600",
+    "riskScore": 31.44,
+    "status": "moderate",
+    "avgTemperature": 39.43,
+    "affectedPopulation": 2908
+  },
+  {
+    "id": "tract-04013611900",
+    "code": "04013611900",
+    "name": "Census Tract 6119",
+    "geoid": "04013611900",
+    "riskScore": 31.1,
+    "status": "moderate",
+    "avgTemperature": 39.44,
+    "affectedPopulation": 3311
+  },
+  {
+    "id": "tract-04013611300",
+    "code": "04013611300",
+    "name": "Census Tract 6113",
+    "geoid": "04013611300",
+    "riskScore": 30.3,
+    "status": "moderate",
+    "avgTemperature": 39.46,
+    "affectedPopulation": 7453
+  },
+  {
+    "id": "tract-04013612302",
+    "code": "04013612302",
+    "name": "Census Tract 6123.02",
+    "geoid": "04013612302",
+    "riskScore": 29.77,
+    "status": "moderate",
+    "avgTemperature": 39.37,
+    "affectedPopulation": 4824
+  },
+  {
+    "id": "tract-04013612301",
+    "code": "04013612301",
+    "name": "Census Tract 6123.01",
+    "geoid": "04013612301",
+    "riskScore": 29.61,
+    "status": "moderate",
+    "avgTemperature": 39.41,
+    "affectedPopulation": 3778
+  },
+  {
+    "id": "tract-04013610800",
+    "code": "04013610800",
+    "name": "Census Tract 6108",
+    "geoid": "04013610800",
+    "riskScore": 29.41,
+    "status": "moderate",
+    "avgTemperature": 39.35,
+    "affectedPopulation": 6712
+  },
+  {
+    "id": "tract-04013611500",
+    "code": "04013611500",
+    "name": "Census Tract 6115",
+    "geoid": "04013611500",
+    "riskScore": 29.13,
+    "status": "moderate",
+    "avgTemperature": 39.34,
+    "affectedPopulation": 7540
+  },
+  {
+    "id": "tract-04013612000",
+    "code": "04013612000",
+    "name": "Census Tract 6120",
+    "geoid": "04013612000",
+    "riskScore": 28.34,
+    "status": "moderate",
+    "avgTemperature": 39.17,
+    "affectedPopulation": 4013
+  },
+  {
+    "id": "tract-04013612700",
+    "code": "04013612700",
+    "name": "Census Tract 6127",
+    "geoid": "04013612700",
+    "riskScore": 27.86,
+    "status": "moderate",
+    "avgTemperature": 38.89,
+    "affectedPopulation": 2163
+  },
+  {
+    "id": "tract-04013612200",
+    "code": "04013612200",
+    "name": "Census Tract 6122",
+    "geoid": "04013612200",
+    "riskScore": 26.92,
+    "status": "moderate",
+    "avgTemperature": 39.2,
+    "affectedPopulation": 6686
+  },
+  {
+    "id": "tract-04013612800",
+    "code": "04013612800",
+    "name": "Census Tract 6128",
+    "geoid": "04013612800",
+    "riskScore": 26.87,
+    "status": "moderate",
+    "avgTemperature": 38.96,
+    "affectedPopulation": 2373
+  },
+  {
+    "id": "tract-04013612401",
+    "code": "04013612401",
+    "name": "Census Tract 6124.01",
+    "geoid": "04013612401",
+    "riskScore": 26.51,
+    "status": "moderate",
+    "avgTemperature": 39.25,
+    "affectedPopulation": 4254
+  },
+  {
+    "id": "tract-04013615100",
+    "code": "04013615100",
+    "name": "Census Tract 6151",
+    "geoid": "04013615100",
+    "riskScore": 26.12,
+    "status": "moderate",
+    "avgTemperature": 39.25,
+    "affectedPopulation": 4586
+  },
+  {
+    "id": "tract-04013610600",
+    "code": "04013610600",
+    "name": "Census Tract 6106",
+    "geoid": "04013610600",
+    "riskScore": 25.37,
+    "status": "moderate",
+    "avgTemperature": 39.08,
+    "affectedPopulation": 6208
+  },
+  {
+    "id": "tract-04013613300",
+    "code": "04013613300",
+    "name": "Census Tract 6133",
+    "geoid": "04013613300",
+    "riskScore": 24.85,
+    "status": "low",
+    "avgTemperature": 39.03,
+    "affectedPopulation": 7168
+  },
+  {
+    "id": "tract-04013610002",
+    "code": "04013610002",
+    "name": "Census Tract 6100.02",
+    "geoid": "04013610002",
+    "riskScore": 24.14,
+    "status": "low",
+    "avgTemperature": 38.88,
+    "affectedPopulation": 6616
+  },
+  {
+    "id": "tract-04013610500",
+    "code": "04013610500",
+    "name": "Census Tract 6105",
+    "geoid": "04013610500",
+    "riskScore": 23.78,
+    "status": "low",
+    "avgTemperature": 38.98,
+    "affectedPopulation": 7808
+  },
+  {
+    "id": "tract-04013612402",
+    "code": "04013612402",
+    "name": "Census Tract 6124.02",
+    "geoid": "04013612402",
+    "riskScore": 23.76,
+    "status": "low",
+    "avgTemperature": 39.12,
+    "affectedPopulation": 4635
+  },
+  {
+    "id": "tract-04013612600",
+    "code": "04013612600",
+    "name": "Census Tract 6126",
+    "geoid": "04013612600",
+    "riskScore": 23.75,
+    "status": "low",
+    "avgTemperature": 38.93,
+    "affectedPopulation": 2173
+  },
+  {
+    "id": "tract-04013612500",
+    "code": "04013612500",
+    "name": "Census Tract 6125",
+    "geoid": "04013612500",
+    "riskScore": 22.55,
+    "status": "low",
+    "avgTemperature": 38.83,
+    "affectedPopulation": 4101
+  },
+  {
+    "id": "tract-04013612900",
+    "code": "04013612900",
+    "name": "Census Tract 6129",
+    "geoid": "04013612900",
+    "riskScore": 22.08,
+    "status": "low",
+    "avgTemperature": 38.85,
+    "affectedPopulation": 2654
+  },
+  {
+    "id": "tract-04013610100",
+    "code": "04013610100",
+    "name": "Census Tract 6101",
+    "geoid": "04013610100",
+    "riskScore": 18.51,
+    "status": "low",
+    "avgTemperature": 38.64,
+    "affectedPopulation": 849
+  },
+  {
+    "id": "tract-04013613000",
+    "code": "04013613000",
+    "name": "Census Tract 6130",
+    "geoid": "04013613000",
+    "riskScore": 15.46,
+    "status": "low",
+    "avgTemperature": 38.45,
+    "affectedPopulation": 5727
+  }
+]

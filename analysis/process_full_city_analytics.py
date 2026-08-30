@@ -1,15 +1,12 @@
 """
 CoolCity AI - Track 7 Full-City Phoenix Analytics Processor
 ===========================================================
-Converts the completed full-city FortyGuard heat snapshot (221,420 features)
-into canonical Track 7 Census Tract analytics for the official Phoenix boundary.
+Converts completed full-city FortyGuard heat snapshots into canonical
+Track 7 Census Tract analytics for the official Phoenix boundary.
 
-Outputs generated:
-  - data/processed/phoenix_tract_risk.json
-  - data/processed/phoenix_tract_risk.csv
-  - data/processed/correlation_summary.json
-  - data/processed/sensitivity_summary.json
-  - data/processed/track7_summary.json
+Supports snapshot parameters for reproducible multi-snapshot processing:
+  - 2024-07-15 14:00 (Historical Baseline)
+  - 2026-08-30 14:00 (Aug 30, 2026 Snapshot)
 """
 
 import os
@@ -18,6 +15,7 @@ import json
 import math
 import time
 import logging
+import argparse
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 import numpy as np
@@ -94,23 +92,59 @@ def is_point_in_rings(x: float, y: float, rings: List[List[List[float]]]) -> boo
     return True
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Process full-city heat snapshot into Track 7 analytics.")
+    parser.add_argument("--snapshot-date", type=str, default="2026-08-30", help="Snapshot date (YYYY-MM-DD)")
+    parser.add_argument("--snapshot-time", type=str, default="14:00", help="Snapshot time (HH:mm)")
+    parser.add_argument("--heat-file", type=str, default=None, help="Path to combined heat JSON file")
+    parser.add_argument("--manifest-file", type=str, default=None, help="Path to run manifest.json")
+    parser.add_argument("--col-summary-file", type=str, default=None, help="Path to collection summary JSON")
+    parser.add_argument("--output-dir", type=str, default=None, help="Output directory for processed analytics")
+    return parser.parse_args()
+
+
 def run_full_city_processing():
+    args = parse_args()
+    snapshot_date = args.snapshot_date
+    snapshot_time = args.snapshot_time
+    clean_time = snapshot_time.replace(":", "")
+    snapshot_id = f"{snapshot_date}-{clean_time}"
+
     project_root = Path(__file__).parent.parent
     web_dir = project_root / "web"
     data_dir = project_root / "data"
-    processed_dir = data_dir / "processed"
+
+    if args.heat_file:
+        combined_heat_path = Path(args.heat_file)
+    else:
+        combined_heat_path = web_dir / "data" / "snapshots" / snapshot_id / "combined" / "phoenix_full_city_heat.json"
+
+    if args.manifest_file:
+        manifest_path = Path(args.manifest_file)
+    else:
+        manifest_path = web_dir / "data" / "snapshots" / snapshot_id / "manifest.json"
+
+    if args.col_summary_file:
+        col_summary_path = Path(args.col_summary_file)
+    else:
+        col_summary_path = web_dir / "data" / "snapshots" / snapshot_id / "combined" / "full_city_collection_summary.json"
+
+    if args.output_dir:
+        processed_dir = Path(args.output_dir)
+    else:
+        processed_dir = data_dir / "processed" / "snapshots" / snapshot_id
+
     processed_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. VERIFY FULL-CITY BATCH MANIFEST & SUMMARY
-    manifest_path = web_dir / "data" / "full-city-run" / "manifest.json"
-    col_summary_path = web_dir / "data" / "full-city-run" / "combined" / "full_city_collection_summary.json"
-    combined_heat_path = web_dir / "data" / "full-city-run" / "combined" / "phoenix_full_city_heat.json"
     boundary_path = web_dir / "public" / "data" / "phoenix-city-boundary.geojson"
     census_path = data_dir / "raw" / "phoenix_census_tracts_demographics.geojson"
 
+    logger.info(f"Processing Track 7 Analytics for Snapshot [{snapshot_id}] ({snapshot_date} {snapshot_time})...")
+
+    # 1. VERIFY FULL-CITY BATCH MANIFEST & SUMMARY
     logger.info("[Step 1/8] Verifying full-city collection status from manifest...")
     if not manifest_path.exists() or not col_summary_path.exists():
-        raise FileNotFoundError("Full-city collection manifest or summary missing.")
+        raise FileNotFoundError(f"Collection manifest or summary missing for {snapshot_id}.")
 
     with open(manifest_path, "r", encoding="utf-8") as f:
         manifest = json.load(f)
@@ -122,14 +156,15 @@ def run_full_city_processing():
     chunks_dict = manifest.get("chunks", {})
     completed_chunks = sum(1 for c in chunks_dict.values() if c.get("status") == "completed")
     failed_chunks = sum(1 for c in chunks_dict.values() if c.get("status") == "failed")
+    timed_out_chunks = sum(1 for c in chunks_dict.values() if c.get("status") == "timed_out")
     reused_chunks = sum(1 for c in chunks_dict.values() if c.get("creationRequestCount", 1) == 0)
     raw_feature_count = col_summary.get("totalRawFeatures", 0)
     coverage_status = col_summary.get("coverageStatus", "")
 
-    if completed_chunks != planned_chunks or failed_chunks > 0 or "complete coverage" not in coverage_status:
+    if completed_chunks != planned_chunks or failed_chunks > 0 or timed_out_chunks > 0 or "complete coverage" not in coverage_status:
         raise ValueError(
             f"Collection verification failed: completed {completed_chunks}/{planned_chunks}, "
-            f"failed={failed_chunks}, status='{coverage_status}'."
+            f"failed={failed_chunks}, timed_out={timed_out_chunks}, status='{coverage_status}'."
         )
 
     logger.info(
@@ -161,7 +196,6 @@ def run_full_city_processing():
         max_y = max(pt[1] for pt in ext)
         phx_bboxes.append((min_x, min_y, max_x, max_y, poly))
 
-    # Grid Index for Phoenix Boundary Bounding Boxes (0.05 degree cells)
     GRID_SIZE = 0.05
     phx_grid = {}
     for idx, (min_x, min_y, max_x, max_y, poly) in enumerate(phx_bboxes):
@@ -301,7 +335,6 @@ def run_full_city_processing():
         best_props = None
         for entry in tract_list:
             min_x, min_y, max_x, max_y = entry["bbox"]
-            # Fast bbox dist estimate
             dx = max(min_x - x, 0, x - max_x)
             dy = max(min_y - y, 0, y - max_y)
             dist_sq = dx*dx + dy*dy
@@ -317,9 +350,13 @@ def run_full_city_processing():
     t1 = time.time()
     tract_tiles_map: Dict[str, List[float]] = {}
     tract_props_map: Dict[str, Dict[str, Any]] = {}
+    join_failures = 0
 
     for feat in retained_phoenix_features:
         geoid, props = find_tract_for_point(feat["cx"], feat["cy"])
+        if not geoid:
+            join_failures += 1
+            continue
         if geoid not in tract_tiles_map:
             tract_tiles_map[geoid] = []
             tract_props_map[geoid] = props
@@ -327,13 +364,12 @@ def run_full_city_processing():
 
     represented_tract_count = len(tract_tiles_map)
     logger.info(
-        f"Spatial Join Completed in {time.time()-t1:.2f}s across {represented_tract_count} Phoenix Census Tracts."
+        f"Spatial Join Completed in {time.time()-t1:.2f}s across {represented_tract_count} Phoenix Census Tracts. Join failures={join_failures}."
     )
 
     # 6. AGGREGATE HEAT, COMPUTE VULNERABILITY, & COMPOSITE RISK MODEL
     logger.info("[Step 6/8] Aggregating heat metrics & computing vulnerability & composite risk scores...")
 
-    # Compute full-city temperature min/max/mean across all Phoenix-filtered features
     all_phoenix_temps = [f["temp_c"] for f in retained_phoenix_features]
     city_min_temp = min(all_phoenix_temps)
     city_max_temp = max(all_phoenix_temps)
@@ -341,17 +377,15 @@ def run_full_city_processing():
 
     logger.info(f"Full-City Temperature Range: {city_min_temp:.2f}°C to {city_max_temp:.2f}°C (Mean: {city_mean_temp:.2f}°C)")
 
-    # Prepare tract table
     tract_rows = []
     for geoid, temps in tract_tiles_map.items():
         props = tract_props_map[geoid]
         avg_temp = float(np.mean(temps))
 
-        # Recomputed Heat Intensity Score using FULL-CITY min/max scaling
+        # Recomputed Heat Intensity Score using THIS SNAPSHOT's min/max scaling
         intensity_score = round(((avg_temp - city_min_temp) / (city_max_temp - city_min_temp)) * 100.0, 2)
         intensity_score = max(0.0, min(100.0, intensity_score))
 
-        # Extract demographic indicators
         pov_rate = float(props.get("poverty_rate", 0.0) or 0.0)
         eld_rate = float(props.get("elderly_rate", 0.0) or 0.0)
         veh_rate = float(props.get("no_vehicle_rate", 0.0) or 0.0)
@@ -404,7 +438,6 @@ def run_full_city_processing():
     # Sort descending by riskScore
     tract_df = tract_df.sort_values(by="riskScore", ascending=False).reset_index(drop=True)
 
-    # Format Canonical Handoff Records
     tract_records = []
     for _, r in tract_df.iterrows():
         tract_records.append({
@@ -432,7 +465,7 @@ def run_full_city_processing():
 
     logger.info(f"Saved {len(tract_records)} clean tract records to {json_risk_path} and {csv_risk_path}.")
 
-    # 7. STATISTICAL CORRELATION ANALYSIS (TRACT LEVEL)
+    # 7. STATISTICAL CORRELATION ANALYSIS
     logger.info("[Step 7/8] Running tract-level statistical correlations...")
     demo_vars = ["poverty_rate", "elderly_rate", "no_vehicle_rate", "minority_rate", "unemployment_rate", "disability_rate"]
     correlations_list = []
@@ -457,10 +490,13 @@ def run_full_city_processing():
 
     corr_summary_data = {
         "study_unit": "Census Tract",
+        "snapshotId": snapshot_id,
+        "snapshotDate": snapshot_date,
+        "snapshotTime": snapshot_time,
         "tract_count": represented_tract_count,
         "methodology_note": (
             f"Pearson and Spearman correlations calculated at the Census Tract level (N={represented_tract_count}) "
-            "after mean-aggregating full-city thermal observations inside official Phoenix municipal boundary. "
+            f"for snapshot {snapshot_id}. "
             "Tile-level analysis was avoided to eliminate pseudoreplication and unearned statistical significance."
         ),
         "heat_metrics_tested": ["intensity_score", "average_temperature"],
@@ -498,6 +534,9 @@ def run_full_city_processing():
 
     sens_summary_data = {
         "analysis_type": "Census-Tract Level Weighting Sensitivity Analysis",
+        "snapshotId": snapshot_id,
+        "snapshotDate": snapshot_date,
+        "snapshotTime": snapshot_time,
         "statistical_unit": "Census Tract",
         "tract_count": represented_tract_count,
         "scenarios": {
@@ -535,10 +574,11 @@ def run_full_city_processing():
     # 9. MASTER TRACK 7 SUMMARY
     track7_summary_data = {
         "studyArea": "City of Phoenix (Full-City Snapshot)",
+        "snapshotId": snapshot_id,
         "coverageStatus": "full-city",
         "boundary": "City of Phoenix",
-        "snapshotDate": manifest.get("snapshotDate", "2024-07-15"),
-        "snapshotTime": manifest.get("snapshotTime", "14:00"),
+        "snapshotDate": snapshot_date,
+        "snapshotTime": snapshot_time,
         "thermalFeatureCount": len(retained_phoenix_features),
         "rawThermalFeatureCount": len(raw_features),
         "excludedOutsideFeatures": len(excluded_outside_features),
@@ -561,11 +601,11 @@ def run_full_city_processing():
         "persistenceAvailable": False,
         "historicalBaselineVerified": False,
         "canonicalOutputs": [
-            "data/processed/phoenix_tract_risk.json",
-            "data/processed/phoenix_tract_risk.csv",
-            "data/processed/correlation_summary.json",
-            "data/processed/sensitivity_summary.json",
-            "data/processed/track7_summary.json"
+            f"data/processed/snapshots/{snapshot_id}/phoenix_tract_risk.json",
+            f"data/processed/snapshots/{snapshot_id}/phoenix_tract_risk.csv",
+            f"data/processed/snapshots/{snapshot_id}/correlation_summary.json",
+            f"data/processed/snapshots/{snapshot_id}/sensitivity_summary.json",
+            f"data/processed/snapshots/{snapshot_id}/track7_summary.json"
         ]
     }
 
@@ -577,8 +617,10 @@ def run_full_city_processing():
 
     # 10. PRINT SUMMARY REPORT
     print("\n" + "=" * 80)
-    print("FULL-CITY PHOENIX TRACK 7 ANALYTICS COMPLETE")
+    print(f"FULL-CITY PHOENIX TRACK 7 ANALYTICS COMPLETE [{snapshot_id}]")
     print("=" * 80)
+    print(f"  - Snapshot ID:                   {snapshot_id}")
+    print(f"  - Snapshot Date/Time:            {snapshot_date} {snapshot_time}")
     print(f"  - Coverage Status:               full-city")
     print(f"  - Boundary:                      City of Phoenix Municipal Boundary")
     print(f"  - Raw Thermal Features:          {len(raw_features):,}")

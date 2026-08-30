@@ -1,0 +1,134 @@
+{
+  "study_unit": "Census Tract",
+  "snapshotId": "2026-08-30-1400",
+  "snapshotDate": "2026-08-30",
+  "snapshotTime": "14:00",
+  "tract_count": 359,
+  "methodology_note": "Pearson and Spearman correlations calculated at the Census Tract level (N=359) for snapshot 2026-08-30-1400. Tile-level analysis was avoided to eliminate pseudoreplication and unearned statistical significance.",
+  "heat_metrics_tested": [
+    "intensity_score",
+    "average_temperature"
+  ],
+  "correlations": [
+    {
+      "variable": "poverty_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 359,
+      "pearson_r": 0.493,
+      "pearson_p_value": 2.179639827227181e-23,
+      "spearman_rho": 0.5818,
+      "spearman_p_value": 6.680553494420624e-34,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "elderly_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 359,
+      "pearson_r": -0.4318,
+      "pearson_p_value": 9.67862794505451e-18,
+      "spearman_rho": -0.5447,
+      "spearman_p_value": 3.9934686603801635e-29,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "no_vehicle_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 359,
+      "pearson_r": 0.3046,
+      "pearson_p_value": 3.8244013112752466e-09,
+      "spearman_rho": 0.3014,
+      "spearman_p_value": 5.653458069036312e-09,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "minority_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 359,
+      "pearson_r": 0.6821,
+      "pearson_p_value": 1.8116390542490552e-50,
+      "spearman_rho": 0.7311,
+      "spearman_p_value": 3.0681145455177326e-61,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "unemployment_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 359,
+      "pearson_r": 0.1969,
+      "pearson_p_value": 0.00017303263556364448,
+      "spearman_rho": 0.1813,
+      "spearman_p_value": 0.0005552479538381326,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "disability_rate",
+      "heat_metric": "intensity_score",
+      "sample_size": 359,
+      "pearson_r": 0.1235,
+      "pearson_p_value": 0.019277531887304425,
+      "spearman_rho": 0.0478,
+      "spearman_p_value": 0.36643999333077004,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "poverty_rate",
+      "heat_metric": "average_temperature",
+      "sample_size": 359,
+      "pearson_r": 0.4927,
+      "pearson_p_value": 2.3386621729011798e-23,
+      "spearman_rho": 0.5811,
+      "spearman_p_value": 8.20012165734927e-34,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "elderly_rate",
+      "heat_metric": "average_temperature",
+      "sample_size": 359,
+      "pearson_r": -0.4315,
+      "pearson_p_value": 1.0372407999593896e-17,
+      "spearman_rho": -0.5449,
+      "spearman_p_value": 3.762251987461359e-29,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "no_vehicle_rate",
+      "heat_metric": "average_temperature",
+      "sample_size": 359,
+      "pearson_r": 0.3041,
+      "pearson_p_value": 4.060040437436297e-09,
+      "spearman_rho": 0.301,
+      "spearman_p_value": 5.937650746695797e-09,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "minority_rate",
+      "heat_metric": "average_temperature",
+      "sample_size": 359,
+      "pearson_r": 0.682,
+      "pearson_p_value": 1.919846649902152e-50,
+      "spearman_rho": 0.7307,
+      "spearman_p_value": 3.908141287317684e-61,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "unemployment_rate",
+      "heat_metric": "average_temperature",
+      "sample_size": 359,
+      "pearson_r": 0.1964,
+      "pearson_p_value": 0.00018008020832556464,
+      "spearman_rho": 0.1807,
+      "spearman_p_value": 0.0005823869569540321,
+      "is_statistically_significant": true
+    },
+    {
+      "variable": "disability_rate",
+      "heat_metric": "average_temperature",
+      "sample_size": 359,
+      "pearson_r": 0.1235,
+      "pearson_p_value": 0.019257518210024974,
+      "spearman_rho": 0.0481,
+      "spearman_p_value": 0.3636593741139964,
+      "is_statistically_significant": true
+    }
+  ]
+}
