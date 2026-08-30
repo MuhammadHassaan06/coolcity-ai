@@ -9,7 +9,7 @@ import PriorityZones from "@/components/PriorityZones";
 import ResourcesPanel from "@/components/ResourcesPanel";
 import DeploymentPanel from "@/components/DeploymentPanel";
 import AnalysisPanel from "@/components/AnalysisPanel";
-import { ViewMode, TimePeriod } from "@/types/dashboard";
+import { ViewMode, TimePeriod, SnapshotId } from "@/types/dashboard";
 import {
   getDataMode,
   getDashboardSummary,
@@ -21,23 +21,38 @@ import {
 
 export default function Dashboard() {
   const [viewMode, setViewMode] = useState<ViewMode>("heat");
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>("current");
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>("2026-08-30-1400");
   const [selectedZoneId, setSelectedZoneId] = useState<string | undefined>();
 
-  // Synchronous track 7 data model retrieval via frontend data access boundary
+  // Synchronous track 7 snapshot data model retrieval via frontend data access boundary
   const dataMode = getDataMode();
-  const dashboardStats = getDashboardSummary();
-  const priorityZones = getPriorityZones();
+  const dashboardStats = getDashboardSummary(timePeriod);
+  const priorityZones = getPriorityZones(timePeriod);
   const resources = getFacilityResources();
   const deployableCategories = getDeployableCategories();
   const defaultDeployableInventory = getDefaultDeployableInventory();
 
-  const selectedZone = priorityZones.find((z) => z.id === selectedZoneId || z.code === selectedZoneId || z.geoid === selectedZoneId);
+  const selectedZone = priorityZones.find(
+    (z) => z.id === selectedZoneId || z.code === selectedZoneId || z.geoid === selectedZoneId
+  );
+
+  const handleTimePeriodChange = (newPeriod: TimePeriod) => {
+    setTimePeriod(newPeriod);
+    if (selectedZoneId) {
+      const newZones = getPriorityZones(newPeriod);
+      const exists = newZones.some(
+        (z) => z.id === selectedZoneId || z.code === selectedZoneId || z.geoid === selectedZoneId
+      );
+      if (!exists) {
+        setSelectedZoneId(undefined);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100/50">
       {/* Header */}
-      <Header dataMode={dataMode} />
+      <Header dataMode={dataMode} snapshotId={timePeriod as SnapshotId} />
 
       {/* Control Bar */}
       <ControlBar
@@ -45,7 +60,7 @@ export default function Dashboard() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         timePeriod={timePeriod}
-        onTimePeriodChange={setTimePeriod}
+        onTimePeriodChange={handleTimePeriodChange}
       />
 
       {/* Main Dashboard Content */}
@@ -110,8 +125,9 @@ export default function Dashboard() {
               categories={deployableCategories}
               defaultInventory={defaultDeployableInventory}
               selectedZoneId={selectedZone?.geoid || selectedZoneId}
+              snapshotId={timePeriod as SnapshotId}
             />
-            <AnalysisPanel />
+            <AnalysisPanel snapshotId={timePeriod as SnapshotId} />
           </div>
         </div>
       </main>

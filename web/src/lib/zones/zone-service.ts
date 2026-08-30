@@ -4,29 +4,33 @@ import { CanonicalTractRecord } from "../../types/zone";
 import { HeatMetrics } from "../../types/heat";
 import { Vulnerability } from "../../types/vulnerability";
 
-// Static runtime snapshot from Track 7 analytics pipeline
+// Static runtime snapshots from Track 7 analytics pipeline
+import risk2026 from "../../data/track7/snapshots/2026-08-30-1400/phoenix_tract_risk.json";
+import risk2024 from "../../data/track7/snapshots/2024-07-15-1400/phoenix_tract_risk.json";
 import runtimeTracts from "../../data/track7/phoenix_tract_risk.json";
 // Default fallback sample fixture for offline development/tests if phoenix_tract_risk.json is absent
 import defaultSampleTracts from "./fixtures/sample-tracts.json";
 
-let currentAnalyticsStore: CanonicalTractRecord[] | null = null;
+let currentAnalyticsStoreOverride: CanonicalTractRecord[] | null = null;
 
-function loadDefaultAnalyticsStore(): CanonicalTractRecord[] {
-  if (currentAnalyticsStore) {
-    return currentAnalyticsStore;
+function loadAnalyticsStoreForSnapshot(snapshotId: string = "2026-08-30-1400"): CanonicalTractRecord[] {
+  if (currentAnalyticsStoreOverride) {
+    return currentAnalyticsStoreOverride;
   }
 
-  // 1. Try static runtime snapshot import (bundled by Next.js)
+  const rawList = snapshotId === "2024-07-15-1400" ? risk2024 : risk2026;
+  if (Array.isArray(rawList) && rawList.length > 0) {
+    return rawList.map((item: unknown) => normalizeCanonicalRecord(item));
+  }
+
   if (Array.isArray(runtimeTracts) && runtimeTracts.length > 0) {
-    currentAnalyticsStore = runtimeTracts.map((item: unknown) => normalizeCanonicalRecord(item));
-    return currentAnalyticsStore;
+    return runtimeTracts.map((item: unknown) => normalizeCanonicalRecord(item));
   }
 
-  // 2. Try disk paths if runtime snapshot was empty
   const candidatePaths = [
+    path.resolve(process.cwd(), `src/data/track7/snapshots/${snapshotId}/phoenix_tract_risk.json`),
+    path.resolve(process.cwd(), `data/processed/snapshots/${snapshotId}/phoenix_tract_risk.json`),
     path.resolve(process.cwd(), "src/data/track7/phoenix_tract_risk.json"),
-    path.resolve(process.cwd(), "data/processed/phoenix_tract_risk.json"),
-    path.resolve(process.cwd(), "../data/processed/phoenix_tract_risk.json"),
   ];
 
   for (const canonicalPath of candidatePaths) {
@@ -35,8 +39,7 @@ function loadDefaultAnalyticsStore(): CanonicalTractRecord[] {
         const raw = fs.readFileSync(/*turbopackIgnore: true*/ canonicalPath, "utf-8");
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          currentAnalyticsStore = parsed.map((item: unknown) => normalizeCanonicalRecord(item));
-          return currentAnalyticsStore;
+          return parsed.map((item: unknown) => normalizeCanonicalRecord(item));
         }
       } catch {
         // Continue to next path
@@ -44,9 +47,7 @@ function loadDefaultAnalyticsStore(): CanonicalTractRecord[] {
     }
   }
 
-  // 3. Fallback to Census GEOID test fixture
-  currentAnalyticsStore = (defaultSampleTracts as unknown[]).map((item) => normalizeCanonicalRecord(item));
-  return currentAnalyticsStore;
+  return (defaultSampleTracts as unknown[]).map((item) => normalizeCanonicalRecord(item));
 }
 
 export function normalizeCanonicalRecord(raw: unknown): CanonicalTractRecord {
@@ -75,24 +76,24 @@ function validateRiskStatus(status: unknown): "low" | "moderate" | "high" | "cri
   return "moderate";
 }
 
-export async function getZones(): Promise<CanonicalTractRecord[]> {
-  return loadDefaultAnalyticsStore();
+export async function getZones(snapshotId: string = "2026-08-30-1400"): Promise<CanonicalTractRecord[]> {
+  return loadAnalyticsStoreForSnapshot(snapshotId);
 }
 
-export async function getZoneByGeoid(idOrGeoid: string): Promise<CanonicalTractRecord | null> {
+export async function getZoneByGeoid(idOrGeoid: string, snapshotId: string = "2026-08-30-1400"): Promise<CanonicalTractRecord | null> {
   if (!idOrGeoid || typeof idOrGeoid !== "string" || idOrGeoid.trim() === "") {
     return null;
   }
   const cleanKey = idOrGeoid.trim();
-  const store = loadDefaultAnalyticsStore();
+  const store = loadAnalyticsStoreForSnapshot(snapshotId);
   const match = store.find(
     (z) => z.geoid === cleanKey || z.id === cleanKey || z.code === cleanKey
   );
   return match || null;
 }
 
-export async function getZoneHeatMetrics(idOrGeoid: string): Promise<HeatMetrics | null> {
-  const zone = await getZoneByGeoid(idOrGeoid);
+export async function getZoneHeatMetrics(idOrGeoid: string, snapshotId: string = "2026-08-30-1400"): Promise<HeatMetrics | null> {
+  const zone = await getZoneByGeoid(idOrGeoid, snapshotId);
   if (!zone) {
     return null;
   }
@@ -101,30 +102,30 @@ export async function getZoneHeatMetrics(idOrGeoid: string): Promise<HeatMetrics
     meanTemp: zone.avgTemperature,
     maxTemp: zone.avgTemperature ? zone.avgTemperature + 2.5 : null,
     temperatureUnit: "C",
-    persistenceScore: null, // Track 7 snapshot does not include persistence metrics
+    persistenceScore: null,
     exceedanceScore: null,
     historicalDeviation: null,
     dataTimestamp: new Date().toISOString(),
   };
 }
 
-export async function getZoneVulnerability(idOrGeoid: string): Promise<Vulnerability | null> {
-  const zone = await getZoneByGeoid(idOrGeoid);
+export async function getZoneVulnerability(idOrGeoid: string, snapshotId: string = "2026-08-30-1400"): Promise<Vulnerability | null> {
+  const zone = await getZoneByGeoid(idOrGeoid, snapshotId);
   if (!zone) {
     return null;
   }
   return {
     zoneId: zone.geoid,
-    povertyRate: null, // Sub-components not stored in Track 7 canonical summary record
+    povertyRate: null,
     age65PlusRate: null,
     noVehicleRate: null,
     compositeScore: zone.riskScore,
-    sourceYear: 2024,
+    sourceYear: snapshotId.startsWith("2024") ? 2024 : 2026,
   };
 }
 
 export function setAnalyticsStore(tracts: CanonicalTractRecord[]): void {
-  currentAnalyticsStore = tracts.map((t) => normalizeCanonicalRecord(t));
+  currentAnalyticsStoreOverride = tracts.map((t) => normalizeCanonicalRecord(t));
 }
 
 export function loadAnalyticsDataFromObject(payload: unknown): CanonicalTractRecord[] {
@@ -135,10 +136,10 @@ export function loadAnalyticsDataFromObject(payload: unknown): CanonicalTractRec
     list = (payload as Record<string, unknown>).zones as unknown[];
   }
   const normalized = list.map((item) => normalizeCanonicalRecord(item));
-  currentAnalyticsStore = normalized;
+  currentAnalyticsStoreOverride = normalized;
   return normalized;
 }
 
 export function resetAnalyticsStore(): void {
-  currentAnalyticsStore = null;
+  currentAnalyticsStoreOverride = null;
 }

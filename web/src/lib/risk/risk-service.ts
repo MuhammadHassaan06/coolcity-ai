@@ -5,8 +5,8 @@ import { getZones, getZoneByGeoid } from "../zones/zone-service";
  * Retrieves the authoritative Track 7 risk score for a specific Census Tract GEOID.
  * Track 7 owns risk calculation (riskScore and risk status band).
  */
-export async function getZoneRisk(idOrGeoid: string): Promise<ZoneRisk | null> {
-  const zone = await getZoneByGeoid(idOrGeoid);
+export async function getZoneRisk(idOrGeoid: string, snapshotId: string = "2026-08-30-1400"): Promise<ZoneRisk | null> {
+  const zone = await getZoneByGeoid(idOrGeoid, snapshotId);
   if (!zone) {
     return null;
   }
@@ -25,8 +25,8 @@ export async function getZoneRisk(idOrGeoid: string): Promise<ZoneRisk | null> {
  * Returns all zone risk records sorted deterministically by totalScore descending.
  * Ties are broken deterministically by zoneId ascending.
  */
-export async function getAllZoneRisks(): Promise<ZoneRisk[]> {
-  const zones = await getZones();
+export async function getAllZoneRisks(snapshotId: string = "2026-08-30-1400"): Promise<ZoneRisk[]> {
+  const zones = await getZones(snapshotId);
   const risks: ZoneRisk[] = zones.map((z) => ({
     zoneId: z.geoid,
     totalScore: z.riskScore,

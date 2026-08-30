@@ -15,11 +15,12 @@ export async function runCoolCityPlanningAgent(
     throw new AgentValidationError(`Invalid agent planning request payload: ${issueMsgs}`);
   }
 
-  const { goal, inventory, zoneIds } = parsedRequest.data;
+  const { goal, inventory, zoneIds, snapshotId } = parsedRequest.data;
+  const activeSnapshot = snapshotId || "2026-08-30-1400";
 
-  // 2. Load zone risks for allocation context
-  const allRisks = await getAllZoneRisks();
-  const allZones = await getZones();
+  // 2. Load zone risks for allocation context using selected snapshotId
+  const allRisks = await getAllZoneRisks(activeSnapshot);
+  const allZones = await getZones(activeSnapshot);
 
   // Run deterministic allocation as ground truth
   const deterministicResult = allocate({
@@ -47,14 +48,14 @@ export async function runCoolCityPlanningAgent(
       type: "risk",
       metric: "Track 7 Composite Risk Score",
       value: z.riskScore,
-      source: "CoolCity deterministic risk model",
+      source: `CoolCity deterministic risk model (${activeSnapshot})`,
     });
     evidenceItems.push({
       zoneId: z.geoid,
       type: "heat",
       metric: "Average Surface Temperature (°C)",
       value: z.avgTemperature,
-      source: "FortyGuard / CoolCity Thermal Engine",
+      source: `FortyGuard / CoolCity Thermal Engine (${activeSnapshot})`,
     });
   }
 
@@ -77,6 +78,7 @@ export async function runCoolCityPlanningAgent(
       const ai = new GoogleGenAI({ apiKey: apiKey!.trim() });
 
       const prompt = `You are the CoolCity AI Heat-Relief Deployment Planner for the City of Phoenix.
+Snapshot Context: ${activeSnapshot}
 Goal: ${goal}
 Available Inventory: ${JSON.stringify(inventory)}
 Requested Target Zones: ${zoneIds && zoneIds.length > 0 ? zoneIds.join(", ") : "All Census Tracts"}
@@ -95,7 +97,7 @@ Ensure allocations strictly comply with municipal inventory limits.`;
       if (response && response.text) {
         // Return valid plan using deterministic allocation enforcement
         const finalPlan: AgentPlanOutput = {
-          summary: `CoolCity Heat-Relief Deployment Plan: ${goal}. ${response.text}`,
+          summary: `CoolCity Heat-Relief Deployment Plan (${activeSnapshot}): ${goal}. ${response.text}`,
           priorityZones: priorityZoneGeoids,
           allocations: deterministicResult.allocations,
           remainingInventory: deterministicResult.remainingInventory,
@@ -114,7 +116,7 @@ Ensure allocations strictly comply with municipal inventory limits.`;
   }
 
   // 4. Deterministic Fallback Execution
-  const fallbackSummary = `CoolCity Heat-Relief Deployment Plan (Deterministic Mode): ${goal}. Automatically prioritized ${priorityZoneGeoids.length} Census Tracts based on Track 7 authoritative riskScores.`;
+  const fallbackSummary = `CoolCity Heat-Relief Deployment Plan (Deterministic Mode - ${activeSnapshot}): ${goal}. Automatically prioritized ${priorityZoneGeoids.length} Census Tracts based on Track 7 authoritative riskScores.`;
 
   const fallbackPlan: AgentPlanOutput = {
     summary: fallbackSummary,

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { DeployableResourceCategory, DeployableInventory } from "@/types/dashboard";
+import { DeployableResourceCategory, DeployableInventory, SnapshotId } from "@/types/dashboard";
 import { AgentPlanResponse } from "@/types/agent";
 import { ResourceAllocation } from "@/types/allocation";
 import {
@@ -13,12 +13,14 @@ interface DeploymentPanelProps {
   categories?: DeployableResourceCategory[];
   defaultInventory?: DeployableInventory;
   selectedZoneId?: string;
+  snapshotId?: SnapshotId;
 }
 
 export default function DeploymentPanel({
   categories = getDeployableCategories(),
   defaultInventory = getDefaultDeployableInventory(),
   selectedZoneId,
+  snapshotId = "2026-08-30-1400",
 }: DeploymentPanelProps = {}) {
   const [inventory, setInventory] = useState<DeployableInventory>(defaultInventory);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -78,6 +80,7 @@ export default function DeploymentPanel({
         outreachTeams: inventory.outreach_teams ?? 0,
       },
       zoneIds: selectedZoneId ? [selectedZoneId] : undefined,
+      snapshotId: snapshotId || "2026-08-30-1400",
     };
 
     try {
@@ -139,10 +142,12 @@ export default function DeploymentPanel({
             <span className="font-bold text-slate-900 uppercase tracking-wider text-[10px] font-mono">
               Agentic Resource Allocation
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">POST /api/agent/plan</span>
+            <span className="text-[10px] text-slate-500 font-mono">
+              Snapshot: {snapshotId === "2024-07-15-1400" ? "2024-07-15" : "2026-08-30"}
+            </span>
           </div>
           <p className="text-[11px] leading-relaxed text-slate-600">
-            Submits municipal resource inventory to the Track 6 agent. The backend optimizes allocations across <strong>Track 7 Census Tract risk scores</strong> while enforcing strict inventory caps via the <strong>deterministic allocator engine</strong>.
+            Submits municipal resource inventory to the Track 6 agent. The backend optimizes allocations across <strong>Track 7 Census Tract risk scores ({snapshotId})</strong> while enforcing strict inventory caps via the <strong>deterministic allocator engine</strong>.
           </p>
         </div>
 

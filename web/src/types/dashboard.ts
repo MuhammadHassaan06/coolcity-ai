@@ -5,7 +5,8 @@
 
 export type DataMode = "demo" | "live";
 export type ViewMode = "heat" | "risk";
-export type TimePeriod = "current" | "afternoon" | "historical";
+export type SnapshotId = "2026-08-30-1400" | "2024-07-15-1400";
+export type TimePeriod = SnapshotId;
 
 export interface PriorityZoneModel {
   id: string;

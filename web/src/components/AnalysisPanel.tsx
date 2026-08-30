@@ -1,15 +1,25 @@
 "use client";
 
-import correlationData from "@/data/track7/correlation_summary.json";
-import sensitivityData from "@/data/track7/sensitivity_summary.json";
+import { SnapshotId } from "@/types/dashboard";
+import {
+  getSnapshotCorrelationSummary,
+  getSnapshotSensitivitySummary,
+} from "@/lib/snapshots/snapshot-adapter";
 
-export default function AnalysisPanel() {
+interface AnalysisPanelProps {
+  snapshotId?: SnapshotId;
+}
+
+export default function AnalysisPanel({ snapshotId = "2026-08-30-1400" }: AnalysisPanelProps) {
+  const correlationData = getSnapshotCorrelationSummary(snapshotId);
+  const sensitivityData = getSnapshotSensitivitySummary(snapshotId);
+
   const correlations = correlationData.correlations || [];
   const tractCount = correlationData.tract_count || 359;
 
   // Filter for intensity_score heat metric for UI display
   const keyCorrelations = correlations.filter(
-    (c) => c.heat_metric === "intensity_score"
+    (c: { heat_metric: string }) => c.heat_metric === "intensity_score"
   );
 
   const top10OverlapA = sensitivityData.top_10_prioritization_stability?.overlap_A_with_baseline || "9 / 10";
@@ -28,7 +38,7 @@ export default function AnalysisPanel() {
           </p>
         </div>
         <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-900 text-white border border-slate-950 shrink-0">
-          TRACK 7 INTEGRATED
+          {snapshotId === "2024-07-15-1400" ? "2024 HISTORICAL" : "2026 LATEST"}
         </span>
       </div>
 
@@ -52,7 +62,12 @@ export default function AnalysisPanel() {
             Tract-Level Correlations (N={tractCount})
           </div>
           <div className="divide-y divide-gray-150 font-mono text-[11px]">
-            {keyCorrelations.slice(0, 4).map((c) => (
+            {keyCorrelations.slice(0, 4).map((c: {
+              variable: string;
+              pearson_r: number;
+              spearman_rho: number;
+              is_statistically_significant: boolean;
+            }) => (
               <div key={c.variable} className="px-3 py-1.5 flex items-center justify-between">
                 <span className="font-medium text-gray-800 capitalize">
                   {c.variable.replace("_", " ")}
