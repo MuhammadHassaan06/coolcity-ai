@@ -1,0 +1,15 @@
+# Large local FortyGuard collection artifacts
+data/full-city-run/
+data/live-validation/
+
+# Generated/local files
+.next/
+node_modules/
+.vercel/
+tsconfig.tsbuildinfo
+scratch/
+*.log
+
+# Local environment files
+.env*
+!.env.example
