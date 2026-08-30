@@ -24,6 +24,7 @@ interface MapPanelProps {
   selectedZone?: PriorityZoneModel;
   selectedZoneId?: string;
   spatialData?: SpatialLayerData;
+  onZoneSelect?: (geoid: string) => void;
 }
 
 export default function MapPanel({
@@ -32,8 +33,9 @@ export default function MapPanel({
   selectedZone,
   selectedZoneId,
   spatialData,
+  onZoneSelect,
 }: MapPanelProps) {
-  const modeLabel = viewMode === "heat" ? "Heat Exposure" : "Risk Index";
+  const modeLabel = viewMode === "heat" ? "Heat Exposure" : "Composite Risk";
 
   return (
     <div className="bg-white border border-gray-200 rounded flex flex-col h-full">
@@ -41,15 +43,15 @@ export default function MapPanel({
       <div className="border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-50 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 className="font-semibold text-gray-900 text-sm">
-            Phoenix Operations Map
+            Phoenix Operations Map ({modeLabel})
           </h2>
           <p className="text-[11px] text-gray-500 font-mono">
-            GIS Viewport • City of Phoenix, Arizona
+            GIS Viewport • 359 Phoenix Census Tracts
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px]">
           <span className="px-2 py-0.5 rounded bg-white text-gray-700 font-medium border border-gray-200">
-            View: <strong className="text-gray-900">{modeLabel}</strong>
+            View Mode: <strong className="text-gray-900">{modeLabel}</strong>
           </span>
           <span className="px-2 py-0.5 rounded bg-white text-gray-700 font-medium border border-gray-200 capitalize">
             Period: <strong className="text-gray-900">{timePeriod}</strong>
@@ -68,7 +70,8 @@ export default function MapPanel({
         <LeafletMap
           activeView={viewMode}
           activePeriod={timePeriod}
-          selectedZone={selectedZoneId ?? selectedZone?.id ?? null}
+          selectedZone={selectedZoneId ?? selectedZone?.geoid ?? selectedZone?.id ?? null}
+          onZoneSelect={onZoneSelect}
           spatialData={spatialData}
         />
 
@@ -77,7 +80,7 @@ export default function MapPanel({
           <div className="bg-slate-900/90 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded text-[10px] sm:text-[11px] shadow-md backdrop-blur-sm flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
             <span className="font-medium leading-tight">
-              Official Phoenix boundary • Full-city heat analytics
+              Official Phoenix boundary • 359 Census Tract spatial choropleth
             </span>
           </div>
         </div>

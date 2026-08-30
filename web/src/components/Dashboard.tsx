@@ -97,6 +97,9 @@ export default function Dashboard() {
                 timePeriod={timePeriod}
                 selectedZone={selectedZone}
                 selectedZoneId={selectedZoneId}
+                onZoneSelect={(id) =>
+                  setSelectedZoneId((prev) => (prev === id ? undefined : id))
+                }
               />
             </div>
 
