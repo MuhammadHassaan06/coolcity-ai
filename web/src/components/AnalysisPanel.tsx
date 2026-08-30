@@ -58,8 +58,8 @@ export default function AnalysisPanel() {
                   {c.variable.replace("_", " ")}
                 </span>
                 <div className="flex items-center gap-3 text-[10px]">
-                  <span>Pearson r: {c.pearson_r > 0 ? `+${c.pearson_r}` : c.pearson_r}</span>
-                  <span>Spearman ρ: {c.spearman_rho > 0 ? `+${c.spearman_rho}` : c.spearman_rho}</span>
+                  <span className="text-slate-900 font-semibold">Pearson r: {c.pearson_r > 0 ? `+${c.pearson_r}` : c.pearson_r}</span>
+                  <span className="text-slate-900 font-semibold">Spearman ρ: {c.spearman_rho > 0 ? `+${c.spearman_rho}` : c.spearman_rho}</span>
                   <span
                     className={`px-1 rounded text-[9px] font-semibold ${
                       c.is_statistically_significant
@@ -94,8 +94,8 @@ export default function AnalysisPanel() {
               <strong className="text-slate-900 text-xs">{top10OverlapC} Top 10 Match</strong>
             </div>
           </div>
-          <p className="text-[9px] text-gray-400 italic">
-            Disclaimer: Sensitivity testing confirms ranking stability under weight shifts. It does not constitute clinical or epidemiological model validation.
+          <p className="text-[9px] text-gray-500 italic">
+            Disclaimer: Sensitivity testing indicates high ranking stability under the tested weighting scenarios. It does not constitute clinical or epidemiological model validation.
           </p>
         </div>
       </div>

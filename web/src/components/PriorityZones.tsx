@@ -74,7 +74,7 @@ export default function PriorityZones({
           placeholder="Filter by GEOID or name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-2.5 py-1 text-xs font-mono bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-800"
+          className="w-full px-2.5 py-1 text-xs font-mono bg-white border border-gray-300 rounded text-slate-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-800"
         />
       </div>
 

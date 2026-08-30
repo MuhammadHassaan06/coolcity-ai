@@ -19,20 +19,23 @@ export default function Header({ dataMode }: HeaderProps) {
               Phoenix Heat Response Operations
             </p>
           </div>
-          <div className="self-start sm:self-auto shrink-0">
+          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <span className="text-[10px] sm:text-[11px] font-mono text-gray-500 hidden sm:inline">
+              Jul 15, 2024 • 14:00
+            </span>
             <span
               className={`inline-flex items-center text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 sm:px-2.5 rounded border ${
                 dataMode === "demo"
                   ? "bg-amber-50 text-amber-900 border-amber-300"
-                  : "bg-emerald-50 text-emerald-900 border-emerald-300"
+                  : "bg-slate-100 text-slate-800 border-slate-300"
               }`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full mr-1.5 shrink-0 ${
-                  dataMode === "demo" ? "bg-amber-500" : "bg-emerald-500"
+                  dataMode === "demo" ? "bg-amber-500" : "bg-slate-600"
                 }`}
               />
-              {dataMode === "demo" ? "DEMO DATA MODE" : "LIVE DATA MODE"}
+              {dataMode === "demo" ? "DEMO DATA MODE" : "FULL-CITY SNAPSHOT"}
             </span>
           </div>
         </div>
