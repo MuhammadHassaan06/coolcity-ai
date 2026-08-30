@@ -92,10 +92,10 @@ Requested Target Zones: ${zoneIds && zoneIds.length > 0 ? zoneIds.join(", ") : "
 Utilize your registered tools to query heat data, risk scores, and compute deterministic allocations.
 Ensure allocations strictly comply with municipal inventory limits.`;
 
-      console.log(`[Gemini Agent] Request attempt started (model: gemini-2.5-flash, snapshot: ${activeSnapshot})`);
+      console.log(`[Gemini Agent] Request attempt started (model: gemini-3.6-flash, snapshot: ${activeSnapshot})`);
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         contents: [prompt],
         config: {
           tools: track6ToolDeclarations,
