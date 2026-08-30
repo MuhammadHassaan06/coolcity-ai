@@ -11,11 +11,14 @@ export const maxDuration = 60; // Next.js serverless route max duration
  * Accepts goal, authoritative inventory, and optional zone scope.
  */
 export async function POST(req: NextRequest) {
+  console.log("[Gemini Agent] Request received at POST /api/agent/plan");
+
   try {
     let body: unknown;
     try {
       body = await req.json();
     } catch {
+      console.log("[Gemini Agent] Invalid JSON request payload received");
       return NextResponse.json(
         {
           success: false,
@@ -29,6 +32,7 @@ export async function POST(req: NextRequest) {
     const validation = AgentPlanRequestSchema.safeParse(body);
     if (!validation.success) {
       const issueMsgs = validation.error.issues.map((i) => i.message).join("; ");
+      console.log(`[Gemini Agent] Request validation failed: ${issueMsgs}`);
       return NextResponse.json(
         {
           success: false,
@@ -53,6 +57,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (error: unknown) {
     if (error instanceof AgentValidationError) {
+      console.log(`[Gemini Agent] Agent validation error: ${error.message}`);
       return NextResponse.json(
         {
           success: false,
@@ -64,6 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (error instanceof GeminiConfigError) {
+      console.log("[Gemini Agent] Configuration error: GEMINI_API_KEY missing");
       return NextResponse.json(
         {
           success: false,
@@ -74,6 +80,7 @@ export async function POST(req: NextRequest) {
     }
 
     const message = error instanceof Error ? error.message : "An unexpected server error occurred.";
+    console.error(`[Gemini Agent] Unexpected route error: ${message}`);
     return NextResponse.json(
       {
         success: false,

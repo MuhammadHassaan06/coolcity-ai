@@ -157,4 +157,25 @@ describe("Track 6 Agentic Planning Engine Test Suite", () => {
       assert.ok(ev.source);
     }
   });
+
+  it("TEST 11: verifies server-side diagnostic logging outputs [Gemini Agent] prefix during fallback", async () => {
+    const logs: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => {
+      logs.push(args.join(" "));
+      originalLog(...args);
+    };
+
+    try {
+      process.env.GEMINI_API_KEY = "mock-key-test";
+      const request = {
+        goal: "Diagnostic log validation test",
+        inventory: { mobileCoolingUnits: 1, waterStations: 1, outreachTeams: 1 },
+      };
+      await runCoolCityPlanningAgent(request);
+      assert.ok(logs.some((l) => l.includes("[Gemini Agent] Falling back:")));
+    } finally {
+      console.log = originalLog;
+    }
+  });
 });
