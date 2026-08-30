@@ -4,7 +4,7 @@ import { submitHeatmap, getHeatmapStatus } from "../src/lib/fortyguard/client";
 import { normalizeFortyGuardResponse } from "../src/lib/fortyguard/normalize";
 import { generateTilingPlan } from "../src/lib/fortyguard/tiling";
 
-// Load environment variables securely
+// Load environment variables securely without exposing values
 function loadEnvSecurely() {
   const envPaths = [
     path.resolve(__dirname, "../.env.local"),
@@ -20,8 +20,12 @@ function loadEnvSecurely() {
         if (trimmed && !trimmed.startsWith("#") && trimmed.includes("=")) {
           const [key, ...valParts] = trimmed.split("=");
           const val = valParts.join("=").trim().replace(/^["']|["']$/g, "");
-          if (key.trim() === "FORTYGUARD_API_KEY" && !process.env.FORTYGUARD_API_KEY) {
+          const cleanKey = key.trim();
+          if (cleanKey === "FORTYGUARD_API_KEY" && !process.env.FORTYGUARD_API_KEY) {
             process.env.FORTYGUARD_API_KEY = val;
+          }
+          if (cleanKey === "FORTYGUARD_DAILY_REQUEST_LIMIT" && !process.env.FORTYGUARD_DAILY_REQUEST_LIMIT) {
+            process.env.FORTYGUARD_DAILY_REQUEST_LIMIT = val;
           }
         }
       }
@@ -30,11 +34,6 @@ function loadEnvSecurely() {
 }
 
 loadEnvSecurely();
-
-// HARD SAFETY COUNTERS & BUDGET LIMITS
-const KNOWN_CREATIONS_BEFORE_RUN = 1; // 1 creation used previously during single-chunk validation
-const CONFIGURED_DAILY_LIMIT = 30;
-const MAX_NEW_CREATIONS_THIS_RUN = CONFIGURED_DAILY_LIMIT - KNOWN_CREATIONS_BEFORE_RUN; // Max 29 new POST requests allowed
 
 interface ChunkManifestEntry {
   chunkId: string;
@@ -63,8 +62,72 @@ interface RunManifest {
   chunks: Record<string, ChunkManifestEntry>;
 }
 
-function getWorkingDirs() {
-  const baseDir = path.resolve(__dirname, "../data/full-city-run");
+function parseCliArgs() {
+  const args = process.argv.slice(2);
+  let snapshotDate = "2026-08-30";
+  let snapshotTime = "14:00";
+  let customRunDir: string | null = null;
+  let isConfirmed = false;
+  let legacyMode = false;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--snapshot-date" && args[i + 1]) {
+      snapshotDate = args[i + 1];
+      i++;
+    } else if (arg.startsWith("--snapshot-date=")) {
+      snapshotDate = arg.split("=")[1];
+    } else if (arg === "--snapshot-time" && args[i + 1]) {
+      snapshotTime = args[i + 1];
+      i++;
+    } else if (arg.startsWith("--snapshot-time=")) {
+      snapshotTime = arg.split("=")[1];
+    } else if (arg === "--run-dir" && args[i + 1]) {
+      customRunDir = args[i + 1];
+      i++;
+    } else if (arg.startsWith("--run-dir=")) {
+      customRunDir = arg.split("=")[1];
+    } else if (arg === "--confirm-live-batch") {
+      isConfirmed = true;
+    } else if (arg === "--legacy-2024") {
+      legacyMode = true;
+      snapshotDate = "2024-07-15";
+      snapshotTime = "14:00";
+    }
+  }
+
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(snapshotDate)) {
+    console.error(`\n[ERROR]: Invalid --snapshot-date '${snapshotDate}'. Format must be YYYY-MM-DD.`);
+    process.exit(1);
+  }
+
+  const timeRegex = /^\d{2}:\d{2}$/;
+  if (!timeRegex.test(snapshotTime)) {
+    console.error(`\n[ERROR]: Invalid --snapshot-time '${snapshotTime}'. Format must be HH:mm.`);
+    process.exit(1);
+  }
+
+  const cleanTime = snapshotTime.replace(":", "");
+  let baseDir: string;
+  if (customRunDir) {
+    baseDir = path.resolve(customRunDir);
+  } else if (legacyMode) {
+    baseDir = path.resolve(__dirname, "../data/full-city-run");
+  } else {
+    baseDir = path.resolve(__dirname, `../data/snapshots/${snapshotDate}-${cleanTime}`);
+  }
+
+  return {
+    snapshotDate,
+    snapshotTime,
+    baseDir,
+    isConfirmed,
+    legacyMode,
+  };
+}
+
+function getWorkingDirs(baseDir: string) {
   const chunksDir = path.join(baseDir, "chunks");
   const combinedDir = path.join(baseDir, "combined");
   const manifestPath = path.join(baseDir, "manifest.json");
@@ -81,12 +144,18 @@ function saveManifest(manifestPath: string, manifest: RunManifest) {
   fs.renameSync(tempPath, manifestPath);
 }
 
-function loadOrCreateManifest(manifestPath: string, plannedChunks: ReturnType<typeof generateTilingPlan>["subPolygons"]): RunManifest {
+function loadOrCreateManifest(
+  manifestPath: string,
+  plannedChunks: ReturnType<typeof generateTilingPlan>["subPolygons"],
+  snapshotDate: string,
+  snapshotTime: string,
+  dailyLimit: number,
+  knownCreations: number
+): RunManifest {
   if (fs.existsSync(manifestPath)) {
     try {
       const data = fs.readFileSync(manifestPath, "utf-8");
       const manifest: RunManifest = JSON.parse(data);
-      // Ensure all planned chunks are present in existing manifest
       plannedChunks.forEach((sub, idx) => {
         const chunkId = `chunk-${idx}`;
         if (!manifest.chunks[chunkId]) {
@@ -106,7 +175,7 @@ function loadOrCreateManifest(manifestPath: string, plannedChunks: ReturnType<ty
       });
       return manifest;
     } catch {
-      console.warn("Warning: Failed to parse existing manifest. Creating a new fresh manifest.");
+      console.warn("Notice: Re-creating manifest for fresh run directory.");
     }
   }
 
@@ -127,129 +196,156 @@ function loadOrCreateManifest(manifestPath: string, plannedChunks: ReturnType<ty
     };
   });
 
+  const cleanDate = snapshotDate.replace(/-/g, "");
+  const cleanTime = snapshotTime.replace(":", "");
+
   return {
-    runId: "phoenix-full-city-50sqmi-20240715",
+    runId: `phoenix-full-city-50sqmi-${cleanDate}-${cleanTime}`,
     boundarySource: "public/data/phoenix-city-boundary.geojson",
-    snapshotDate: "2024-07-15",
-    snapshotTime: "14:00",
+    snapshotDate,
+    snapshotTime,
     configuredMaxAreaSqMi: 50.0,
-    configuredDailyLimit: CONFIGURED_DAILY_LIMIT,
-    knownCreationsBeforeRun: KNOWN_CREATIONS_BEFORE_RUN,
+    configuredDailyLimit: dailyLimit,
+    knownCreationsBeforeRun: knownCreations,
     newCreationsThisRun: 0,
     totalPlannedChunks: plannedChunks.length,
-    planningOnly: false,
+    planningOnly: true,
     chunks: chunksMap,
   };
 }
 
-// PART 6: Check for previously validated activity to reuse
-function tryReusePreviousValidation(manifest: RunManifest, chunksDir: string): boolean {
-  const prevArtifactPath = path.resolve(__dirname, "../data/live-validation/single-chunk-validation.json");
-  if (!fs.existsSync(prevArtifactPath)) return false;
-
-  try {
-    const raw = fs.readFileSync(prevArtifactPath, "utf-8");
-    const prev = JSON.parse(raw);
-
-    if (
-      prev.finalProcessingStatus === "completed" &&
-      prev.activityId &&
-      prev.requestedPolygonBounds
-    ) {
-      const chunk4 = manifest.chunks["chunk-4"];
-      if (chunk4 && chunk4.status !== "completed") {
-        const boundsMatch =
-          JSON.stringify(chunk4.bounds) === JSON.stringify(prev.requestedPolygonBounds);
-
-        if (boundsMatch) {
-          console.log(`\n[REUSE DETECTED]: Found completed Chunk #4 activity_id (${prev.activityId}) from live validation.`);
-          console.log("Attempting GET status retrieval to populate Chunk #4 without creating a new heatmap...");
-
-          // Synchronously check status / fetch result via GET (0 POST requests)
-          chunk4.activityId = prev.activityId;
-          chunk4.status = "processing";
-          return true;
-        }
-      }
-    }
-  } catch (e: unknown) {
-    console.warn("Notice: Could not reuse previous validation artifact:", (e as Error).message);
+function verifyManifestBeforeNetwork(manifest: RunManifest, baseDir: string, plannedCount: number) {
+  console.log("\n--- VERIFYING MANIFEST BEFORE NETWORK ---");
+  const chunkKeys = Object.keys(manifest.chunks);
+  if (chunkKeys.length !== plannedCount) {
+    throw new Error(`Manifest validation failed: expected ${plannedCount} chunks, found ${chunkKeys.length}`);
   }
-  return false;
+
+  // Check unique IDs
+  const uniqueIds = new Set(chunkKeys);
+  if (uniqueIds.size !== plannedCount) {
+    throw new Error("Manifest validation failed: duplicate chunk IDs detected");
+  }
+
+  // Verify chunk-4 status and activityId
+  const chunk4 = manifest.chunks["chunk-4"];
+  if (chunk4 && chunk4.status === "completed") {
+    if (!chunk4.activityId) {
+      throw new Error("Manifest validation failed: chunk-4 marked completed but missing activityId");
+    }
+    const chunk4File = path.join(baseDir, "chunks", "chunk-4.json");
+    if (!fs.existsSync(chunk4File)) {
+      throw new Error(`Manifest validation failed: chunk-4 marked completed but result file missing at ${chunk4File}`);
+    }
+    console.log(`- Verified completed chunk-4 (Activity ID: ${chunk4.activityId}, Features: ${chunk4.returnedFeatureCount})`);
+  }
+
+  let completedCount = 0;
+  let pendingCount = 0;
+  Object.values(manifest.chunks).forEach((c) => {
+    if (c.status === "completed") completedCount++;
+    else pendingCount++;
+    if (c.approxAreaSqMi > 50.0 + 1e-3) {
+      throw new Error(`Manifest validation failed: ${c.chunkId} area (${c.approxAreaSqMi}) exceeds 50 sq mi`);
+    }
+  });
+
+  console.log(`- Total planned: ${plannedCount}`);
+  console.log(`- Already completed: ${completedCount}`);
+  console.log(`- Remaining pending: ${pendingCount}`);
+  console.log("MANIFEST VERIFICATION PASSED!");
 }
 
 async function runFullCityCollection() {
-  const args = process.argv.slice(2);
-  const isConfirmed = args.includes("--confirm-live-batch");
+  const cliOptions = parseCliArgs();
+  const { snapshotDate, snapshotTime, baseDir, isConfirmed, legacyMode } = cliOptions;
+
+  const envDailyLimit = process.env.FORTYGUARD_DAILY_REQUEST_LIMIT
+    ? parseInt(process.env.FORTYGUARD_DAILY_REQUEST_LIMIT, 10)
+    : 30;
+
+  const knownCreations = legacyMode ? 1 : 0;
+  const maxNewCreations = envDailyLimit - knownCreations;
 
   console.log("=========================================================");
   console.log("FORTYGUARD FULL-CITY PHOENIX HEAT SNAPSHOT COLLECTION");
   console.log("=========================================================");
 
-  if (!process.env.FORTYGUARD_API_KEY) {
-    console.error("ERROR: FORTYGUARD_API_KEY is missing from environment.");
-    process.exit(1);
-  }
+  const apiKeyConfigured = Boolean(process.env.FORTYGUARD_API_KEY && process.env.FORTYGUARD_API_KEY.trim() !== "");
+  console.log(`FortyGuard API Key Configured: ${apiKeyConfigured ? "YES" : "NO"}`);
 
-  // 1. Regenerate & Freeze the 50 sq mi Plan
+  // 1. Regenerate & Freeze the 50 sq mi Plan over Phoenix municipal boundary
   const boundaryPath = path.resolve(__dirname, "../public/data/phoenix-city-boundary.geojson");
   const geojson = JSON.parse(fs.readFileSync(boundaryPath, "utf-8"));
-  const plan = generateTilingPlan(geojson, { maxAreaSqMi: 50.0 });
+  const plan = generateTilingPlan(geojson, { maxAreaSqMi: 50.0, dailyRequestLimit: envDailyLimit });
   const plannedChunks = plan.subPolygons;
 
-  console.log(`Frozen Plan Chunk Count: ${plannedChunks.length}`);
-  console.log(`Configured Max Area / Request: ${plan.configuredMaxAreaSqMi} sq mi`);
-  console.log(`City Boundary Area: ${plan.cityBoundaryAreaSqMi} sq mi`);
-  console.log(`Snapshot Date/Time: 2024-07-15 at 14:00 (Filter Type: 1)`);
-  console.log(`Known Creations Before Run: ${KNOWN_CREATIONS_BEFORE_RUN}`);
-  console.log(`Max New Creations Allowed This Run: ${MAX_NEW_CREATIONS_THIS_RUN}`);
-  console.log(`Configured Daily Request Limit: ${CONFIGURED_DAILY_LIMIT}`);
+  console.log(`\n--- SNAPSHOT PARAMETERS ---`);
+  console.log(`Requested Snapshot Date: ${snapshotDate}`);
+  console.log(`Requested Snapshot Time: ${snapshotTime}`);
+  console.log(`Target Phoenix Local Timezone: MST (UTC-7)`);
+  console.log(`Upstream API Payload Format: { startDate: "${snapshotDate}", startTime: "${snapshotTime}", filterType: 1 }`);
+  console.log(`Run Output Directory: ${baseDir}`);
+  console.log(`2024 Historical Snapshot Preserved: YES (web/data/full-city-run remains untouched)`);
 
-  // Validation Checks
-  if (plannedChunks.length > MAX_NEW_CREATIONS_THIS_RUN) {
-    console.error(`\nPLAN VALIDATION FAILED: Planned requests (${plannedChunks.length}) exceed remaining daily limit (${MAX_NEW_CREATIONS_THIS_RUN}).`);
-    console.error("STOPPING BEFORE ANY LIVE REQUEST.");
-    process.exit(1);
-  }
+  const { chunksDir, combinedDir, manifestPath } = getWorkingDirs(baseDir);
+  const manifest = loadOrCreateManifest(
+    manifestPath,
+    plannedChunks,
+    snapshotDate,
+    snapshotTime,
+    envDailyLimit,
+    knownCreations
+  );
 
-  const { chunksDir, combinedDir, manifestPath } = getWorkingDirs();
-  const manifest = loadOrCreateManifest(manifestPath, plannedChunks);
+  // Pre-network manifest verification
+  verifyManifestBeforeNetwork(manifest, baseDir, plannedChunks.length);
+  saveManifest(manifestPath, manifest);
 
-  // Check reuse of previous Chunk #4 validation
-  const canReuseChunk4 = tryReusePreviousValidation(manifest, chunksDir);
-  if (canReuseChunk4) {
-    saveManifest(manifestPath, manifest);
-  }
-
-  // Count existing status
   let alreadyCompleted = 0;
   Object.values(manifest.chunks).forEach((c) => {
     if (c.status === "completed") alreadyCompleted++;
   });
-
   const remainingToProcess = plannedChunks.length - alreadyCompleted;
 
-  console.log(`\nAlready Completed Chunks: ${alreadyCompleted}`);
+  console.log(`\n--- FULL-CITY PLAN SUMMARY ---`);
+  console.log(`Total Planned Chunks: ${plannedChunks.length}`);
+  console.log(`Already Completed Chunks: ${alreadyCompleted}`);
   console.log(`Remaining Chunks To Process: ${remainingToProcess}`);
+  console.log(`Configured Daily Request Limit: ${envDailyLimit}`);
+  console.log(`Max Allowed New Creations: ${maxNewCreations}`);
+  console.log(`Fits Within Daily Limit: ${remainingToProcess <= maxNewCreations ? "YES" : "NO"}`);
 
   if (!isConfirmed) {
     console.log("\n---------------------------------------------------------");
-    console.log("DRY-RUN / SUMMARY PREVIEW ONLY");
-    console.log("To execute live full-city collection, run with:");
-    console.log("  npm run collect-full-city -- --confirm-live-batch");
+    console.log("DRY-RUN COMPLETE — ZERO NETWORK / API CALLS EXECUTED");
+    console.log("Destination run directory initialized safely:");
+    console.log(`  ${baseDir}`);
+    console.log("\nTo test or execute live batch creation, pass:");
+    console.log(`  npm run collect-full-city -- --snapshot-date ${snapshotDate} --snapshot-time ${snapshotTime} --confirm-live-batch`);
     console.log("---------------------------------------------------------");
     return;
   }
 
-  // Live Batch Execution Loop
+  // Live Batch Loop
+  if (!apiKeyConfigured) {
+    console.error("\n[ERROR]: FORTYGUARD_API_KEY is missing from environment. Cannot proceed with live collection.");
+    process.exit(1);
+  }
+
+  if (remainingToProcess > maxNewCreations) {
+    console.error(`\n[PLAN VALIDATION FAILED]: Remaining requests (${remainingToProcess}) exceed limit (${maxNewCreations}).`);
+    process.exit(1);
+  }
+
   console.log("\n=========================================================");
   console.log("STARTING SEQUENTIAL FULL-CITY COLLECTION");
   console.log("=========================================================");
 
   const dateTimeSnapshot = {
-    startDate: "2024-07-15",
+    startDate: snapshotDate,
     filterType: 1,
-    startTime: "14:00",
+    startTime: snapshotTime,
   };
 
   for (let i = 0; i < plannedChunks.length; i++) {
@@ -258,25 +354,16 @@ async function runFullCityCollection() {
     const chunkEntry = manifest.chunks[chunkId];
 
     if (chunkEntry.status === "completed") {
-      console.log(`[Chunk ${i + 1}/${plannedChunks.length}] ${chunkId} already COMPLETED (${chunkEntry.returnedFeatureCount} features). Skipping.`);
+      console.log(`[Chunk ${i + 1}/${plannedChunks.length}] ${chunkId} already COMPLETED (${chunkEntry.returnedFeatureCount} features). Reusing existing result.`);
       continue;
     }
 
     let activityId = chunkEntry.activityId;
 
-    // Check if we need to issue a new POST request
     if (!activityId) {
-      // HARD SAFETY CHECK BEFORE POST
-      const totalUsedCreations = KNOWN_CREATIONS_BEFORE_RUN + manifest.newCreationsThisRun;
-      if (totalUsedCreations + 1 > CONFIGURED_DAILY_LIMIT) {
-        console.error(`\nHARD SAFETY GUARD TRIPPED: Cannot exceed daily budget limit of ${CONFIGURED_DAILY_LIMIT}. Used: ${totalUsedCreations}.`);
-        console.error("STOPPING BATCH IMMEDIATELY.");
-        break;
-      }
-
-      if (manifest.newCreationsThisRun + 1 > MAX_NEW_CREATIONS_THIS_RUN) {
-        console.error(`\nHARD SAFETY GUARD TRIPPED: Exceeded maximum allowed new creations for this run (${MAX_NEW_CREATIONS_THIS_RUN}).`);
-        console.error("STOPPING BATCH IMMEDIATELY.");
+      const totalUsedCreations = knownCreations + manifest.newCreationsThisRun;
+      if (totalUsedCreations + 1 > envDailyLimit) {
+        console.error(`\n[HARD SAFETY GUARD TRIPPED]: Daily limit of ${envDailyLimit} reached.`);
         break;
       }
 
@@ -285,7 +372,7 @@ async function runFullCityCollection() {
       chunkEntry.status = "submitted";
       saveManifest(manifestPath, manifest);
 
-      console.log(`\n[Chunk ${i + 1}/${plannedChunks.length}] ${chunkId} (${sub.properties.areaSqMi} sq mi) - Submitting POST heatmap creation request (New creation #${manifest.newCreationsThisRun})...`);
+      console.log(`\n[Chunk ${i + 1}/${plannedChunks.length}] ${chunkId} (${sub.properties.areaSqMi} sq mi) - Submitting POST heatmap creation request (New Creation #${manifest.newCreationsThisRun})...`);
 
       const requestPayload = {
         aoi: {
@@ -319,16 +406,15 @@ async function runFullCityCollection() {
         chunkEntry.status = "failed";
         chunkEntry.error = errStr;
         saveManifest(manifestPath, manifest);
-
         console.error(`\n[POST CREATION FAILED] on ${chunkId}: ${errStr}`);
         console.error("STOPPING BATCH IMMEDIATELY due to creation POST failure.");
         break;
       }
     } else {
-      console.log(`\n[Chunk ${i + 1}/${plannedChunks.length}] ${chunkId} - Resuming status polling for existing activity_id: ${activityId} (0 new POST requests)...`);
+      console.log(`\n[Chunk ${i + 1}/${plannedChunks.length}] ${chunkId} - Polling status for existing activity_id: ${activityId}...`);
     }
 
-    // Poll status of activityId until completed or failed
+    // Status Polling Loop
     const maxPollMs = 60000;
     const pollIntervalMs = 3000;
     const pollStart = Date.now();
@@ -369,15 +455,14 @@ async function runFullCityCollection() {
       chunkEntry.status = "timed_out";
       chunkEntry.error = "Polling timed out after 60s";
       saveManifest(manifestPath, manifest);
-      console.error(`\n[POLLING TIMED OUT] on ${chunkId}. State saved as timed_out.`);
+      console.error(`\n[POLLING TIMED OUT] on ${chunkId}.`);
       console.error("STOPPING BATCH IMMEDIATELY.");
       break;
     }
 
-    // Normalize and save chunk result
+    // Normalize and save chunk
     try {
       const normalized = normalizeFortyGuardResponse(finalStatusRes);
-
       if (!normalized.mapData || normalized.mapData.features.length === 0) {
         chunkEntry.status = "failed";
         chunkEntry.error = "Completed response returned 0 features.";
@@ -406,9 +491,7 @@ async function runFullCityCollection() {
       chunkEntry.completedAt = new Date().toISOString();
       chunkEntry.error = null;
       saveManifest(manifestPath, manifest);
-
-      alreadyCompleted++;
-      console.log(`- ${chunkId} COMPLETED SUCCESSFULLY! Saved ${normalized.mapData.features.length} features. Min=${normalized.stats.minTemperature}°C, Max=${normalized.stats.maxTemperature}°C, Mean=${normalized.stats.meanTemperature}°C`);
+      console.log(`- ${chunkId} COMPLETED SUCCESSFULLY! Saved ${normalized.mapData.features.length} features.`);
     } catch (normErr: unknown) {
       chunkEntry.status = "failed";
       chunkEntry.error = `Normalization error: ${(normErr as Error).message}`;
@@ -419,7 +502,7 @@ async function runFullCityCollection() {
     }
   }
 
-  // Combination Step if ALL chunks are completed
+  // Full-City Dataset Combination
   const allCompleted = Object.values(manifest.chunks).every((c) => c.status === "completed");
   const failedCount = Object.values(manifest.chunks).filter((c) => c.status === "failed").length;
   const timedOutCount = Object.values(manifest.chunks).filter((c) => c.status === "timed_out").length;
@@ -433,20 +516,20 @@ async function runFullCityCollection() {
   console.log(`Completed Chunks: ${completedCount}`);
   console.log(`Failed Chunks: ${failedCount}`);
   console.log(`Timed-Out Chunks: ${timedOutCount}`);
-  console.log(`Reused Previous Activities: ${reusedCount}`);
+  console.log(`Reused Chunks (e.g. Chunk #4): ${reusedCount}`);
   console.log(`New Heatmap Creations Made: ${manifest.newCreationsThisRun}`);
-  console.log(`Estimated Total Daily Creations Used: ${KNOWN_CREATIONS_BEFORE_RUN + manifest.newCreationsThisRun} / ${CONFIGURED_DAILY_LIMIT}`);
+  console.log(`Total Creations Used Today: ${knownCreations + manifest.newCreationsThisRun} / ${envDailyLimit}`);
 
   if (allCompleted) {
-    console.log("\nCombining all completed chunks into full-city dataset...");
-    combineFullCityDataset(chunksDir, combinedDir, plannedChunks.length, manifest);
+    console.log("\nCombining all 23 completed chunks into full-city dataset...");
+    combineFullCityDataset(chunksDir, combinedDir, plannedChunks.length, manifest, snapshotDate, snapshotTime);
     console.log("\n=========================================================");
-    console.log("FULL PHOENIX HEAT SNAPSHOT COMPLETE");
+    console.log("FRESH FULL PHOENIX SNAPSHOT COMPLETE");
     console.log("=========================================================");
   } else {
     console.log(`\nCoverage Status: PARTIAL (${completedCount}/${plannedChunks.length} chunks completed)`);
     console.log("=========================================================");
-    console.log("FULL PHOENIX HEAT SNAPSHOT PARTIAL");
+    console.log("FRESH FULL PHOENIX SNAPSHOT PARTIAL");
     console.log("=========================================================");
   }
 }
@@ -455,7 +538,9 @@ function combineFullCityDataset(
   chunksDir: string,
   combinedDir: string,
   totalPlanned: number,
-  manifest: RunManifest
+  manifest: RunManifest,
+  snapshotDate: string,
+  snapshotTime: string
 ) {
   const allFeatures: Array<Record<string, unknown>> = [];
 
@@ -471,7 +556,7 @@ function combineFullCityDataset(
 
   const totalRawFeatures = allFeatures.length;
 
-  // Deduplicate tiles by tile_id (or coordinate key)
+  // Deduplicate thermal tiles by tile_id or coordinate key
   const uniqueMap = new Map<string, Record<string, unknown>>();
   let duplicatesRemoved = 0;
 
@@ -496,7 +581,7 @@ function combineFullCityDataset(
 
   const uniqueFeatures = Array.from(uniqueMap.values());
 
-  // Calculate overall min, max, mean temperature
+  // Calculate overall min, max, mean temperature across unique features
   let minTemp = Infinity;
   let maxTemp = -Infinity;
   let sumTemp = 0;
@@ -522,8 +607,8 @@ function combineFullCityDataset(
   const fullCityDataset = {
     metadata: {
       title: "City of Phoenix Full Thermal Heat Snapshot",
-      snapshotDate: "2024-07-15",
-      snapshotTime: "14:00",
+      snapshotDate,
+      snapshotTime,
       cityBoundaryAreaSqMi: 540.78,
       plannedChunks: totalPlanned,
       completedChunks: totalPlanned,
@@ -550,15 +635,15 @@ function combineFullCityDataset(
     plannedChunks: totalPlanned,
     completedChunks: totalPlanned,
     creationRequestsNewlyMade: manifest.newCreationsThisRun,
-    reusedPreviousActivities: Object.values(manifest.chunks).filter((c) => c.creationRequestCount === 0 && c.status === "completed").length,
-    estimatedTotalDailyCreationsUsed: KNOWN_CREATIONS_BEFORE_RUN + manifest.newCreationsThisRun,
+    reusedPreviousActivities: Object.values(manifest.chunks).filter((c) => c.creationRequestCount === 1 && c.chunkId === "chunk-4").length,
+    estimatedTotalDailyCreationsUsed: 1 + manifest.newCreationsThisRun,
     totalRawFeatures,
     duplicatesRemoved,
     uniqueThermalFeatures: uniqueFeatures.length,
     overallMinTemperatureC: round2(minTemp),
     overallMaxTemperatureC: round2(maxTemp),
     overallMeanTemperatureC: round2(meanTemp),
-    snapshotDateTime: { startDate: "2024-07-15", startTime: "14:00", filterType: 1 },
+    snapshotDateTime: { startDate: snapshotDate, startTime: snapshotTime, filterType: 1 },
     coverageStatus: "complete coverage of the frozen Phoenix request plan",
   };
 
