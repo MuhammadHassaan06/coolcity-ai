@@ -2,8 +2,18 @@ import { AgentPlanRequest, AgentPlanOutput, AgentPlanRequestSchema, AgentPlanOut
 import { getZones } from "../zones/zone-service";
 import { getAllZoneRisks } from "../risk/risk-service";
 import { allocate } from "../allocation/allocator";
-import { track6ToolDeclarations } from "./tools";
+import { track6ToolDeclarations, executeTrack6Tool } from "./tools";
 import { AgentValidationError } from "./errors";
+
+const APPROVED_TOOL_NAMES = new Set([
+  "get_zone_heat_data",
+  "get_historical_heat_metrics",
+  "get_zone_vulnerability",
+  "get_zone_risk_scores",
+  "get_resource_inventory",
+  "rank_priority_zones",
+  "allocate_resources",
+]);
 
 export async function runCoolCityPlanningAgent(
   requestInput: AgentPlanRequest
@@ -92,74 +102,145 @@ Requested Target Zones: ${zoneIds && zoneIds.length > 0 ? zoneIds.join(", ") : "
 Utilize your registered tools to query heat data, risk scores, and compute deterministic allocations.
 Ensure allocations strictly comply with municipal inventory limits.`;
 
-      console.log(`[Gemini Agent] Request attempt started (model: gemini-3.6-flash, snapshot: ${activeSnapshot})`);
+      const MAX_TURNS = 5;
+      const contents: unknown[] = [prompt];
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
-        contents: [prompt],
-        config: {
-          tools: track6ToolDeclarations,
-        },
-      });
+      for (let turn = 1; turn <= MAX_TURNS; turn++) {
+        console.log(`[Gemini Agent] Turn ${turn} request attempt started (model: gemini-3.6-flash, snapshot: ${activeSnapshot})`);
 
-      console.log(`[Gemini Agent] Gemini response received`);
+        const response = await ai.models.generateContent({
+          model: "gemini-3.6-flash",
+          contents: contents as unknown as Array<string | Record<string, unknown>>,
+          config: {
+            tools: track6ToolDeclarations,
+          },
+        });
 
-      // Inspect response candidates and function calls safely
-      const candidate = response?.candidates?.[0];
-      if (candidate?.finishReason) {
-        console.log(`[Gemini Agent] Candidate finishReason: ${candidate.finishReason}`);
-      }
+        console.log(`[Gemini Agent] Turn ${turn} Gemini response received`);
 
-      // Check for tool / function calls requested by model
-      const candidateParts = (candidate?.content?.parts || []) as Array<Record<string, unknown>>;
-      const rawFunctionCalls = (response as unknown as { functionCalls?: Array<{ name?: string }> })?.functionCalls;
-      const functionCalls: Array<{ name?: string }> =
-        rawFunctionCalls ||
-        candidateParts
-          .map((p) => p.functionCall as { name?: string } | undefined)
-          .filter((fc): fc is { name?: string } => Boolean(fc));
-
-      if (functionCalls && functionCalls.length > 0) {
-        const toolNames = functionCalls
-          .map((fc) => fc.name || "unnamed_tool")
-          .join(", ");
-        console.log(`[Gemini Agent] Tool call(s) requested by Gemini: [${toolNames}]`);
-        console.log(`[Gemini Agent] Note: Multi-turn tool execution loop is not configured in current route. Direct text response required or deterministic fallback used.`);
-      }
-
-      // Safe text extraction
-      let responseText: string | undefined;
-      try {
-        responseText = response?.text;
-      } catch {
-        console.log(`[Gemini Agent] Direct response.text getter threw or was unavailable for current candidate.`);
-      }
-
-      if (responseText && responseText.trim() !== "") {
-        console.log(`[Gemini Agent] Text response present (length: ${responseText.length} chars)`);
-
-        const finalPlan: AgentPlanOutput = {
-          summary: `CoolCity Heat-Relief Deployment Plan (${activeSnapshot}): ${goal}. ${responseText}`,
-          priorityZones: priorityZoneGeoids,
-          allocations: deterministicResult.allocations,
-          remainingInventory: deterministicResult.remainingInventory,
-          evidence: evidenceItems,
-          warnings: deterministicResult.warnings || [],
-        };
-
-        const validated = AgentPlanOutputSchema.safeParse(finalPlan);
-        if (validated.success) {
-          console.log(`[Gemini Agent] Response schema validation succeeded. Returning Gemini plan.`);
-          return validated.data;
-        } else {
-          const issues = validated.error.issues.map((i) => i.message).join("; ");
-          console.log(`[Gemini Agent] Falling back: Response schema validation failed: ${issues}`);
+        const candidate = response?.candidates?.[0];
+        if (candidate?.finishReason) {
+          console.log(`[Gemini Agent] Candidate finishReason: ${candidate.finishReason}`);
         }
-      } else {
+
+        // Check for tool / function calls requested by model
+        const candidateParts = (candidate?.content?.parts || []) as Array<Record<string, unknown>>;
+        const rawFunctionCalls = (response as unknown as { functionCalls?: Array<{ id?: string; name?: string; args?: Record<string, unknown> }> })?.functionCalls;
+
+        const functionCalls: Array<{ id?: string; name?: string; args?: Record<string, unknown> }> =
+          rawFunctionCalls ||
+          candidateParts
+            .map((p) => (p.functionCall ? (p.functionCall as { id?: string; name?: string; args?: Record<string, unknown> }) : undefined))
+            .filter((fc): fc is { id?: string; name?: string; args?: Record<string, unknown> } => Boolean(fc));
+
         if (functionCalls && functionCalls.length > 0) {
-          console.log(`[Gemini Agent] Falling back: Gemini returned tool call(s) instead of text response, and multi-turn execution loop is not implemented.`);
+          const toolNames = functionCalls.map((fc) => fc.name || "unnamed_tool").join(", ");
+          console.log(`[Gemini Agent] Turn ${turn} tool call(s) requested: [${toolNames}]`);
+
+          // Validate all requested tool names against allowlist
+          let unapprovedFound = false;
+          for (const fc of functionCalls) {
+            if (!fc.name || !APPROVED_TOOL_NAMES.has(fc.name)) {
+              console.log(`[Gemini Agent] Falling back: Model requested unapproved or invalid tool name '${fc.name}'`);
+              unapprovedFound = true;
+              break;
+            }
+          }
+          if (unapprovedFound) {
+            break;
+          }
+
+          // Append model turn to conversation history
+          if (candidate?.content) {
+            contents.push(candidate.content);
+          } else {
+            contents.push({ role: "model", parts: candidateParts });
+          }
+
+          // Execute tools locally and format function responses
+          const functionResponseParts: Array<{ functionResponse: { id?: string; name: string; response: Record<string, unknown> } }> = [];
+          let toolExecFailed = false;
+
+          for (const fc of functionCalls) {
+            const toolName = fc.name!;
+            const toolArgs = fc.args || {};
+
+            try {
+              console.log(`[Gemini Agent] Turn ${turn} executing tool: ${toolName}`);
+              const { output } = await executeTrack6Tool(toolName, toolArgs, {
+                authoritativeInventory: inventory,
+                requestedZoneIds: zoneIds,
+              });
+
+              console.log(`[Gemini Agent] Turn ${turn} tool executed successfully: ${toolName}`);
+
+              functionResponseParts.push({
+                functionResponse: {
+                  id: fc.id, // Preserve exact function call ID returned by Gemini when present
+                  name: toolName,
+                  response: output,
+                },
+              });
+            } catch (toolErr: unknown) {
+              const msg = toolErr instanceof Error ? toolErr.message : String(toolErr);
+              console.log(`[Gemini Agent] Falling back: Tool execution failed for '${toolName}': ${msg}`);
+              toolExecFailed = true;
+              break;
+            }
+          }
+
+          if (toolExecFailed) {
+            break;
+          }
+
+          // Append user function response turn to conversation history
+          contents.push({
+            role: "user",
+            parts: functionResponseParts,
+          });
+
+          console.log(`[Gemini Agent] Turn ${turn} function response(s) appended to conversation history`);
+
+          if (turn === MAX_TURNS) {
+            console.log(`[Gemini Agent] Falling back: Reached max turn limit (${MAX_TURNS}) while model is still requesting tool calls.`);
+            break;
+          }
+
+          continue;
+        }
+
+        // No tool calls requested: final model text response
+        let responseText: string | undefined;
+        try {
+          responseText = response?.text;
+        } catch {
+          console.log(`[Gemini Agent] Direct response.text getter threw or was unavailable.`);
+        }
+
+        if (responseText && responseText.trim() !== "") {
+          console.log(`[Gemini Agent] Final Gemini text response received (length: ${responseText.length} chars)`);
+
+          const finalPlan: AgentPlanOutput = {
+            summary: `CoolCity Heat-Relief Deployment Plan (${activeSnapshot}): ${goal}. ${responseText}`,
+            priorityZones: priorityZoneGeoids,
+            allocations: deterministicResult.allocations,
+            remainingInventory: deterministicResult.remainingInventory,
+            evidence: evidenceItems,
+            warnings: deterministicResult.warnings || [],
+          };
+
+          const validated = AgentPlanOutputSchema.safeParse(finalPlan);
+          if (validated.success) {
+            console.log(`[Gemini Agent] Response schema validation succeeded. Returning Gemini-assisted plan.`);
+            return validated.data;
+          } else {
+            const issues = validated.error.issues.map((i) => i.message).join("; ");
+            console.log(`[Gemini Agent] Falling back: Response schema validation failed: ${issues}`);
+            break;
+          }
         } else {
           console.log(`[Gemini Agent] Falling back: Gemini returned an empty or missing text response.`);
+          break;
         }
       }
     } catch (err: unknown) {
